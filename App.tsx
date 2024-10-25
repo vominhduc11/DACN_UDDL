@@ -1,118 +1,129 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {NavigationContainer} from '@react-navigation/native';
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import Home from './src/Home';
+import Product from './src/Product';
+import Cart from './src/Cart';
+import Notify from './src/Notify';
+import Login from './src/Login';
+import Sign from './src/Sign';
+import Feature_Activity from './src/Feature_Activity';
+import Recent_View from './src/Recent_View';
+import Pay from './src/Pay';
+import Pay_status from './src/Pay_status';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import Order_Confirm from './src/Order_Confirm';
+import Search from './src/Search';
+import City from './src/City';
+import Have_fun from './src/Have_fun';
+import Where_go from './src/Where_go';
+import Fun_experience from './src/Fun_experience';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+const Stack = createNativeStackNavigator();
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+const App = () => {
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Product"
+          component={Product}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{headerShown: false}}
+        />
+        {/* <Stack.Screen name="Product" component={Product} options={{ headerShown: false }} /> */}
+        <Stack.Screen
+          name="Cart"
+          component={Cart}
+          options={{
+            headerShown: true,
+            headerTitle: 'Giỏ hàng',
+          }}
+        />
+        <Stack.Screen
+          name="Notify"
+          component={Notify}
+          options={{
+            headerShown: true,
+            headerTitle: 'Thông báo',
+          }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Sign"
+          component={Sign}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Feature_Activity"
+          component={Feature_Activity}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Recent_View"
+          component={Recent_View}
+          options={{
+            headerShown: true,
+            headerTitle: 'Xem gần đây',
+          }}
+        />
+        <Stack.Screen
+          name="Pay"
+          component={Pay}
+          options={{
+            headerShown: true,
+            headerTitle: 'Hoàn tất đơn hàng',
+          }}
+        />
+        <Stack.Screen
+          name="Pay_status"
+          component={Pay_status}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Order_Confirm"
+          component={Order_Confirm}
+          options={{
+            headerShown: true,
+            headerTitle: 'Xác nhận đơn hàng',
+          }}
+        />
+        <Stack.Screen
+          name="Search"
+          component={Search}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Have_fun"
+          component={Have_fun}
+          options={{
+            headerShown: false,
+          }}
+        />
+        {/* <Stack.Screen name="City" component={City} options={{ headerShown: false }} /> */}
+        <Stack.Screen
+          name="Where_go"
+          component={Where_go}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Fun_experience"
+          component={Fun_experience}
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
-
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+};
 
 export default App;
