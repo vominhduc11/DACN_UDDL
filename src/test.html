@@ -11,15 +11,125 @@
             box-shadow: 0 0 0 0 red;
             z-index: 1;
         }
+
+        li:nth-child(2) {
+            list-style: none;
+            font-weight: bolder;
+            display: inline-block;
+            box-sizing: border-box;
+        }
     </style>
 </head>
 
 <body>
-    <div><span>abc</span></div>
+    <div id="abc">
+        <span>abc</span>
+    </div>
 </body>
 <script>
-    document.querySelector().onclick
-    JSON.stringify({ action: 'action1', action: 'action1' })
+    const a = {
+        ten: [
+            {
+                kieu: 'loai_goi_dich_vu',
+                loai: [{ ten: "" }, { ten: "" }]
+            }
+        ],
+        so_luong: [
+            {
+                tuoi: 'nguoi_lon',
+                gia: 200000
+            },
+            {
+                tuoi: 'nguoi_lon',
+                gia: 200000
+            },
+            {
+                tuoi: 'nguoi_lon',
+                gia: 200000
+            }
+        ]
+    }
+
+    console.log(JSON.parse(JSON.stringify(a)))
+
+    const b = {
+        ten: [
+            {
+                kieu: 'loai_dich_vu',
+                loai: [{ ten: '' }, { ten: '' }]
+            },
+            {
+                kieu: 'diem tap trung',
+                loai: [{ ten: '' }, { ten: '' }]
+            },
+            {
+                kieu: 'goi dich vu',
+                loai: [{ ten: '' }, { ten: '' }]
+            }
+        ],
+
+        so_luong: [
+            {
+                tuoi: nguoi_lon,
+                gia: 200000
+            },
+            {
+                tuoi: nguoi_lon,
+                gia: 200000
+            },
+            {
+                tuoi: nguoi_lon,
+                gia: 200000
+            }
+        ]
+    }
+
+    const c =
+        [
+            {
+                ngay: [
+                    {
+                        ten: 'Tour Ngày'
+                    },
+                    {
+                        ten: 'Tour 2N1Đ'
+                    }
+                ],
+                tour: [
+                    {
+                        ten: 'Tour Ghép'
+                    },
+                    {
+                        ten: 'Tour Riêng'
+                    },
+                    {
+                        ten: 'Tour ghép bằng xe sang (D-Car)'
+                    }
+                ]
+            },
+            {
+                ngay: [
+                    {
+                        ten: 'Tour Ngày1'
+                    },
+                    {
+                        ten: 'Tour 2N1Đ1'
+                    }
+                ],
+                tour: [
+                    {
+                        ten: 'Tour Ghép1'
+                    },
+                    {
+                        ten: 'Tour Riêng1'
+                    },
+                    {
+                        ten: 'Tour ghép bằng xe sang (D-Car)1'
+                    }
+                ]
+            },
+        ]
+
 </script>
 
 </html>

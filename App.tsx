@@ -18,6 +18,7 @@ import City from './src/City';
 import Have_fun from './src/Have_fun';
 import Where_go from './src/Where_go';
 import Fun_experience from './src/Fun_experience';
+import TourComponent from './src/TourComponent';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +26,11 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        {/* <Stack.Screen
+          name="TourComponent"
+          component={TourComponent}
+          options={{headerShown: false}}
+        /> */}
         <Stack.Screen
           name="Product"
           component={Product}
