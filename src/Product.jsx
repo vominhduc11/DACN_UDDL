@@ -11,6 +11,7 @@ import {
   Alert,
   Dimensions,
   TouchableOpacity,
+  StyleSheet,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 
@@ -40,6 +41,7 @@ const Product = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible1, setModalVisible1] = useState(false);
   const [count, setCount] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   //chuyển đổi số lớn
   const formatNumber = number => {
@@ -92,16 +94,20 @@ const Product = ({navigation}) => {
       setColorBtn('#808080');
     }
   }
+  //Tìm price nhỏ nhất
+  function minPrice(data) {
+    return data[0];
+  }
   // Gọi api sản phẩm
   useEffect(() => {
     axios
       .get('http://192.168.0.113:8080/api/getProduct/1')
       .then(res => {
         setProduct(res.data);
-        console.log(JSON.parse(res.data.package_services[0].name));
       })
       .catch(err => console.log(err));
   }, []);
+
   return (
     <>
       <View style={{flex: 1, position: 'relative'}}>
@@ -343,146 +349,28 @@ const Product = ({navigation}) => {
                   Các gói dịch vụ
                 </Text>
               </View>
-              <WebView
-                onMessage={handleMessage2}
-                showsHorizontalScrollIndicator={false} // Tắt cuộn ngang
-                showsVerticalScrollIndicator={false} // Tắt cuộn dọc
-                style={{
-                  height: contentHeight2 + 12,
-                  overflow: 'hidden',
-                }}
-                javaScriptEnabled={true}
-                // injectedJavaScript={`
-
-                //                     let parentElement = document.querySelector("#style1 ul"); // Lấy phần tử cha
-                //                     let childCount = parentElement.children.length; // Đếm số lượng thẻ con
-                //                     parentElement.style.width = 250 * childCount;
-
-                //                     document.querySelectorAll("#style1 ul li").forEach((ele)=>{
-                //                         ele.onclick = () => {
-                //                             if(!document.querySelector(".active")){
-                //                                 ele.classList.add("active");
-                //                             }
-                //                             else{
-                //                                 document.querySelector(".active").classList.remove("active");
-                //                                 ele.classList.add("active");
-                //                             }
-                //                         }
-                //                     })
-
-                //                     const height = document.querySelector("#style1").offsetHeight;
-                //                     (function sendMessageToReactNative() {
-                //                             window.ReactNativeWebView.postMessage(height);
-                //                     })()
-                //                 `}
-
-                injectedJavaScript={`    
-                                    
-
-
-                  document.querySelectorAll("#style2 ul li").forEach((ele)=>{                                           
-                      ele.onclick = () => {
-                          if(!document.querySelector(".active")){                             
-                              ele.classList.add("active");
-                          }
-                          else{
-                              document.querySelector(".active").classList.remove("active");
-                              ele.classList.add("active");
-                          }                                  
-                      }
-                  })
-
-                  const height = document.querySelector("#style2").offsetHeight;
-                  (function sendMessageToReactNative() {
-                          window.ReactNativeWebView.postMessage(height);
-                  })()
-              `}
-                // source={{
-                //   html: `
-                //                     <head>
-                //                         <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0">
-                //                         <style>
-                // #style1 {overflow-x: scroll; will-change: transform;scroll-behavior: smooth;}
-                //                               #style1 ul {list-style: none;display: flex;padding-left: 0;}
-                //                               #style1 ul li {width: 400px;font-size:16;font-weight: 600; padding: 0px 12px; margin-right: 12;border: 2px #000 solid; border-radius: 16px}
-                //                               #style1 li.active {border: 2px #FF5B00 solid; background-color: #FCF6F2}
-                //                         </style>
-                //                     </head>
-                //                     <body>
-                //                         <div id="style1">
-                //                             <ul>
-                //                                 <li class = "active">
-                //                                     <p>Du thuyền ăn tối cho khách nước ngoài tại bến tàu ICONSIAM (Thời gian du thuyền: 20:00 - 22:15)</p>
-                //                                     <p>đ 1,339,156</p>
-                //                                 </li>
-                //                                 <li>
-                //                                     <p>Du thuyền ăn tối cho khách nước ngoài tại bến tàu ICONSIAM (Thời gian du thuyền: 20:00 - 22:15)</p>
-                //                                     <p>đ 1,339,156</p>
-                //                                 </li>
-                //                                 <li>
-                //                                     <p>Du thuyền ăn tối cho khách nước ngoài tại bến tàu ICONSIAM (Thời gian du thuyền: 20:00 - 22:15)</p>
-                //                                     <p>đ 1,339,156</p>
-                //                                 </li>
-                //                                 <li>
-                //                                     <p>Du thuyền ăn tối cho khách nước ngoài tại bến tàu ICONSIAM (Thời gian du thuyền: 20:00 - 22:15)</p>
-                //                                     <p>đ 1,339,156</p>
-                //                                 </li>
-                //                             </ul>
-                //                         </div>
-                //                     </body>
-                //                     `,
-                // }}
-                source={{
-                  html: `
-                                  <html>
-                                    <head>
-                                        <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0">
-                                        <style>
-                                              body, html {width: ${
-                                                Dimensions.get('window').width -
-                                                40
-                                              };overflow-x: hidden}
-                                              #style2 { background-color: #fafafa; padding: 12px; box-sizing: border-box; border-radius: 12px}
-                                              #style2 > div:nth-child(1) {display: flex; justify-content: space-between;}
-                                              #style2 > div:nth-child(1) > p:nth-child(1) {font-weight: bolder}
-                                              #style2 > div:nth-child(1) > p:nth-child(2) {text-decoration: underline}
-                                              #style2 ul:nth-child(2) {list-style:none; padding-left: 0; width: 300px}
-                                              #style2 ul:nth-child(2) li {margin-top: 24px}
-                                              #style2 ul:nth-child(2) li p {color:#8e8e8e}
-                                              #style2 ul:nth-child(2) li > div { margin-top: 18px }
-                                              #style2 ul:nth-child(2) li > div > div + div {margin-top: 12px}
-                                              #style2 ul:nth-child(2) li > div > div > span {display: inline-block; border: 1px #ccc solid; color:#b2b2b2; font-weight: bolder; padding: 12px; border-radius: 12px}
-                                        </style>
-                                    </head>
-                                    <body>
-                                        <div id="style2">
-                                            <div>
-                                              <p>Chọn các gói dịch vụ</p>
-                                              <p>Xóa</p>
-                                            </div>
-                                            <ul>
-                                                <li>
-                                                    <p>Du thuyền ăn </p>
-                                                    <div>
-                                                      <div><span>Tuyến tuor thành phố</span></div>
-                                                      <div><span>Tuyến chợ lớn</span></div>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <p>Du thuyền ăn </p>
-                                                    <div>
-                                                      <div><span>Tuyến tuor thành phố</span></div>
-                                                      <div><span>Tuyến chợ lớn</span></div>
-                                                    </div>
-                                                </li>
-                                             
-                                            </ul>
-                                        </div>
-                                    </body>
-                                  </html>
-                                    `,
-                }}
-              />
+              <ScrollView
+                horizontal
+                style={styles.scrollContainer}
+                showsHorizontalScrollIndicator={false}>
+                {product.package_services !== undefined &&
+                  product.package_services.map((text, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      style={[
+                        styles.item,
+                        index === activeIndex && styles.activeItem,
+                      ]}
+                      onPress={() => setActiveIndex(index)}>
+                      <Text style={styles.itemText}>{text.name}</Text>
+                      {product.package_services.quantitys !== undefined && (
+                        <Text style={styles.priceText}>
+                          {minPrice(product.package_services.quantitys)}
+                        </Text>
+                      )}
+                    </TouchableOpacity>
+                  ))}
+              </ScrollView>
             </View>
             {/* Đánh giá */}
             <View style={{marginTop: 24}}>
@@ -1396,5 +1284,39 @@ const Product = ({navigation}) => {
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  scrollContainer: {
+    overflow: 'scroll',
+    marginTop: 12,
+  },
+  item: {
+    width: 250,
+    minHeight: 100,
+    paddingHorizontal: 12,
+    marginRight: 12,
+    paddingVertical: 10,
+    borderWidth: 2,
+    borderColor: '#000',
+    borderRadius: 16,
+    backgroundColor: '#FFF',
+    fontSize: 16,
+    fontWeight: '600',
+    justifyContent: 'space-between',
+  },
+  activeItem: {
+    borderColor: '#FF5B00',
+    backgroundColor: '#FCF6F2',
+  },
+  itemText: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  priceText: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginTop: 5,
+  },
+});
 
 export default Product;
