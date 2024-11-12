@@ -23,135 +23,45 @@
 
 <body>
     <div class="dynamic-image">
-        <p>Embark on an exquisite day tour of Ha Long Bay aboard the esteemed 5-star Hercules Premium Cruise. Begin your
-            adventure exploring Sung Sot Cave, renowned for its awe-inspiring stalactites and stalagmites. Glide through
-            the tranquil waters to Luon Cave, where the lush greenery and serene atmosphere await. Next, indulge in a
-            sumptuous buffet lunch served on board, featuring a delectable array of local and international cuisine.
-            After lunch, visit Ti Top Island to relax on its pristine beach or climb to the summit for panoramic views.
-            Throughout the journey, knowledgeable guides provide insights into the bay's geological marvels and cultural
-            significance. This tour promises an unforgettable blend of luxury, relaxation, and exploration in one of
-            Vietnam's most iconic destinations.
-        </p>
+        <p>Thư giãn cơ thể sau một ngày dài khám phá Hà Nội và trải nghiệm một trong những dịch vụ spa tốt nhất trong
+            thành phố với mười gói liệu trình tuyệt vời của Metis Boutique Spa! Đến và trải nghiệm massage Metis đặc
+            biệt. Nuông chiều cơ thể với gói massage truyền thống của Việt Nam tập trung vào việc kích thích lưu thông
+            máu để giảm đau và áp lực trong cơ thể. Thưởng thức tách trà thảo mộc ấm sau liệu trình để tiếp thêm năng
+            lượng cho cơ thể. Nằm ở vị trí thuận tiện chỉ cách ga xe lửa Hà Nội vài mét, bạn không phải đi đâu xa để
+            trải nghiệm sự thư giãn tuyệt đối.</p>
         <div>
-            <img src="https://res.klook.com/images/fl_lossy.progressive,q_65/c_fill,w_1295,h_728/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/pc2zaguubbtstodg8roz/[Route2]HaLongBayDayTourby5-StarHerculesPremiumCruise.webp"
+            <img src="https://res.klook.com/images/fl_lossy.progressive,q_65/c_fill,w_1295,h_863/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/ar2szwkitb5oqwz5y29m/TrảiNghiệmCácGóiDịchVụcủaMetisBoutiqueSpatạiHàNội.webp"
                 alt="">
-            <p>Ha Long Travel Route for your reference</p>
+            <p>Tận hưởng bầu không khí thư giãn của spa mà bạn sẽ cảm thấy ngay lập tức khi bước vào</p>
         </div>
         <div>
-            <img src="https://res.klook.com/images/fl_lossy.progressive,q_65/c_fill,w_1295,h_969/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/tbeebxm1wqfys5weeh4f/[Route2]HaLongBayDayTourby5-StarHerculesPremiumCruise.webp"
+            <img src="https://res.klook.com/images/fl_lossy.progressive,q_65/c_fill,w_1295,h_859/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/q9n8mpbstms1yplgaglx/TrảiNghiệmCácGóiDịchVụcủaMetisBoutiqueSpatạiHàNội.webp"
                 alt="">
-            <p>Embark on an exquisite day tour of Ha Long Bay with Hercules Premium Cruise</p>
         </div>
         <div>
-            <img src="https://res.klook.com/images/fl_lossy.progressive,q_65/c_fill,w_1295,h_971/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/gjayahafcqqjns9uaerv/[Route2]HaLongBayDayTourby5-StarHerculesPremiumCruise.webp"
+            <img src="https://res.klook.com/images/fl_lossy.progressive,q_65/c_fill,w_1295,h_863/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/gauvhrtzy6des6fq2hqp/TrảiNghiệmCácGóiDịchVụcủaMetisBoutiqueSpatạiHàNội.webp"
                 alt="">
-            <p>A complimentary welcome drink will be served when embarking on the cruise</p>
         </div>
     </div>
 </body>
 <script>
-    const a = {
-        ten: [
-            {
-                kieu: 'loai_goi_dich_vu',
-                loai: [{ ten: "" }, { ten: "" }]
+    fetch("http://192.168.0.113:8080/api/getProductOfCity/1")
+        .then(response => {
+            // Kiểm tra xem phản hồi có thành công hay không
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
             }
-        ],
-        so_luong: [
-            {
-                tuoi: 'nguoi_lon',
-                gia: 200000
-            },
-            {
-                tuoi: 'nguoi_lon',
-                gia: 200000
-            },
-            {
-                tuoi: 'nguoi_lon',
-                gia: 200000
-            }
-        ]
-    }
-
-    console.log(JSON.parse(JSON.stringify(a)))
-
-    const b = {
-        ten: [
-            {
-                kieu: 'loai_dich_vu',
-                loai: [{ ten: '' }, { ten: '' }]
-            },
-            {
-                kieu: 'diem tap trung',
-                loai: [{ ten: '' }, { ten: '' }]
-            },
-            {
-                kieu: 'goi dich vu',
-                loai: [{ ten: '' }, { ten: '' }]
-            }
-        ],
-
-        so_luong: [
-            {
-                tuoi: nguoi_lon,
-                gia: 200000
-            },
-            {
-                tuoi: nguoi_lon,
-                gia: 200000
-            },
-            {
-                tuoi: nguoi_lon,
-                gia: 200000
-            }
-        ]
-    }
-
-    const c =
-        [
-            {
-                ngay: [
-                    {
-                        ten: 'Tour Ngày'
-                    },
-                    {
-                        ten: 'Tour 2N1Đ'
-                    }
-                ],
-                tour: [
-                    {
-                        ten: 'Tour Ghép'
-                    },
-                    {
-                        ten: 'Tour Riêng'
-                    },
-                    {
-                        ten: 'Tour ghép bằng xe sang (D-Car)'
-                    }
-                ]
-            },
-            {
-                ngay: [
-                    {
-                        ten: 'Tour Ngày1'
-                    },
-                    {
-                        ten: 'Tour 2N1Đ1'
-                    }
-                ],
-                tour: [
-                    {
-                        ten: 'Tour Ghép1'
-                    },
-                    {
-                        ten: 'Tour Riêng1'
-                    },
-                    {
-                        ten: 'Tour ghép bằng xe sang (D-Car)1'
-                    }
-                ]
-            },
-        ]
+            return response.json(); // Chuyển đổi phản hồi sang JSON
+        })
+        .then(data => {
+            // Xử lý dữ liệu trả về (danh sách sản phẩm)
+            console.log('Sản phẩm:', data);
+            // Bạn có thể hiển thị sản phẩm trên giao diện hoặc làm gì đó với dữ liệu
+        })
+        .catch(error => {
+            // Xử lý lỗi nếu có
+            console.error('Có lỗi khi gọi API:', error);
+        });
 
 </script>
 

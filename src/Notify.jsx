@@ -1,11 +1,6 @@
-import {
-    View,
-    Text,
-    Image,
-    ScrollView,
-    TouchableWithoutFeedback,
-} from 'react-native';
+import { View, Text, Image, ScrollView, TouchableWithoutFeedback } from 'react-native';
 import React from 'react';
+import FastImage from 'react-native-fast-image';
 
 const Notify = () => {
     return (
@@ -18,14 +13,14 @@ const Notify = () => {
         //         paddingHorizontal: 24,
         //         backgroundColor: '#fff',
         //     }}>
-        //     <Image
-        //         height={120}
-        //         width={120}
-        //         style={{ marginBottom: 32 }}
-        //         source={{
-        //             uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLpjIs9paeuwquOJEmVOXCqz7sjlwDHIhEXA&s',
-        //         }}
-        //     />
+        // <FastImage
+        //                     style={{height: 120,width:120,marginBottom: 32}}
+        //                     source={{
+        //                         uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLpjIs9paeuwquOJEmVOXCqz7sjlwDHIhEXA&s',
+        //                         priority: FastImage.priority.high,
+        //                     }}
+        //                     resizeMode={FastImage.resizeMode.cover}
+        //                 />
         //     <Text
         //         style={{
         //             textAlign: 'center',
@@ -43,14 +38,16 @@ const Notify = () => {
                         marginTop: 16,
                         padding: 12,
                         borderRadius: 12,
-                    }}>
+                    }}
+                >
                     <Text
                         style={{
                             fontSize: 17,
                             fontWeight: '700',
                             color: '#000',
                         }}
-                        numberOfLines={1}>
+                        numberOfLines={1}
+                    >
                         Mua sản phẩm
                     </Text>
                     <View
@@ -58,21 +55,20 @@ const Notify = () => {
                             flexDirection: 'row',
                             justifyContent: 'space-between',
                             marginTop: 16,
-                        }}>
+                        }}
+                    >
                         <View>
                             <Text>Đã thanh toán: đ 0</Text>
-                            <Text style={{ color: '#1cb57a', marginTop: 2 }}>
-                                Đơn hàng đã được xác nhận
-                            </Text>
+                            <Text style={{ color: '#1cb57a', marginTop: 2 }}>Đơn hàng đã được xác nhận</Text>
                         </View>
                         <View>
-                            <Image
-                                height={60}
-                                width={60}
-                                borderRadius={8}
+                            <FastImage
+                                style={{ height: 60, width: 60, borderRadius: 8 }}
                                 source={{
                                     uri: 'https://res.klook.com/image/upload/fl_lossy.progressive,w_500,h_334,c_fill,q_85/activities/fdbxep6vcao6inbj611w.webp',
+                                    priority: FastImage.priority.high,
                                 }}
+                                resizeMode={FastImage.resizeMode.cover}
                             />
                         </View>
                     </View>
@@ -89,14 +85,14 @@ const Notify = () => {
         //         paddingHorizontal: 24,
         //         backgroundColor: '#fff',
         //     }}>
-        //     <Image
-        //         height={90}
-        //         width={90}
-        //         style={{ marginBottom: 32 }}
-        //         source={{
-        //             uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLpjIs9paeuwquOJEmVOXCqz7sjlwDHIhEXA&s',
-        //         }}
-        //     />
+        // <FastImage
+        //                         style={{ height: 90, width: 90, marginBottom: 32 }}
+        //                         source={{
+        //                             uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLpjIs9paeuwquOJEmVOXCqz7sjlwDHIhEXA&s',
+        //                             priority: FastImage.priority.high,
+        //                         }}
+        //                         resizeMode={FastImage.resizeMode.cover}
+        //                     />
         //     <Text style={{ textAlign: 'center' }}>
         //         Hãy đăng nhập để xem danh sách thông báo của mình
         //     </Text>

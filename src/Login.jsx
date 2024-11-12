@@ -1,16 +1,7 @@
-import {
-    Image,
-    ImageBackground,
-    Modal,
-    StatusBar,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from 'react-native';
+import { Image, ImageBackground, Modal, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Orientation from 'react-native-orientation-locker';
 import React, { useEffect, useState } from 'react';
+import FastImage from 'react-native-fast-image';
 
 const Login = ({ navigation }) => {
     const [modalVisible, setModalVisible] = useState(false);
@@ -38,15 +29,18 @@ const Login = ({ navigation }) => {
                 style={styles.backgroundImage}
                 source={{
                     uri: 'https://cdn.photoroom.com/v2/image-cache?path=gs://background-7ef44.appspot.com/backgrounds_v3/white/Photoroom_white_background_extremely_fine_texture_only_white_co_d6a2d66a-dfe4-41fc-80fd-ec55764101bb.jpg',
-                }}>
+                }}
+            >
                 <View style={styles.wrap}>
                     {/* logo */}
                     <View style={styles.wrapLogo}>
-                        <Image
+                        <FastImage
                             style={styles.logo}
                             source={{
                                 uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7Zt6ClEfRlo4BMdsAgsXqgOVyyllMuoCbnV-oDOoSXILvqbRNZ0htKDeSbtcrQQ-3l0U',
+                                priority: FastImage.priority.high,
                             }}
+                            resizeMode={FastImage.resizeMode.cover}
                         />
                     </View>
                     {/* Email */}
@@ -57,11 +51,7 @@ const Login = ({ navigation }) => {
                         autoCapitalize="none" // Tắt viết hoa tự động cho email
                     />
                     {/* Password */}
-                    <TextInput
-                        style={styles.inputPassword}
-                        placeholder="Nhập Password ..."
-                        secureTextEntry={true}
-                    />
+                    <TextInput style={styles.inputPassword} placeholder="Nhập Password ..." secureTextEntry={true} />
                     {/* Role */}
                     {/* <TouchableOpacity
                         activeOpacity={0.8}
@@ -149,9 +139,7 @@ const Login = ({ navigation }) => {
                         </ImageBackground>
                     </Modal> */}
                     {/* Button Login */}
-                    <TouchableOpacity
-                        activeOpacity={0.8}
-                        style={styles.btnLogin}>
+                    <TouchableOpacity activeOpacity={0.8} style={styles.btnLogin}>
                         <Text style={styles.textBtnLogin}>Đăng nhập</Text>
                     </TouchableOpacity>
 
@@ -160,18 +148,18 @@ const Login = ({ navigation }) => {
                             flexDirection: 'row',
                             justifyContent: 'center',
                             marginTop: 14,
-                        }}>
+                        }}
+                    >
                         <Text
                             style={{
                                 color: '#000',
                                 marginRight: 6,
                                 textDecorationLine: 'underline',
-                            }}>
+                            }}
+                        >
                             Quên mật khẩu ?
                         </Text>
-                        <Text
-                            style={{ color: '#00c0a7' }}
-                            onPress={() => navigation.navigate('Sign')}>
+                        <Text style={{ color: '#00c0a7' }} onPress={() => navigation.navigate('Sign')}>
                             Đăng ký
                         </Text>
                     </View>

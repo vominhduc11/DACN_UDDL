@@ -1,0 +1,18 @@
+# GET http://192.168.0.113:8080/api/getProductOfCity/6/4 HTTP/1.1
+
+
+
+# GET http://192.168.0.113:8080/api/getCity HTTP/1.1
+
+# http://192.168.0.113:8080/api/getListCity HTTP/1.1
+
+# http://192.168.0.113:8080/api/getCity/1 HTTP/1.1
+
+# http://192.168.0.113:8080/api/getAllCategoryOfCity/10 HTTP/1.1
+
+# http://192.168.0.113:8080/api/getInTurnProduct/20 HTTP/1.1
+http://192.168.0.113:8080/api/getInTurnProductOfCity/1/3 HTTP/1.1
+
+# http://192.168.0.113:8080/api/getCityByName/H%E1%BB%93%20Ch%C3%AD%20Minh HTTP/1.1
+# http://192.168.0.113:8080/api/getAllProductOfCity/2 HTTP/1.1
+# http://192.168.0.113:8080/api/getListProduct/Tour/1 HTTP/1.1
