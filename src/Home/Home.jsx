@@ -20,7 +20,12 @@ const Home = ({ navigation }) => {
 
     return (
         <View style={{ position: 'relative', zIndex: 1, flex: 1 }}>
-            <Stack.Navigator>
+            <Stack.Navigator
+                screenOptions={{
+                    animation: 'fade',
+                    gestureEnabled: true,
+                }}
+            >
                 <Stack.Screen name="Home_page" component={Home_page} options={{ headerShown: false }} />
                 <Stack.Screen name="Endow_page" component={Endow_page} options={{ headerShown: false }} />
                 <Stack.Screen name="Like_page" component={Like_page} options={{ headerShown: false }} />

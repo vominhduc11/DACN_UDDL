@@ -1,5 +1,5 @@
 import { View, Text, Modal } from 'react-native';
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import WebView from 'react-native-webview';
 
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
@@ -122,4 +122,4 @@ const ModalHighlight = ({ highlight, modalVisible, setModalVisible, navigation }
     );
 };
 
-export default ModalHighlight;
+export default memo(ModalHighlight);

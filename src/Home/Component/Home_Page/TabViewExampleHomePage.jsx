@@ -108,7 +108,7 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
     }, []);
 
     return (
-        <PagerView ref={pagerViewRef} style={{ height: heightPagerView }} initialPage={0}>
+        <PagerView ref={pagerViewRef} style={{ height: heightPagerView }} initialPage={0} scrollEnabled={false}>
             <View
                 onLayout={handleLayout1}
                 key="1"

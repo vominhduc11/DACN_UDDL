@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { memo } from 'react';
 
 const Package = ({
     package_services,
@@ -127,4 +127,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Package;
+export default memo(Package);

@@ -1,4 +1,4 @@
-import { View, Text, TouchableWithoutFeedback, Image } from 'react-native';
+import { View, Text, TouchableWithoutFeedback } from 'react-native';
 import React, { useEffect, useState } from 'react';
 
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
@@ -27,6 +27,14 @@ const Part2 = ({ navigation, city, id }) => {
 
     //Thực hiện khi nhấn vào sản phẩm
     const handlePressProduct = async (id, image, name, star, category, cityId, city, packages) => {
+        //Chuyển sang trang sản phẩm
+        navigation.navigate('Product', {
+            id: id,
+            category: category,
+            cityId: cityId,
+        });
+
+        // Lưu sản phẩm vào AsyncStorage
         const arr = (await AsyncStorage.getItem('product')) ? JSON.parse(await AsyncStorage.getItem('product')) : [];
 
         if (!arr.some((item) => item.id === id)) {
@@ -44,13 +52,6 @@ const Part2 = ({ navigation, city, id }) => {
             const newArray = elementToMove.concat(remainingElements);
             await AsyncStorage.setItem('product', JSON.stringify(newArray));
         }
-
-        //Chuyển sang trang sản phẩm
-        navigation.navigate('Product', {
-            id: id,
-            category: category,
-            cityId: cityId,
-        });
     };
 
     useEffect(() => {

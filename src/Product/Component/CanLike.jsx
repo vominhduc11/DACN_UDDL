@@ -1,15 +1,13 @@
-import { View, Text, TouchableWithoutFeedback, FlatList } from 'react-native';
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import { View, Text, ScrollView, TouchableWithoutFeedback, FlatList } from 'react-native';
+import React, { memo, useEffect, useState } from 'react';
 
-import IconEntypo from 'react-native-vector-icons/Entypo';
-import axios from 'axios';
+import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import FastImage from 'react-native-fast-image';
+import axios from 'axios';
 
-const ScheduleHomePage = ({ formatNumberWithCommas, minPricePackage, handlePressProduct, navigation }) => {
-    const [city_name, setCity_name] = useState(undefined);
+const CanLike = ({ formatNumberWithCommas, minPricePackage, handlePressProduct, category, cityId }) => {
     const [listProduct, setListProduct] = useState([]);
 
-    // Các element sản phẩm FlaList
     const renderItem = ({ item }) => (
         <TouchableWithoutFeedback
             onPress={() => handlePressProduct(item.id, item.image, item.name, item.star, item.category, item.cityId, item.city, item.package)}
@@ -35,9 +33,21 @@ const ScheduleHomePage = ({ formatNumberWithCommas, minPricePackage, handlePress
                 >
                     {item.name}
                 </Text>
-                <View
+                <Text style={{ marginTop: 0, color: '#000' }}>
+                    <IconAntDesign name="star" color="#fe9428" />{' '}
+                    <Text
+                        style={{
+                            color: '#fe9428',
+                            fontWeight: '600',
+                        }}
+                    >
+                        {item.star}
+                    </Text>{' '}
+                    ({item.booked})
+                </Text>
+                <Text
                     style={{
-                        marginTop: 12,
+                        marginTop: 6,
                         flexDirection: 'row',
                     }}
                 >
@@ -65,37 +75,45 @@ const ScheduleHomePage = ({ formatNumberWithCommas, minPricePackage, handlePress
                     {item.package.length === 1 && item.package[0].quantitys.length === 1 && (
                         <Text style={{ color: '#000' }}>đ {formatNumberWithCommas(minPricePackage(item.package))}</Text>
                     )}
-                </View>
+                </Text>
             </View>
         </TouchableWithoutFeedback>
     );
 
-    // Gọi api lần đầu
     useEffect(() => {
         async function fetchData() {
-            //Lấy 1 thành phố bất kì
-            const res1 = await axios.get('http://192.168.0.113:8080/api/getCity');
-            setCity_name(res1.data.name);
-            // Lấy 10 sản phẩm của thành phố bất kì trên
-            const res2 = await axios.get(`http://192.168.0.113:8080/api/getProductOfCity/${1}/10`);
-            setListProduct(res2.data);
+            const res = await axios.get(`http://192.168.0.113:8080/api/getListProduct/${category}/${cityId}`);
+            setListProduct(res.data);
         }
         fetchData();
     }, []);
-
     return (
-        <View style={{ marginTop: 18, paddingLeft: 16 }}>
-            <Text
+        <View style={{ marginTop: 18, marginRight: -12 }}>
+            <View
                 style={{
-                    fontSize: 17,
-                    fontWeight: '700',
-                    color: '#000',
+                    flexDirection: 'row',
+                    alignItems: 'center',
                 }}
-                onPress={() => navigation.navigate('Feature_Activity')}
             >
-                Tiếp tục lên lịch {city_name}
-                <IconEntypo name="chevron-thin-right" size={16} color="#000" />
-            </Text>
+                <Text
+                    style={{
+                        backgroundColor: '#FF5B00',
+                        width: 7,
+                        borderRadius: 12,
+                        height: 24,
+                        marginRight: 10,
+                    }}
+                />
+                <Text
+                    style={{
+                        color: '#000',
+                        fontSize: 18,
+                        fontWeight: '700',
+                    }}
+                >
+                    Có thể bạn sẽ thích
+                </Text>
+            </View>
 
             {/* Danh sách sản phẩm */}
             <FlatList
@@ -105,7 +123,7 @@ const ScheduleHomePage = ({ formatNumberWithCommas, minPricePackage, handlePress
                 keyExtractor={(item) => item.id}
                 initialNumToRender={1}
                 maxToRenderPerBatch={1}
-                windowSize={2}
+                windowSize={3}
                 removeClippedSubviews={true}
                 horizontal
                 scrollEventThrottle={16}
@@ -114,4 +132,4 @@ const ScheduleHomePage = ({ formatNumberWithCommas, minPricePackage, handlePress
     );
 };
 
-export default memo(ScheduleHomePage);
+export default memo(CanLike);

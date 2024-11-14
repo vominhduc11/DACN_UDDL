@@ -1,5 +1,5 @@
 import { View, Text, Modal, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { memo } from 'react';
 
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -26,6 +26,7 @@ const ModalOrder = ({
         updatedCounts[index] = newCount;
         setCounts(updatedCounts);
     };
+
     return (
         <Modal
             animationType="slide" // hoặc 'fade', 'none'
@@ -101,11 +102,7 @@ const ModalOrder = ({
                                             }}
                                         >
                                             {/* Nút trừ */}
-                                            <TouchableOpacity
-                                                onPress={() =>
-                                                    handleChange(index, Math.max(countsInit[index], counts[index] - 1))
-                                                }
-                                            >
+                                            <TouchableOpacity onPress={() => handleChange(index, Math.max(countsInit[index], counts[index] - 1))}>
                                                 <View
                                                     style={{
                                                         backgroundColor: '#f5f5f5',
@@ -164,7 +161,10 @@ const ModalOrder = ({
                             )}
                         </Text>
                         <TouchableOpacity
-                            onPress={() => navigation.navigate('Pay')}
+                            onPress={() => {
+                                setModalVisible1(false);
+                                navigation.navigate('Pay');
+                            }}
                             activeOpacity={0.6}
                             style={{ marginBottom: 12 }}
                         >
@@ -194,4 +194,4 @@ const ModalOrder = ({
     );
 };
 
-export default ModalOrder;
+export default memo(ModalOrder);

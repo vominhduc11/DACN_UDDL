@@ -1,11 +1,9 @@
 import { View, Text, Animated, TextInput, ScrollView, ImageBackground, TouchableWithoutFeedback } from 'react-native';
 import React, { useCallback, useRef, useState } from 'react';
 
-import IconFontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import IconFoundation from 'react-native-vector-icons/Foundation';
 import IconFeather from 'react-native-vector-icons/Feather';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
-import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
 import numeral from 'numeral';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -13,6 +11,7 @@ import ScheduleHomePage from '../Component/Home_Page/ScheduleHomePage';
 import RecentHomePage from '../Component/Home_Page/RecentHomePage';
 import GoSomewhere from '../Component/Home_Page/GoSomewhere';
 import SuggestAndRecent from '../Component/Home_Page/SuggestAndRecent';
+import BackgroundMain from '../Component/Home_Page/BackgroundMain';
 
 function Home_page({ navigation }) {
     const [opacity, setOpacity] = useState(0);
@@ -112,6 +111,13 @@ function Home_page({ navigation }) {
 
     //Thực hiện khi nhấn vào sản phẩm
     const handlePressProduct = useCallback(async (id, image, name, star, category, cityId, city, packages) => {
+        //Chuyển sang trang sản phẩm
+        navigation.navigate('Product', {
+            id: id,
+            category: category,
+            cityId: cityId,
+        });
+
         const arr = (await AsyncStorage.getItem('product')) ? JSON.parse(await AsyncStorage.getItem('product')) : [];
 
         if (!arr.some((item) => item.id === id)) {
@@ -130,13 +136,6 @@ function Home_page({ navigation }) {
             await AsyncStorage.setItem('product', JSON.stringify(newArray));
         }
         childRef1.current.setListProduct2(JSON.parse(await AsyncStorage.getItem('product')));
-
-        //Chuyển sang trang sản phẩm
-        navigation.navigate('Product', {
-            id: id,
-            category: category,
-            cityId: cityId,
-        });
     }, []);
 
     return (
@@ -243,111 +242,7 @@ function Home_page({ navigation }) {
 
             <ScrollView onScroll={handleScrollScreen} showsVerticalScrollIndicator={false}>
                 {/* background */}
-                <ImageBackground
-                    blurRadius={5}
-                    style={{
-                        height: 200,
-                    }}
-                    source={{
-                        uri: 'https://img.freepik.com/free-photo/pouch-map-toy-airplane-blue-background-with-space-writing-text_23-2147958180.jpg',
-                    }}
-                >
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            // justifyContent: 'space-between',
-                            flexWrap: 'wrap',
-                            marginTop: 100,
-                        }}
-                    >
-                        <View
-                            style={{
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                flexBasis: '20%',
-                            }}
-                        >
-                            <IconMaterialIcons name="local-play" size={24} color="#663366" />
-                            <Text style={{ maxWidth: 50, fontSize: 10, color: '#000' }}>Vui chơi & Trải nghiệm</Text>
-                        </View>
-                        <TouchableWithoutFeedback onPress={() => navigation.navigate('Search')}>
-                            <View
-                                style={{
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    flexBasis: '20%',
-                                }}
-                            >
-                                <IconMaterialIcons name="tour" size={24} color="#990000" />
-                                <Text style={{ maxWidth: 50, fontSize: 10, color: '#000' }}>Tour</Text>
-                            </View>
-                        </TouchableWithoutFeedback>
-                        <TouchableWithoutFeedback onPress={() => navigation.navigate('Search')}>
-                            <View
-                                style={{
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    flexBasis: '20%',
-                                }}
-                            >
-                                <IconMaterialIcons name="directions-boat" size={24} color="#33FFFF" />
-                                <Text style={{ maxWidth: 50, fontSize: 10, color: '#000' }}>Du thuyền</Text>
-                            </View>
-                        </TouchableWithoutFeedback>
-                        <TouchableWithoutFeedback onPress={() => navigation.navigate('Search')}>
-                            <View
-                                style={{
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    flexBasis: '20%',
-                                }}
-                            >
-                                <IconFontAwesome5 name="hot-tub" size={24} color="#FF9999" />
-                                <Text style={{ maxWidth: 50, fontSize: 10, color: '#000' }}>Massage & Suối nước nóng</Text>
-                            </View>
-                        </TouchableWithoutFeedback>
-                        <TouchableWithoutFeedback onPress={() => navigation.navigate('Search')}>
-                            <View
-                                style={{
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    flexBasis: '20%',
-                                }}
-                            >
-                                <IconFoundation name="trees" size={24} color="#009933" />
-                                <Text style={{ maxWidth: 50, fontSize: 10, color: '#000' }}>Phiêu lưu & khám phá thiên nhiên</Text>
-                            </View>
-                        </TouchableWithoutFeedback>
-                        {/* <TouchableWithoutFeedback onPress={() => navigation.navigate('Search')}>
-                            <View
-                                style={{
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    flexBasis: '20%',
-                                }}
-                            >
-                                <IconFontAwesome5 name="swimmer" size={24} color="#0099FF" />
-                                <Text style={{ maxWidth: 50, fontSize: 10, color: '#000' }}>
-                                    Massage & Suối nước nóng
-                                </Text>
-                            </View>
-                        </TouchableWithoutFeedback>
-                        <TouchableWithoutFeedback onPress={() => navigation.navigate('Search')}>
-                            <View
-                                style={{
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    flexBasis: '20%',
-                                }}
-                            >
-                                <IconFontAwesome5 name="landmark" size={24} color="#900" />
-                                <Text style={{ maxWidth: 50, fontSize: 10, color: '#000' }}>
-                                    Phiêu lưu & khám phá thiên nhiên
-                                </Text>
-                            </View>
-                        </TouchableWithoutFeedback> */}
-                    </View>
-                </ImageBackground>
+                <BackgroundMain navigation={navigation} />
 
                 <View
                     style={{

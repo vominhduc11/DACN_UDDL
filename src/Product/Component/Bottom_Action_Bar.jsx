@@ -1,5 +1,5 @@
 import { View, Text, TouchableWithoutFeedback } from 'react-native';
-import React from 'react';
+import React, { memo } from 'react';
 
 import IconEntypo from 'react-native-vector-icons/Entypo';
 
@@ -103,4 +103,4 @@ const Bottom_Action_Bar = ({ price, formatNumberWithCommas, activeIndex, setModa
     );
 };
 
-export default Bottom_Action_Bar;
+export default memo(Bottom_Action_Bar);

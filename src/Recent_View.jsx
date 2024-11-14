@@ -29,6 +29,13 @@ const Recent_View = ({ navigation }) => {
 
     //Thực hiện khi nhấn vào sản phẩm
     const handlePressProduct = async (id, image, name, star, category, cityId, city, packages) => {
+        //Chuyển sang trang sản phẩm
+        navigation.navigate('Product', {
+            id: id,
+            category: category,
+            cityId: cityId,
+        });
+
         const arr = (await AsyncStorage.getItem('product')) ? JSON.parse(await AsyncStorage.getItem('product')) : [];
 
         if (!arr.some((item) => item.id === id)) {
@@ -46,13 +53,6 @@ const Recent_View = ({ navigation }) => {
             const newArray = elementToMove.concat(remainingElements);
             await AsyncStorage.setItem('product', JSON.stringify(newArray));
         }
-
-        //Chuyển sang trang sản phẩm
-        navigation.navigate('Product', {
-            id: id,
-            category: category,
-            cityId: cityId,
-        });
     };
 
     useEffect(() => {
@@ -158,6 +158,7 @@ const Recent_View = ({ navigation }) => {
                 maxToRenderPerBatch={1}
                 windowSize={3}
                 removeClippedSubviews={true}
+                scrollEventThrottle={16}
             />
         </View>
     );

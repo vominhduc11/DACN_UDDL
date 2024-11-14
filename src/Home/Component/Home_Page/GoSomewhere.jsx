@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, ScrollView, TouchableWithoutFeedback, FlatList } from 'react-native';
 import React, { memo, useEffect, useState } from 'react';
 
 import IconEntypo from 'react-native-vector-icons/Entypo';
@@ -30,6 +30,52 @@ const GoSomewhere = ({ navigation }) => {
         });
     }
 
+    // Các element sản phẩm FlaList
+    const renderItem = ({ item, index }) => (
+        <TouchableWithoutFeedback onPress={() => handlePressCity(item.id, item.image, item.name)}>
+            <View
+                style={{
+                    marginRight: 12,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    backgroundColor: '#F5F5F5',
+                    borderRadius: 30,
+                }}
+            >
+                <FastImage
+                    style={{
+                        height: 50,
+                        width: 50,
+                        borderRadius: 30,
+                    }}
+                    source={{ uri: item.image, priority: FastImage.priority.high }}
+                    resizeMode={FastImage.resizeMode.cover}
+                />
+
+                <View style={{ marginHorizontal: 15 }}>
+                    {index === 0 && (
+                        <Text
+                            style={{
+                                color: '#000',
+                                fontSize: 12,
+                            }}
+                        >
+                            Tiếp tục khám phá
+                        </Text>
+                    )}
+                    <Text
+                        style={{
+                            color: '#000',
+                        }}
+                    >
+                        {item.name}
+                    </Text>
+                </View>
+            </View>
+        </TouchableWithoutFeedback>
+    );
+
+    // Gọi api và lưu vào AsyncStorage lần đầu
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -62,54 +108,20 @@ const GoSomewhere = ({ navigation }) => {
                 Bạn muốn đi đâu chơi
                 <IconEntypo name="chevron-thin-right" size={16} color="#000" />
             </Text>
-            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{ marginTop: 12 }}>
-                <View style={{ flexDirection: 'row' }}>
-                    {/* element */}
-                    {listCity.map((city, index) => (
-                        <TouchableWithoutFeedback key={city.id} onPress={() => handlePressCity(city.id, city.image, city.name)}>
-                            <View
-                                style={{
-                                    marginRight: 12,
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    backgroundColor: '#F5F5F5',
-                                    borderRadius: 30,
-                                }}
-                            >
-                                <FastImage
-                                    style={{
-                                        height: 50,
-                                        width: 50,
-                                        borderRadius: 30,
-                                    }}
-                                    source={{ uri: city.image, priority: FastImage.priority.high }}
-                                    resizeMode={FastImage.resizeMode.cover}
-                                />
 
-                                <View style={{ marginHorizontal: 15 }}>
-                                    {index === 0 && (
-                                        <Text
-                                            style={{
-                                                color: '#000',
-                                                fontSize: 12,
-                                            }}
-                                        >
-                                            Tiếp tục khám phá
-                                        </Text>
-                                    )}
-                                    <Text
-                                        style={{
-                                            color: '#000',
-                                        }}
-                                    >
-                                        {city.name}
-                                    </Text>
-                                </View>
-                            </View>
-                        </TouchableWithoutFeedback>
-                    ))}
-                </View>
-            </ScrollView>
+            {/* Danh sách sản phẩm */}
+            <FlatList
+                style={{ marginTop: 12 }}
+                data={listCity}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
+                initialNumToRender={1}
+                maxToRenderPerBatch={1}
+                windowSize={3}
+                removeClippedSubviews={true}
+                horizontal
+                scrollEventThrottle={16}
+            />
         </View>
     );
 };

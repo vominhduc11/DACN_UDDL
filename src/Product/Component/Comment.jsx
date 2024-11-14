@@ -1,5 +1,5 @@
 import { View, Text, TextInput, TouchableWithoutFeedback } from 'react-native';
-import React from 'react';
+import React, { memo } from 'react';
 
 import Stars from 'react-native-stars';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
@@ -191,4 +191,4 @@ const Comment = ({ star, comments }) => {
     );
 };
 
-export default Comment;
+export default memo(Comment);

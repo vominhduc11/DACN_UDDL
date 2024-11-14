@@ -14,16 +14,25 @@ import Feature_Activity from './src/Feature_Activity/Feature_Activity';
 import Recent_View from './src/Recent_View';
 import Pay_status from './src/Pay_status';
 import Order_Confirm from './src/Order_Confirm';
-import Search from './src/Search';
+import Search from './src/Search/Search';
 import Have_fun from './src/Have_fun';
 import Where_go from './src/Where_go/Where_go';
+import { TouchableOpacity } from 'react-native';
+
+import IconEntypo from 'react-native-vector-icons/Entypo';
+// import { Icon } from 'react-native-vector-icons/Icon';
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
     return (
         <NavigationContainer>
-            <Stack.Navigator>
+            <Stack.Navigator
+                screenOptions={{
+                    animation: 'slide_from_right', // Chuyển cảnh từ phải sang trái
+                    gestureEnabled: true, // Kích hoạt cử chỉ vuốt
+                }}
+            >
                 {/* <Stack.Screen
           name="TourComponent"
           component={TourComponent}
@@ -31,7 +40,13 @@ const App = () => {
         /> */}
                 <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
                 <Stack.Screen name="City" component={City} options={{ headerShown: false }} />
-                <Stack.Screen name="Product" component={Product} options={{ headerShown: false }} />
+                <Stack.Screen
+                    name="Product"
+                    component={Product}
+                    options={{
+                        headerShown: false,
+                    }}
+                />
                 <Stack.Screen
                     name="Cart"
                     component={Cart}
@@ -62,10 +77,10 @@ const App = () => {
                 <Stack.Screen
                     name="Pay"
                     component={Pay}
-                    options={{
+                    options={() => ({
                         headerShown: true,
                         headerTitle: 'Hoàn tất đơn hàng',
-                    }}
+                    })}
                 />
                 <Stack.Screen
                     name="Pay_status"

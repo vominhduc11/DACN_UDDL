@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import WebView from 'react-native-webview';
 
 const About_service = ({ information }) => {
@@ -61,7 +61,9 @@ const About_service = ({ information }) => {
                     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
                     <style>
                         img {width:100%}
+                        div {margin-top:12px}
                         p {font-size: 15}
+                        ul {padding-left: 12}
                     </style>
                 </head>
                 <body>
@@ -75,4 +77,4 @@ const About_service = ({ information }) => {
     );
 };
 
-export default About_service;
+export default memo(About_service);
