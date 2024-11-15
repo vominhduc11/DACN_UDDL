@@ -166,7 +166,7 @@ const Search = ({ navigation, route }) => {
 
     // Sử lý khi bấm vào tên thành phố
     const setListProduct = async (cityId) => {
-        const res = await axios.get(`http://192.168.0.113:8080/api/getAllProductOfCity/${cityId}`);
+        const res = await axios.get(`http://10.150.3.6:8080/api/getAllProductOfCity/${cityId}`);
         setProducts(res.data);
     };
 
@@ -174,7 +174,7 @@ const Search = ({ navigation, route }) => {
     useEffect(() => {
         async function fetchData() {
             // category được truyền qua từ trang trước
-            const res = await axios.get(`http://192.168.0.113:8080/api/getAllProductOfCategory/${category}`);
+            const res = await axios.get(`http://10.150.3.6:8080/api/getAllProductOfCategory/${category}`);
             setProducts(res.data);
         }
         fetchData();

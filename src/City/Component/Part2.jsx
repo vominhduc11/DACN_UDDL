@@ -56,7 +56,7 @@ const Part2 = ({ navigation, city, id }) => {
 
     useEffect(() => {
         async function fetchData() {
-            const res1 = await axios.get(`http://192.168.0.113:8080/api/getProductOfCity/${id}/4`);
+            const res1 = await axios.get(`http://10.150.3.6:8080/api/getProductOfCity/${id}/4`);
             setProducts(res1.data);
         }
 

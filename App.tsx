@@ -17,9 +17,7 @@ import Order_Confirm from './src/Order_Confirm';
 import Search from './src/Search/Search';
 import Have_fun from './src/Have_fun';
 import Where_go from './src/Where_go/Where_go';
-import { TouchableOpacity } from 'react-native';
 
-import IconEntypo from 'react-native-vector-icons/Entypo';
 // import { Icon } from 'react-native-vector-icons/Icon';
 
 const Stack = createNativeStackNavigator();

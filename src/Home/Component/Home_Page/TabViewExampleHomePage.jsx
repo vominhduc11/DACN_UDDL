@@ -67,7 +67,7 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
         setLoading1(true);
 
         try {
-            const res = await axios.get(`http://192.168.0.113:8080/api/getInTurnProduct/${amountProduct1}`);
+            const res = await axios.get(`http://10.150.3.6:8080/api/getInTurnProduct/${amountProduct1}`);
             setListProduct3(res.data);
             setAmountProduct1(amountProduct1 + 10);
         } catch (error) {
@@ -91,8 +91,8 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
                     `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${params[0]},${params[1]}&lang=vi-VN&apiKey=oX3CYSdcd1kzHo9iAiGTKzYCSetABD5KuCAkPUN6QrQ`
                 );
 
-                const res2 = await axios.get(`http://192.168.0.113:8080/api/getCityByName/${res1.data.items[0].address.county}`);
-                const res3 = await axios.get(`http://192.168.0.113:8080/api/getInTurnProductOfCity/${res2.data.id}/${amountProduct2}`);
+                const res2 = await axios.get(`http://10.150.3.6:8080/api/getCityByName/${res1.data.items[0].address.county}`);
+                const res3 = await axios.get(`http://10.150.3.6:8080/api/getInTurnProductOfCity/${res2.data.id}/${amountProduct2}`);
                 setListProduct4(res3.data);
                 setAmountProduct2(amountProduct2 + 10);
             }

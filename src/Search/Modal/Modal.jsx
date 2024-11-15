@@ -1,5 +1,5 @@
 import { View, Text, Modal, TextInput, Keyboard, TouchableWithoutFeedback, Dimensions, TouchableOpacity, Image, Animated } from 'react-native';
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import IconFeather from 'react-native-vector-icons/Feather';
@@ -7,10 +7,9 @@ import IconFeather from 'react-native-vector-icons/Feather';
 const ModalDestination = ({ setValueInput, setListProduct }, ref) => {
     const [visible, setVisible] = useState(false);
     const [value, setValue] = useState('');
-    const [showKeyBoard, setShowKeyBoard] = useState(false);
 
     // Khởi tạo Animated.Value với giá trị bắt đầu là 0
-    const height = new Animated.Value(0);
+    const height = useRef(new Animated.Value(0)).current;
 
     // Cung cấp hàm openModal cho component cha
     useImperativeHandle(ref, () => ({
@@ -33,10 +32,9 @@ const ModalDestination = ({ setValueInput, setListProduct }, ref) => {
     // Thiết lập chuyển động
     const setAnimate = () => {
         // Reset Animated Value trước khi bắt đầu animation mới
-        height.setValue(0);
         Animated.timing(height, {
             toValue: Dimensions.get('window').height - 66, // Giá trị cuối cùng
-            duration: 200, // Thời gian animation
+            duration: 500, // Thời gian animation
             useNativeDriver: false, // Sử dụng Native driver để tăng hiệu suất
         }).start(); // Khởi động animation
     };
@@ -85,6 +83,7 @@ const ModalDestination = ({ setValueInput, setListProduct }, ref) => {
                             size={22}
                             color="#000"
                             onPress={() => {
+                                height.setValue(0);
                                 setVisible(false);
                             }}
                         />

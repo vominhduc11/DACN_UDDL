@@ -39,7 +39,7 @@ const City = ({ navigation, route }) => {
     // Gọi Api
     useEffect(() => {
         async function fetchData() {
-            const res1 = await axios.get(`http://192.168.0.113:8080/api/getCity/${id}`);
+            const res1 = await axios.get(`http://10.150.3.6:8080/api/getCity/${id}`);
             setCity(res1.data); // Truy cập vào dữ liệu trong response
         }
         fetchData();

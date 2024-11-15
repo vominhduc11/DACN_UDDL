@@ -74,10 +74,10 @@ const ScheduleHomePage = ({ formatNumberWithCommas, minPricePackage, handlePress
     useEffect(() => {
         async function fetchData() {
             //Lấy 1 thành phố bất kì
-            const res1 = await axios.get('http://192.168.0.113:8080/api/getCity');
+            const res1 = await axios.get('http://10.150.3.6:8080/api/getCity');
             setCity_name(res1.data.name);
             // Lấy 10 sản phẩm của thành phố bất kì trên
-            const res2 = await axios.get(`http://192.168.0.113:8080/api/getProductOfCity/${1}/10`);
+            const res2 = await axios.get(`http://10.150.3.6:8080/api/getProductOfCity/${1}/10`);
             setListProduct(res2.data);
         }
         fetchData();

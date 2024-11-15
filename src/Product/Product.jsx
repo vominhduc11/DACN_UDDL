@@ -100,7 +100,7 @@ const Product = ({ navigation, route }) => {
     useEffect(() => {
         async function fetchData() {
             try {
-                const res1 = await axios.get(`http://192.168.0.113:8080/api/getProduct/${id}`);
+                const res1 = await axios.get(`http://10.150.3.6:8080/api/getProduct/${id}`);
                 setProduct(res1.data);
             } catch (error) {
                 console.log(error);

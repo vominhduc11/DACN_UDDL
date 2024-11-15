@@ -12,7 +12,7 @@ const Part1 = ({ id }) => {
     // Gọi Api
     useEffect(() => {
         async function fetchData() {
-            const res1 = await axios.get(`http://192.168.0.113:8080/api/getAllCategoryOfCity/${id}`);
+            const res1 = await axios.get(`http://10.150.3.6:8080/api/getAllCategoryOfCity/${id}`);
             setListCategory(res1.data);
         }
         fetchData();
@@ -38,9 +38,7 @@ const Part1 = ({ id }) => {
                                     }}
                                 >
                                     <IconMaterialIcons name="tour" size={30} color="#990000" />
-                                    <Text style={{ maxWidth: 60, fontSize: 12, textAlign: 'center', color: '#000' }}>
-                                        Tour
-                                    </Text>
+                                    <Text style={{ maxWidth: 60, fontSize: 12, textAlign: 'center', color: '#000' }}>Tour</Text>
                                 </View>
                             </TouchableWithoutFeedback>
                         );
@@ -55,9 +53,7 @@ const Part1 = ({ id }) => {
                                     }}
                                 >
                                     <IconMaterialIcons name="directions-boat" size={30} color="#33FFFF" />
-                                    <Text style={{ maxWidth: 60, fontSize: 12, textAlign: 'center', color: '#000' }}>
-                                        Du thuyền
-                                    </Text>
+                                    <Text style={{ maxWidth: 60, fontSize: 12, textAlign: 'center', color: '#000' }}>Du thuyền</Text>
                                 </View>
                             </TouchableWithoutFeedback>
                         );
@@ -72,9 +68,7 @@ const Part1 = ({ id }) => {
                                     }}
                                 >
                                     <IconFontAwesome5 name="hot-tub" size={30} color="#FF9999" />
-                                    <Text style={{ maxWidth: 60, fontSize: 12, textAlign: 'center', color: '#000' }}>
-                                        Massage & Suối nước nóng
-                                    </Text>
+                                    <Text style={{ maxWidth: 60, fontSize: 12, textAlign: 'center', color: '#000' }}>Massage & Suối nước nóng</Text>
                                 </View>
                             </TouchableWithoutFeedback>
                         );
@@ -106,9 +100,7 @@ const Part1 = ({ id }) => {
                                     }}
                                 >
                                     <IconFontAwesome5 name="swimmer" size={30} color="#0099FF" />
-                                    <Text style={{ maxWidth: 60, fontSize: 12, textAlign: 'center', color: '#000' }}>
-                                        Hoạt động dưới nước
-                                    </Text>
+                                    <Text style={{ maxWidth: 60, fontSize: 12, textAlign: 'center', color: '#000' }}>Hoạt động dưới nước</Text>
                                 </View>
                             </TouchableWithoutFeedback>
                         );
@@ -123,9 +115,7 @@ const Part1 = ({ id }) => {
                                     }}
                                 >
                                     <IconFontAwesome5 name="landmark" size={30} color="#900" />
-                                    <Text style={{ maxWidth: 60, fontSize: 12, textAlign: 'center', color: '#000' }}>
-                                        Trải nghiệm văn hóa
-                                    </Text>
+                                    <Text style={{ maxWidth: 60, fontSize: 12, textAlign: 'center', color: '#000' }}>Trải nghiệm văn hóa</Text>
                                 </View>
                             </TouchableWithoutFeedback>
                         );

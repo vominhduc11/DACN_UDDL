@@ -82,7 +82,7 @@ const GoSomewhere = ({ navigation }) => {
                 // Lấy tất cả các thành phố (6 thành phố) và lưu vào trong AsyncStorage
                 // Nếu AsyncStorage tồn tại thì lần sau chỉ cần truy cập vào AsyncStorage
                 if (!(await AsyncStorage.getItem('city'))) {
-                    const res3 = await axios.get(`http://192.168.0.113:8080/api/getListCity`);
+                    const res3 = await axios.get(`http://10.150.3.6:8080/api/getListCity`);
                     await AsyncStorage.setItem('city', JSON.stringify(res3.data));
                     setListCity(res3.data);
                 } else {
