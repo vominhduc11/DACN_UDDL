@@ -24,6 +24,7 @@ const Home = ({ navigation }) => {
                 screenOptions={{
                     animation: 'fade',
                     gestureEnabled: true,
+                    animationDuration: 3000,
                 }}
             >
                 <Stack.Screen name="Home_page" component={Home_page} options={{ headerShown: false }} />

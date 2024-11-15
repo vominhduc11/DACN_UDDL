@@ -7,7 +7,7 @@ import FastImage from 'react-native-fast-image';
 import axios from 'axios';
 import numeral from 'numeral';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ModalDestination from './Modal/ModalDestination';
+import ModalDestination from './Modal/Modal';
 import Header from './Component/Header';
 
 const Search = ({ navigation, route }) => {
