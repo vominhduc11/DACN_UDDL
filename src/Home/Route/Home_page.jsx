@@ -12,6 +12,7 @@ import RecentHomePage from '../Component/Home_Page/RecentHomePage';
 import GoSomewhere from '../Component/Home_Page/GoSomewhere';
 import SuggestAndRecent from '../Component/Home_Page/SuggestAndRecent';
 import BackgroundMain from '../Component/Home_Page/BackgroundMain';
+import { moderateScale, scale } from 'react-native-size-matters';
 
 function Home_page({ navigation }) {
     const [opacity, setOpacity] = useState(0);
@@ -51,7 +52,7 @@ function Home_page({ navigation }) {
             pagerViewRef.current.setPage(1);
             Animated.parallel([
                 Animated.timing(marginLeft, {
-                    toValue: 97, // opacity chuyển đến 1 (hoàn toàn hiện)
+                    toValue: 106, // opacity chuyển đến 1 (hoàn toàn hiện)
                     duration: 300, // thời gian hiệu ứng là 1 giây
                     useNativeDriver: false,
                 }),
@@ -110,7 +111,8 @@ function Home_page({ navigation }) {
     }, []);
 
     //Thực hiện khi nhấn vào sản phẩm
-    const handlePressProduct = useCallback(async (id, image, name, star, category, cityId, city, packages) => {
+    const handlePressProduct = useCallback(async (...param) => {
+        const [id, image, name, star, category, cityId, city, packages] = param;
         //Chuyển sang trang sản phẩm
         navigation.navigate('Product', {
             id: id,
@@ -158,8 +160,8 @@ function Home_page({ navigation }) {
                         style={{
                             flexDirection: 'row',
                             alignItems: 'center',
-                            borderWidth: 2,
-                            borderColor: '#00FFFF',
+                            borderWidth: scale(2),
+                            borderColor: '#ff4343',
                             borderRadius: 30,
                             paddingHorizontal: 0,
                         }}
@@ -167,19 +169,20 @@ function Home_page({ navigation }) {
                         <IconFeather name="search" size={20} color="#000" style={{ marginHorizontal: 10 }} />
                         <TextInput
                             style={{
-                                width: 130,
+                                width: scale(160),
                                 fontSize: 15,
-                                paddingVertical: 5,
+                                paddingVertical: moderateScale(5),
+                                paddingRight: moderateScale(12),
                             }}
                             placeholder="Tìm kiếm ..."
                             placeholderTextColor="#000"
                         />
                     </View>
                     <Text onPress={() => navigation.navigate('Cart')}>
-                        <IconFeather name="shopping-cart" size={20} color="#000" />
+                        <IconFeather name="shopping-cart" size={moderateScale(20)} color="#000" />
                     </Text>
                     <Text onPress={() => navigation.navigate('Notify')}>
-                        <IconAntDesign name="message1" size={20} color="#000" />
+                        <IconAntDesign name="message1" size={moderateScale(20)} color="#000" />
                     </Text>
                 </View>
                 {show && (
@@ -188,7 +191,7 @@ function Home_page({ navigation }) {
                             backgroundColor: '#fff',
                             position: 'relative',
                             zIndex: 1,
-                            paddingHorizontal: 16,
+                            paddingHorizontal: moderateScale(16),
                         }}
                     >
                         <View
@@ -201,8 +204,9 @@ function Home_page({ navigation }) {
                                     handleChange(true);
                                 }}
                                 style={{
-                                    fontSize: 18,
+                                    fontSize: moderateScale(18),
                                     fontWeight: '600',
+                                    paddingHorizontal: moderateScale(5),
                                     color: active ? '#FF9933' : '#000',
                                 }}
                             >
@@ -211,9 +215,10 @@ function Home_page({ navigation }) {
                             <Text
                                 onPress={() => handleChange(false)}
                                 style={{
-                                    fontSize: 18,
+                                    fontSize: moderateScale(18),
                                     fontWeight: '600',
-                                    marginLeft: 30,
+                                    paddingHorizontal: moderateScale(5),
+                                    marginLeft: moderateScale(30),
                                     color: active ? '#000' : '#FF9933',
                                 }}
                             >
@@ -222,16 +227,17 @@ function Home_page({ navigation }) {
                         </View>
                         <View
                             style={{
-                                width: 187,
+                                width: scale(160),
                                 height: 4,
                                 marginTop: 12,
+                                // backgroundColor: 'red',
                             }}
                         >
                             <Animated.View
                                 style={{
                                     height: 4,
                                     backgroundColor: '#FF9933',
-                                    width: 75,
+                                    width: scale(70),
                                     marginLeft: marginLeft,
                                 }}
                             />

@@ -1,74 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
-        <style>
-            div {
-                text-decoration: underline;
-                box-shadow: 0 0 0 0 red;
-                z-index: 1;
-            }
+<html>
 
-            li:nth-child(2) {
-                list-style: none;
-                font-weight: bolder;
-                display: inline-block;
-                box-sizing: border-box;
-            }
-        </style>
-    </head>
+<head>
+    <title>Simple HERE Map</title>
+    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+    <style>
+        html,
+        body {
+            border: 0;
+            margin: 0;
+            padding: 0;
+        }
 
-    <body>
-        <div class="dynamic-image">
-            <p>
-                Thư giãn cơ thể sau một ngày dài khám phá Hà Nội và trải nghiệm một trong những dịch vụ spa tốt nhất trong thành phố với mười gói liệu
-                trình tuyệt vời của Metis Boutique Spa! Đến và trải nghiệm massage Metis đặc biệt. Nuông chiều cơ thể với gói massage truyền thống của
-                Việt Nam tập trung vào việc kích thích lưu thông máu để giảm đau và áp lực trong cơ thể. Thưởng thức tách trà thảo mộc ấm sau liệu
-                trình để tiếp thêm năng lượng cho cơ thể. Nằm ở vị trí thuận tiện chỉ cách ga xe lửa Hà Nội vài mét, bạn không phải đi đâu xa để trải
-                nghiệm sự thư giãn tuyệt đối.
-            </p>
-            <div>
-                <img
-                    src="https://res.klook.com/images/fl_lossy.progressive,q_65/c_fill,w_1295,h_863/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/ar2szwkitb5oqwz5y29m/TrảiNghiệmCácGóiDịchVụcủaMetisBoutiqueSpatạiHàNội.webp"
-                    alt=""
-                />
-                <img src="" alt="" srcset="" />
-                <img src="" alt="" srcset="" />
-                <p>Tận hưởng bầu không khí thư giãn của spa mà bạn sẽ cảm thấy ngay lập tức khi bước vào</p>
-            </div>
-            <div>
-                <img
-                    src="https://res.klook.com/images/fl_lossy.progressive,q_65/c_fill,w_1295,h_859/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/q9n8mpbstms1yplgaglx/TrảiNghiệmCácGóiDịchVụcủaMetisBoutiqueSpatạiHàNội.webp"
-                    alt=""
-                />
-            </div>
-            <div>
-                <img
-                    src="https://res.klook.com/images/fl_lossy.progressive,q_65/c_fill,w_1295,h_863/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/gauvhrtzy6des6fq2hqp/TrảiNghiệmCácGóiDịchVụcủaMetisBoutiqueSpatạiHàNội.webp"
-                    alt=""
-                />
-            </div>
-        </div>
-    </body>
+        #map {
+            height: 100vh;
+            width: 100vw;
+        }
+    </style>
+</head>
+
+<body>
     <script>
-        fetch('http://192.168.0.113:8080/api/getProductOfCity/1')
-            .then((response) => {
-                // Kiểm tra xem phản hồi có thành công hay không
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json(); // Chuyển đổi phản hồi sang JSON
-            })
-            .then((data) => {
-                // Xử lý dữ liệu trả về (danh sách sản phẩm)
-                console.log('Sản phẩm:', data);
-                // Bạn có thể hiển thị sản phẩm trên giao diện hoặc làm gì đó với dữ liệu
-            })
-            .catch((error) => {
-                // Xử lý lỗi nếu có
-                console.error('Có lỗi khi gọi API:', error);
-            });
+        function isAddress(text) {
+            const regexVietnam = /^\d+[A-Za-z]*\s(Đường|Phố|Thôn|Xã|Phường|Quận|Huyện|Thành phố|Tỉnh).*/;
+            const regexInternational = /^\d+\s[A-Za-z\s]+(Street|St\.|Ave|Avenue|Road|Rd\.|Blvd|Boulevard|Lane|Ln).*/;
+            return regexVietnam.test(text) || regexInternational.test(text);
+        }
+
+        // Kiểm tra chuỗi
+        const text1 = "123 Lê Lợi, Quận 1, TP. Hồ Chí Minh";
+        const text2 = "Khởi hành từ Hà Nội";
+
+        console.log(isAddress(text1)); // true
+        console.log(isAddress(text2)); // false
+
+
+
+        const a = [
+            {
+                b: []
+            }
+        ]
+        console.log(JSON.parse(JSON.stringify(a)));
     </script>
-</html>
+</body>

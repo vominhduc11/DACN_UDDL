@@ -5,6 +5,9 @@ import IconEntypo from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FastImage from 'react-native-fast-image';
 import axios from 'axios';
+import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
+
+import { API_URL } from '@env';
 
 const GoSomewhere = ({ navigation }) => {
     const [listCity, setListCity] = useState([]);
@@ -35,7 +38,6 @@ const GoSomewhere = ({ navigation }) => {
         <TouchableWithoutFeedback onPress={() => handlePressCity(item.id, item.image, item.name)}>
             <View
                 style={{
-                    marginRight: 12,
                     flexDirection: 'row',
                     alignItems: 'center',
                     backgroundColor: '#F5F5F5',
@@ -44,8 +46,8 @@ const GoSomewhere = ({ navigation }) => {
             >
                 <FastImage
                     style={{
-                        height: 50,
-                        width: 50,
+                        height: verticalScale(50),
+                        width: scale(50),
                         borderRadius: 30,
                     }}
                     source={{ uri: item.image, priority: FastImage.priority.high }}
@@ -57,7 +59,7 @@ const GoSomewhere = ({ navigation }) => {
                         <Text
                             style={{
                                 color: '#000',
-                                fontSize: 12,
+                                fontSize: moderateScale(12),
                             }}
                         >
                             Tiếp tục khám phá
@@ -66,6 +68,7 @@ const GoSomewhere = ({ navigation }) => {
                     <Text
                         style={{
                             color: '#000',
+                            fontSize: moderateScale(14),
                         }}
                     >
                         {item.name}
@@ -82,7 +85,7 @@ const GoSomewhere = ({ navigation }) => {
                 // Lấy tất cả các thành phố (6 thành phố) và lưu vào trong AsyncStorage
                 // Nếu AsyncStorage tồn tại thì lần sau chỉ cần truy cập vào AsyncStorage
                 if (!(await AsyncStorage.getItem('city'))) {
-                    const res3 = await axios.get(`http://10.150.3.6:8080/api/getListCity`);
+                    const res3 = await axios.get(`${API_URL}/api/getListCity`);
                     await AsyncStorage.setItem('city', JSON.stringify(res3.data));
                     setListCity(res3.data);
                 } else {
@@ -121,6 +124,8 @@ const GoSomewhere = ({ navigation }) => {
                 removeClippedSubviews={true}
                 horizontal
                 scrollEventThrottle={16}
+                ItemSeparatorComponent={() => <View style={{ width: scale(12) }} />}
+                showsHorizontalScrollIndicator={false}
             />
         </View>
     );

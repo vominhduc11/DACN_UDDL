@@ -1,15 +1,16 @@
-import { View, Text, Modal } from 'react-native';
+import { View, Text, Modal, ScrollView } from 'react-native';
 import React, { memo, useState } from 'react';
 import WebView from 'react-native-webview';
 
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import { TouchableWithoutFeedback } from 'react-native';
 
 const ModalHighlight = ({ highlight, modalVisible, setModalVisible, navigation }) => {
-    const [contentHeight3, setContentHeight3] = useState(0);
+    const [contentHeight, setContentHeight] = useState(0);
     // Hàm xử lý khi nhận dữ liệu từ WebView
-    const handleMessage3 = (event) => {
+    const handleMessage = (event) => {
         const webData = event.nativeEvent.data; // Dữ liệu từ WebView
-        setContentHeight3(Number(webData));
+        setContentHeight(Number(webData));
     };
 
     return (
@@ -36,6 +37,7 @@ const ModalHighlight = ({ highlight, modalVisible, setModalVisible, navigation }
                         width: '100%',
                         borderTopRightRadius: 12,
                         borderTopLeftRadius: 12,
+                        maxHeight: 500,
                     }}
                 >
                     <Text
@@ -49,11 +51,12 @@ const ModalHighlight = ({ highlight, modalVisible, setModalVisible, navigation }
                     >
                         Điểm nổi bật
                     </Text>
-                    <WebView
-                        showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false}
-                        source={{
-                            html: `
+                    <ScrollView>
+                        <WebView
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}
+                            source={{
+                                html: `
                                         <head>
                                             <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
                                             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -95,8 +98,8 @@ const ModalHighlight = ({ highlight, modalVisible, setModalVisible, navigation }
                                             </div>
                                         </body>
                                     `,
-                        }}
-                        injectedJavaScript={`
+                            }}
+                            injectedJavaScript={`
                                 function sendMessageToReactNative(param) {
                                     window.ReactNativeWebView.postMessage(param);
                                 }
@@ -104,11 +107,13 @@ const ModalHighlight = ({ highlight, modalVisible, setModalVisible, navigation }
                                 const height = document.querySelector("ul").offsetHeight;
                                 sendMessageToReactNative(height);
                             `}
-                        onMessage={handleMessage3}
-                        style={{
-                            height: contentHeight3,
-                        }}
-                    />
+                            onMessage={handleMessage}
+                            style={{
+                                height: contentHeight,
+                            }}
+                        />
+                    </ScrollView>
+
                     <IconAntDesign
                         color="#000"
                         onPress={() => setModalVisible(false)}

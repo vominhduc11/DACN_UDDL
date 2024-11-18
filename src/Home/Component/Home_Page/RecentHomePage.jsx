@@ -4,6 +4,7 @@ import React, { forwardRef, memo, useEffect, useImperativeHandle, useState } fro
 import IconEntypo from 'react-native-vector-icons/Entypo';
 import FastImage from 'react-native-fast-image';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 
 const RecentHomePage = ({ handlePressProduct, navigation }, ref) => {
     const [listProduct, setListProduct] = useState([]);
@@ -23,8 +24,8 @@ const RecentHomePage = ({ handlePressProduct, navigation }, ref) => {
             <View style={{ marginRight: 12 }}>
                 <FastImage
                     style={{
-                        height: 50,
-                        width: 75,
+                        height: verticalScale(50),
+                        width: scale(75),
                         borderRadius: 6,
                     }}
                     source={{ uri: item.image, priority: FastImage.priority.high }}
@@ -35,8 +36,9 @@ const RecentHomePage = ({ handlePressProduct, navigation }, ref) => {
                     style={{
                         color: '#000',
                         marginTop: 8,
-                        maxWidth: 75,
+                        maxWidth: scale(75),
                         fontWeight: '700',
+                        fontSize: moderateScale(14),
                     }}
                 >
                     {item.name}
@@ -63,17 +65,17 @@ const RecentHomePage = ({ handlePressProduct, navigation }, ref) => {
             <Text
                 onPress={() => navigation.navigate('Recent_View')}
                 style={{
-                    fontSize: 17,
+                    fontSize: moderateScale(17),
                     fontWeight: '700',
                     color: '#000',
                 }}
             >
                 Xem gần đây
-                <IconEntypo name="chevron-thin-right" size={16} color="#000" />
+                <IconEntypo name="chevron-thin-right" size={moderateScale(16)} color="#000" />
             </Text>
             {/* Danh sách sản phẩm */}
             <FlatList
-                style={{ marginTop: 12 }}
+                style={{ marginTop: moderateScale(12) }}
                 data={listProduct}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
@@ -83,6 +85,7 @@ const RecentHomePage = ({ handlePressProduct, navigation }, ref) => {
                 removeClippedSubviews={true}
                 horizontal
                 scrollEventThrottle={16}
+                showsHorizontalScrollIndicator={false}
             />
         </View>
     );

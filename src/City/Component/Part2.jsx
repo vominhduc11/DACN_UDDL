@@ -6,6 +6,8 @@ import axios from 'axios';
 import numeral from 'numeral';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FastImage from 'react-native-fast-image';
+import { API_URL } from '@env';
+import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 
 const Part2 = ({ navigation, city, id }) => {
     const [products, setProducts] = useState([]);
@@ -26,7 +28,8 @@ const Part2 = ({ navigation, city, id }) => {
     };
 
     //Thực hiện khi nhấn vào sản phẩm
-    const handlePressProduct = async (id, image, name, star, category, cityId, city, packages) => {
+    const handlePressProduct = async (...param) => {
+        const [id, image, name, star, category, cityId, city, packages] = param;
         //Chuyển sang trang sản phẩm
         navigation.navigate('Product', {
             id: id,
@@ -56,18 +59,18 @@ const Part2 = ({ navigation, city, id }) => {
 
     useEffect(() => {
         async function fetchData() {
-            const res1 = await axios.get(`http://10.150.3.6:8080/api/getProductOfCity/${id}/4`);
+            const res1 = await axios.get(`${API_URL}/api/getProductOfCity/${id}/4`);
             setProducts(res1.data);
         }
 
         fetchData();
     }, []);
     return (
-        <View style={{ marginTop: 28 }}>
+        <View style={{ marginTop: moderateScale(28) }}>
             <Text
                 style={{
                     color: '#000',
-                    fontSize: 18,
+                    fontSize: moderateScale(18),
                     fontWeight: '700',
                 }}
             >
@@ -75,7 +78,7 @@ const Part2 = ({ navigation, city, id }) => {
             </Text>
             <View
                 style={{
-                    marginTop: 24,
+                    marginTop: moderateScale(24),
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                     flexWrap: 'wrap',
@@ -102,14 +105,14 @@ const Part2 = ({ navigation, city, id }) => {
                                 borderWidth: 0.5,
                                 borderColor: '#DDDDDD',
                                 borderRadius: 12,
-                                width: 140,
-                                marginBottom: 15,
+                                width: scale(140),
+                                marginBottom: moderateScale(15),
                                 position: 'relative',
                             }}
                         >
                             <FastImage
                                 style={{
-                                    height: 100,
+                                    height: verticalScale(100),
                                     borderTopLeftRadius: 12,
                                     borderTopRightRadius: 12,
                                 }}
@@ -118,7 +121,7 @@ const Part2 = ({ navigation, city, id }) => {
                             />
                             <View
                                 style={{
-                                    padding: 5,
+                                    padding: moderateScale(5),
                                 }}
                             >
                                 <Text
@@ -126,13 +129,13 @@ const Part2 = ({ navigation, city, id }) => {
                                     style={{
                                         fontWeight: 700,
                                         color: '#000',
-                                        width: 140,
+                                        width: verticalScale(140),
                                     }}
                                 >
                                     {product.name}
                                 </Text>
-                                <Text style={{ marginTop: 6 }}>
-                                    <IconAntDesign name="star" size={16} color="#FFCC33" />
+                                <Text style={{ marginTop: moderateScale(6) }}>
+                                    <IconAntDesign name="star" size={moderateScale(16)} color="#FFCC33" />
                                     <Text
                                         style={{
                                             color: '#FFCC33',
@@ -145,7 +148,7 @@ const Part2 = ({ navigation, city, id }) => {
                                 <Text
                                     style={{
                                         fontWeight: '700',
-                                        marginTop: 6,
+                                        marginTop: moderateScale(6),
                                         color: '#000',
                                     }}
                                 >
@@ -154,26 +157,26 @@ const Part2 = ({ navigation, city, id }) => {
                             </View>
                             <IconAntDesign
                                 name="hearto"
-                                size={25}
+                                size={moderateScale(25)}
                                 color="#fff"
                                 style={{
                                     position: 'absolute',
-                                    right: 12,
-                                    top: 12,
+                                    right: scale(12),
+                                    top: verticalScale(12),
                                 }}
                             />
                         </View>
                     </TouchableWithoutFeedback>
                 ))}
             </View>
-            <TouchableWithoutFeedback onPress={() => navigation.navigate('Have_fun')}>
+            <TouchableWithoutFeedback onPress={() => navigation.navigate('Have_fun', { nameCity: city.name, idCity: city.id })}>
                 <Text
                     style={{
                         textAlign: 'center',
                         color: '#000',
                         fontWeight: '700',
                         borderWidth: 1,
-                        paddingVertical: 12,
+                        paddingVertical: moderateScale(12),
                         borderRadius: 12,
                     }}
                 >

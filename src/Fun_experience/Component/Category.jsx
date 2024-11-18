@@ -1,19 +1,30 @@
 import { View, Text, TouchableWithoutFeedback } from 'react-native';
-import React from 'react';
+import React, { forwardRef, useImperativeHandle, useState } from 'react';
 
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import IconEntypo from 'react-native-vector-icons/Entypo';
+import { moderateScale, verticalScale, scale } from 'react-native-size-matters';
 
-const Category = ({ nameCategory, setModalVisible2 }) => {
+const Category = ({ colorAuthenCategory, openModalCategory }, ref) => {
+    const [nameCategory, setNameCategory] = useState(undefined);
+
+    useImperativeHandle(ref, () => ({
+        getnameCategory() {
+            return nameCategory;
+        },
+        setNameCategory(name) {
+            setNameCategory(name);
+        },
+    }));
     return (
-        <TouchableWithoutFeedback onPress={() => setModalVisible2(true)}>
+        <TouchableWithoutFeedback onPress={openModalCategory}>
             <View
                 style={{
                     borderWidth: 1,
                     borderColor: '#e8e8e8',
-                    padding: 14,
-                    borderRadius: 12,
-                    marginTop: 18,
+                    padding: verticalScale(14), // Responsive padding
+                    borderRadius: moderateScale(12), // Responsive border radius
+                    marginTop: verticalScale(18), // Responsive margin top
                 }}
             >
                 <Text style={{ color: '#000' }}>Danh mục</Text>
@@ -22,9 +33,10 @@ const Category = ({ nameCategory, setModalVisible2 }) => {
                         flexDirection: 'row',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-                        marginTop: 8,
+                        marginTop: verticalScale(8), // Responsive margin top
                     }}
                 >
+                    {/* Nếu nameCategory chưa được định nghĩa */}
                     {nameCategory === undefined && (
                         <View
                             style={{
@@ -32,28 +44,39 @@ const Category = ({ nameCategory, setModalVisible2 }) => {
                                 alignItems: 'center',
                             }}
                         >
-                            <IconMaterialIcons name="category" size={20} />
+                            <IconMaterialIcons
+                                name="category"
+                                size={moderateScale(20)} // Responsive icon size
+                                color={colorAuthenCategory ? '#c0c0c0' : 'red'}
+                            />
                             <Text
                                 style={{
-                                    marginLeft: 8,
+                                    marginLeft: scale(8), // Responsive margin left
+                                    color: colorAuthenCategory ? '#c0c0c0' : 'red',
                                 }}
                             >
                                 Danh mục bất kì
                             </Text>
                         </View>
                     )}
-                    {nameCategory === undefined || (
+
+                    {/* Nếu nameCategory đã được định nghĩa */}
+                    {nameCategory !== undefined && (
                         <View
                             style={{
                                 flexDirection: 'row',
                                 alignItems: 'center',
                             }}
                         >
-                            <IconMaterialIcons name="category" size={20} color="#000" />
+                            <IconMaterialIcons
+                                name="category"
+                                size={moderateScale(20)} // Responsive icon size
+                                color="#000"
+                            />
                             <Text
                                 numberOfLines={1}
                                 style={{
-                                    marginLeft: 8,
+                                    marginLeft: scale(8), // Responsive margin left
                                     color: '#000',
                                     flexBasis: '80%',
                                 }}
@@ -62,11 +85,11 @@ const Category = ({ nameCategory, setModalVisible2 }) => {
                             </Text>
                         </View>
                     )}
-                    <IconEntypo name="chevron-thin-right" size={18} />
+                    <IconEntypo name="chevron-thin-right" size={moderateScale(18)} />
                 </View>
             </View>
         </TouchableWithoutFeedback>
     );
 };
 
-export default Category;
+export default forwardRef(Category);

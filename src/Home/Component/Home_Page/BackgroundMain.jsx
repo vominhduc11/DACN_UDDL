@@ -4,13 +4,14 @@ import React from 'react';
 import IconFontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import IconFoundation from 'react-native-vector-icons/Foundation';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { moderateScale, verticalScale } from 'react-native-size-matters';
 
 const BackgroundMain = ({ navigation }) => {
     return (
         <ImageBackground
             blurRadius={5}
             style={{
-                height: 200,
+                height: verticalScale(220),
             }}
             source={{
                 uri: 'https://img.freepik.com/free-photo/pouch-map-toy-airplane-blue-background-with-space-writing-text_23-2147958180.jpg',
@@ -19,9 +20,8 @@ const BackgroundMain = ({ navigation }) => {
             <View
                 style={{
                     flexDirection: 'row',
-                    // justifyContent: 'space-between',
                     flexWrap: 'wrap',
-                    marginTop: 100,
+                    marginTop: moderateScale(120),
                 }}
             >
                 <TouchableWithoutFeedback onPress={() => navigation.navigate('Fun_experience', { category: 'Vui chơi & Trải nghiệm' })}>
@@ -32,8 +32,8 @@ const BackgroundMain = ({ navigation }) => {
                             flexBasis: '20%',
                         }}
                     >
-                        <IconMaterialIcons name="local-play" size={24} color="#663366" />
-                        <Text style={{ maxWidth: 50, fontSize: 10, color: '#000' }}>Vui chơi & Trải nghiệm</Text>
+                        <IconMaterialIcons name="local-play" size={moderateScale(26)} color="#663366" />
+                        <Text style={{ maxWidth: 50, fontSize: moderateScale(10), color: '#000' }}>Vui chơi & Trải nghiệm</Text>
                     </View>
                 </TouchableWithoutFeedback>
                 <TouchableWithoutFeedback onPress={() => navigation.navigate('Search', { category: 'Tour' })}>
@@ -44,8 +44,8 @@ const BackgroundMain = ({ navigation }) => {
                             flexBasis: '20%',
                         }}
                     >
-                        <IconMaterialIcons name="tour" size={24} color="#990000" />
-                        <Text style={{ maxWidth: 50, fontSize: 10, color: '#000' }}>Tour</Text>
+                        <IconMaterialIcons name="tour" size={moderateScale(26)} color="#990000" />
+                        <Text style={{ maxWidth: 50, fontSize: moderateScale(10), color: '#000' }}>Tour</Text>
                     </View>
                 </TouchableWithoutFeedback>
                 <TouchableWithoutFeedback onPress={() => navigation.navigate('Search', { category: 'Du thuyền' })}>
@@ -56,8 +56,8 @@ const BackgroundMain = ({ navigation }) => {
                             flexBasis: '20%',
                         }}
                     >
-                        <IconMaterialIcons name="directions-boat" size={24} color="#33FFFF" />
-                        <Text style={{ maxWidth: 50, fontSize: 10, color: '#000' }}>Du thuyền</Text>
+                        <IconMaterialIcons name="directions-boat" size={moderateScale(26)} color="#33FFFF" />
+                        <Text style={{ maxWidth: 50, fontSize: moderateScale(10), color: '#000' }}>Du thuyền</Text>
                     </View>
                 </TouchableWithoutFeedback>
                 <TouchableWithoutFeedback onPress={() => navigation.navigate('Search', { category: 'Massage & Suối nước nóng' })}>
@@ -68,8 +68,8 @@ const BackgroundMain = ({ navigation }) => {
                             flexBasis: '20%',
                         }}
                     >
-                        <IconFontAwesome5 name="hot-tub" size={24} color="#FF9999" />
-                        <Text style={{ maxWidth: 50, fontSize: 10, color: '#000' }}>Massage & Suối nước nóng</Text>
+                        <IconFontAwesome5 name="hot-tub" size={moderateScale(26)} color="#FF9999" />
+                        <Text style={{ maxWidth: 50, fontSize: moderateScale(10), color: '#000' }}>Massage & Suối nước nóng</Text>
                     </View>
                 </TouchableWithoutFeedback>
                 <TouchableWithoutFeedback onPress={() => navigation.navigate('Search', { category: 'Phiêu lưu & khám phá thiên nhiên' })}>
@@ -80,8 +80,8 @@ const BackgroundMain = ({ navigation }) => {
                             flexBasis: '20%',
                         }}
                     >
-                        <IconFoundation name="trees" size={24} color="#009933" />
-                        <Text style={{ maxWidth: 50, fontSize: 10, color: '#000' }}>Phiêu lưu & khám phá thiên nhiên</Text>
+                        <IconFoundation name="trees" size={moderateScale(26)} color="#009933" />
+                        <Text style={{ maxWidth: 50, fontSize: moderateScale(10), color: '#000' }}>Phiêu lưu & khám phá thiên nhiên</Text>
                     </View>
                 </TouchableWithoutFeedback>
             </View>

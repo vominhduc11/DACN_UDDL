@@ -7,6 +7,9 @@ import IconFontisto from 'react-native-vector-icons/Fontisto';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import axios from 'axios';
 import Geolocation from '@react-native-community/geolocation';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+
+import { API_URL, API_KEY } from '@env';
 
 const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handlePressProduct, pagerViewRef }, ref) => {
     const [heightPagerView, setHeightPagerView] = useState(1200);
@@ -67,7 +70,7 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
         setLoading1(true);
 
         try {
-            const res = await axios.get(`http://10.150.3.6:8080/api/getInTurnProduct/${amountProduct1}`);
+            const res = await axios.get(`${API_URL}/api/getInTurnProduct/${amountProduct1}`);
             setListProduct3(res.data);
             setAmountProduct1(amountProduct1 + 10);
         } catch (error) {
@@ -88,11 +91,11 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
 
             async function getPosition(...params) {
                 const res1 = await axios.get(
-                    `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${params[0]},${params[1]}&lang=vi-VN&apiKey=oX3CYSdcd1kzHo9iAiGTKzYCSetABD5KuCAkPUN6QrQ`
+                    `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${params[0]},${params[1]}&lang=vi-VN&apiKey=${API_KEY}`
                 );
 
-                const res2 = await axios.get(`http://10.150.3.6:8080/api/getCityByName/${res1.data.items[0].address.county}`);
-                const res3 = await axios.get(`http://10.150.3.6:8080/api/getInTurnProductOfCity/${res2.data.id}/${amountProduct2}`);
+                const res2 = await axios.get(`${API_URL}/api/getCityByName/${res1.data.items[0].address.county}`);
+                const res3 = await axios.get(`${API_URL}/api/getInTurnProductOfCity/${res2.data.id}/${amountProduct2}`);
                 setListProduct4(res3.data);
                 setAmountProduct2(amountProduct2 + 10);
             }
@@ -137,17 +140,17 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
                     >
                         <View
                             style={{
-                                borderWidth: 0.5,
+                                borderWidth: scale(0.5),
                                 borderColor: '#DDDDDD',
                                 borderRadius: 12,
-                                width: 140,
-                                marginBottom: 8,
+                                width: scale(155),
+                                marginBottom: moderateScale(10),
                             }}
                         >
                             <View>
                                 <FastImage
                                     style={{
-                                        height: 100,
+                                        height: verticalScale(100),
                                         borderTopLeftRadius: 12,
                                         borderTopRightRadius: 12,
                                     }}
@@ -163,8 +166,8 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
                                         left: 6,
                                     }}
                                 >
-                                    <IconFontisto name="map-marker-alt" size={16} color="#fff" />
-                                    <Text style={{ color: '#fff', fontSize: 12, marginLeft: 5 }}>{product.city}</Text>
+                                    <IconFontisto name="map-marker-alt" size={moderateScale(16)} color="#fff" />
+                                    <Text style={{ color: '#fff', fontSize: moderateScale(12), marginLeft: 5 }}>{product.city}</Text>
                                 </View>
                             </View>
                             <View
@@ -177,13 +180,14 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
                                     style={{
                                         fontWeight: 700,
                                         color: '#000',
-                                        height: 58,
+                                        height: verticalScale(58),
+                                        fontSize: moderateScale(14),
                                     }}
                                 >
                                     {product.name}
                                 </Text>
-                                <Text style={{ marginTop: 6, color: '#000' }}>
-                                    <IconAntDesign name="star" size={16} color="#FFCC33" />
+                                <Text style={{ marginTop: moderateScale(6), color: '#000' }}>
+                                    <IconAntDesign name="star" size={moderateScale(16)} color="#FFCC33" />
                                     <Text
                                         style={{
                                             color: '#FFCC33',
@@ -195,16 +199,20 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
                                 </Text>
                                 <View
                                     style={{
-                                        marginTop: 6,
+                                        marginTop: moderateScale(6),
                                         color: '#000',
                                         flexDirection: 'row',
                                     }}
                                 >
-                                    {product.package.length === 0 && <Text style={{ color: '#ccc', fontWeight: '700' }}>Đã hết hàng</Text>}
+                                    {product.package.length === 0 && (
+                                        <Text style={{ color: '#ccc', fontWeight: '700', fontSize: moderateScale(14) }}>Đã hết hàng</Text>
+                                    )}
                                     {product.package.length > 1 && (
                                         <>
-                                            <Text style={{ fontWeight: '700', color: '#000', marginRight: 2 }}>Từ </Text>
-                                            <Text style={{ color: '#000' }}>đ {formatNumberWithCommas(minPricePackage(product.package))}</Text>
+                                            <Text style={{ fontWeight: '700', color: '#000', marginRight: 2, fontSize: moderateScale(14) }}>Từ </Text>
+                                            <Text style={{ color: '#000', fontSize: moderateScale(14) }}>
+                                                đ {formatNumberWithCommas(minPricePackage(product.package))}
+                                            </Text>
                                         </>
                                     )}
                                     {product.package.length === 1 && product.package[0].quantitys.length > 1 && (
@@ -214,15 +222,20 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
                                                     fontWeight: '700',
                                                     color: '#000',
                                                     marginRight: 2,
+                                                    fontSize: moderateScale(14),
                                                 }}
                                             >
                                                 Từ{' '}
                                             </Text>
-                                            <Text style={{ color: '#000' }}>đ {formatNumberWithCommas(minPricePackage(product.package))}</Text>
+                                            <Text style={{ color: '#000', fontSize: moderateScale(14) }}>
+                                                đ {formatNumberWithCommas(minPricePackage(product.package))}
+                                            </Text>
                                         </>
                                     )}
                                     {product.package.length === 1 && product.package[0].quantitys.length === 1 && (
-                                        <Text style={{ color: '#000' }}>đ {formatNumberWithCommas(minPricePackage(product.package))}</Text>
+                                        <Text style={{ color: '#000', fontSize: moderateScale(14) }}>
+                                            đ {formatNumberWithCommas(minPricePackage(product.package))}
+                                        </Text>
                                     )}
                                 </View>
                             </View>

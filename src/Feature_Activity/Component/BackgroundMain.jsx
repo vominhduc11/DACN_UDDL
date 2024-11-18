@@ -2,15 +2,16 @@ import { View, Text, ImageBackground } from 'react-native';
 import React from 'react';
 
 import IconFeather from 'react-native-vector-icons/Feather';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 const BackgroundMain = ({ bottom, opacityBackground }) => {
     return (
         <View style={{ position: 'relative' }}>
             <ImageBackground
                 style={{
-                    paddingTop: 130,
-                    paddingBottom: 42,
-                    paddingHorizontal: 12,
+                    paddingTop: verticalScale(130), // Dùng verticalScale cho paddingTop
+                    paddingBottom: verticalScale(42), // Dùng verticalScale cho paddingBottom
+                    paddingHorizontal: scale(12), // Dùng scale cho paddingHorizontal
                     position: 'relative',
                     bottom: bottom,
                     opacity: opacityBackground,
@@ -22,7 +23,7 @@ const BackgroundMain = ({ bottom, opacityBackground }) => {
                 <Text
                     style={{
                         color: '#fff',
-                        fontSize: 24,
+                        fontSize: moderateScale(24), // Dùng moderateScale cho fontSize
                         fontWeight: '600',
                     }}
                     numberOfLines={1}
@@ -32,11 +33,11 @@ const BackgroundMain = ({ bottom, opacityBackground }) => {
                 <Text
                     style={{
                         color: '#fff',
-                        fontSize: 16,
-                        marginTop: 8,
+                        fontSize: moderateScale(16), // Dùng moderateScale cho fontSize
+                        marginTop: verticalScale(8), // Dùng verticalScale cho marginTop
                     }}
                 >
-                    <IconFeather name="map-pin" size={16} />
+                    <IconFeather name="map-pin" size={moderateScale(16)} /> {/* Dùng moderateScale cho Icon size */}
                     TP Hồ Chí Minh
                 </Text>
             </ImageBackground>

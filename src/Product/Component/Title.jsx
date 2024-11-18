@@ -5,7 +5,7 @@ import IconEntypo from 'react-native-vector-icons/Entypo';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
 
-const Title = ({ name, star, notify, place, evaluate, booked }) => {
+const Title = ({ name, star, notify, place, evaluate, booked, navigation }) => {
     //chuyển đổi số lớn
     const formatNumber = (number) => {
         if (number >= 1000) {
@@ -52,7 +52,7 @@ const Title = ({ name, star, notify, place, evaluate, booked }) => {
                 <Text style={{ color: '#000', marginLeft: 12 }}>({formatNumber(evaluate)} Đánh giá)</Text>
                 <Text style={{ marginLeft: 18, color: '#000' }}>{formatNumber(booked)} Đã đặt</Text>
             </View>
-            <TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => navigation.navigate('Map')}>
                 <View>
                     {notify && (
                         <View
@@ -62,7 +62,7 @@ const Title = ({ name, star, notify, place, evaluate, booked }) => {
                                 marginBottom: 6,
                             }}
                         >
-                            <IconIonicons name="notifications" size={20} />
+                            <IconIonicons name="notifications" size={20} color="#c0c0c0" />
                             <Text
                                 numberOfLines={1}
                                 style={{
@@ -82,7 +82,7 @@ const Title = ({ name, star, notify, place, evaluate, booked }) => {
                                 alignItems: 'center',
                             }}
                         >
-                            <IconIonicons name="location-sharp" size={20} />
+                            <IconIonicons name="location-sharp" size={20} color="#c0c0c0" />
                             <Text
                                 numberOfLines={1}
                                 style={{

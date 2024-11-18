@@ -8,6 +8,9 @@ import Part1 from './Component/Part1';
 import Part2 from './Component/Part2';
 import Part3 from './Component/Part3';
 import axios from 'axios';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+
+import { API_URL } from '@env';
 
 const City = ({ navigation, route }) => {
     const [opacity, setOpacity] = useState(0);
@@ -39,8 +42,12 @@ const City = ({ navigation, route }) => {
     // Gọi Api
     useEffect(() => {
         async function fetchData() {
-            const res1 = await axios.get(`http://10.150.3.6:8080/api/getCity/${id}`);
-            setCity(res1.data); // Truy cập vào dữ liệu trong response
+            try {
+                const res = await axios.get(`${API_URL}/api/getCity/${id}`);
+                setCity(res.data); // Truy cập vào dữ liệu trong response
+            } catch (error) {
+                console.log(error);
+            }
         }
         fetchData();
     }, []);
@@ -57,18 +64,18 @@ const City = ({ navigation, route }) => {
                 <BackgroundMain bottom={bottom} opacityBackground={opacityBackground} city={city} />
                 <View
                     style={{
-                        paddingHorizontal: 12,
+                        paddingHorizontal: scale(12), // Dùng scale cho padding ngang
                         zIndex: 10,
-                        borderRadius: 12,
+                        borderRadius: moderateScale(12), // Dùng moderateScale cho borderRadius
                         backgroundColor: '#fff',
-                        marginTop: -12,
-                        paddingTop: 20,
-                        paddingBottom: 12,
+                        marginTop: verticalScale(-12), // Dùng verticalScale cho marginTop
+                        paddingTop: verticalScale(20), // Dùng verticalScale cho paddingTop
+                        paddingBottom: verticalScale(12), // Dùng verticalScale cho paddingBottom
                     }}
                 >
-                    <Part1 id={id} />
-                    <Part2 navigation={navigation} city={city} id={id} />
-                    <Part3 />
+                    <Part1 id={id} city={city} navigation={navigation} />
+                    <Part2 id={id} city={city} navigation={navigation} />
+                    <Part3 id={id} city={city} navigation={navigation} />
                 </View>
             </ScrollView>
         </View>

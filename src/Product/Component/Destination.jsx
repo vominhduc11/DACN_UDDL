@@ -1,7 +1,10 @@
-import { View, Text, TouchableWithoutFeedback, ScrollView, FlatList } from 'react-native';
+import { View, Text, TouchableWithoutFeedback, FlatList } from 'react-native';
 import React, { memo, useEffect, useState } from 'react';
+
 import FastImage from 'react-native-fast-image';
 import axios from 'axios';
+
+import { API_URL } from '@env';
 
 const Destination = ({ handlePressProduct, cityId }) => {
     const [listProduct, setListProduct] = useState([]);
@@ -46,7 +49,7 @@ const Destination = ({ handlePressProduct, cityId }) => {
 
     useEffect(() => {
         async function fetchData() {
-            const res = await axios.get(`http://192.168.0.113:8080/api/getProductOfCity/${cityId}/10`);
+            const res = await axios.get(`${API_URL}/api/getProductOfCity/${cityId}/10`);
             setListProduct(res.data);
         }
         fetchData();

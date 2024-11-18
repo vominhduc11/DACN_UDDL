@@ -1,14 +1,15 @@
 import { View, Text, ImageBackground } from 'react-native';
 import React from 'react';
+import { moderateScale } from 'react-native-size-matters';
 
 const BackgroundMain = ({ bottom, opacityBackground, city }) => {
     return (
         <View style={{ position: 'relative' }}>
             <ImageBackground
                 style={{
-                    paddingTop: 148,
-                    paddingBottom: 52,
-                    paddingHorizontal: 12,
+                    paddingTop: moderateScale(148),
+                    paddingBottom: moderateScale(52),
+                    paddingHorizontal: moderateScale(12),
                     position: 'relative',
                     bottom: bottom,
                     opacity: opacityBackground,
@@ -20,7 +21,7 @@ const BackgroundMain = ({ bottom, opacityBackground, city }) => {
                 <Text
                     style={{
                         color: '#fff',
-                        fontSize: 24,
+                        fontSize: moderateScale(24),
                         fontWeight: '600',
                     }}
                     numberOfLines={1}

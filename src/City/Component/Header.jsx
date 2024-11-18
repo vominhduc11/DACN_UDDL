@@ -3,12 +3,13 @@ import React from 'react';
 
 import IconEntypo from 'react-native-vector-icons/Entypo';
 import IconFeather from 'react-native-vector-icons/Feather';
+import { moderateScale } from 'react-native-size-matters';
 
 const Header = ({ opacity, color, navigation }) => {
     return (
         <View
             style={{
-                padding: 12,
+                padding: moderateScale(12),
                 position: 'absolute',
                 flexDirection: 'row',
                 justifyContent: 'space-between',
@@ -27,11 +28,11 @@ const Header = ({ opacity, color, navigation }) => {
                 <View
                     style={{
                         backgroundColor: '#fff',
-                        padding: 10,
+                        padding: moderateScale(10),
                         borderRadius: 30,
                     }}
                 >
-                    <IconEntypo name="chevron-left" size={20} color="#000" />
+                    <IconEntypo name="chevron-left" size={moderateScale(20)} color="#000" />
                 </View>
             </TouchableWithoutFeedback>
             <View

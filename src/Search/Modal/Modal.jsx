@@ -1,15 +1,31 @@
-import { View, Text, Modal, TextInput, Keyboard, TouchableWithoutFeedback, Dimensions, TouchableOpacity, Image, Animated } from 'react-native';
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import {
+    View,
+    Text,
+    Modal,
+    TextInput,
+    Keyboard,
+    TouchableWithoutFeedback,
+    Dimensions,
+    TouchableOpacity,
+    Image,
+    FlatList,
+    ScrollView,
+} from 'react-native';
+import React, { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useState } from 'react';
 
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import IconFeather from 'react-native-vector-icons/Feather';
+import axios from 'axios';
 
-const ModalDestination = ({ setValueInput, setListProduct }, ref) => {
+import { API_URL } from '@env';
+import FastImage from 'react-native-fast-image';
+
+const ModalDestination = ({ setValueInput, setListProduct, handlePressProduct, navigation }, ref) => {
     const [visible, setVisible] = useState(false);
     const [value, setValue] = useState('');
-
-    // Khởi tạo Animated.Value với giá trị bắt đầu là 0
-    const height = useRef(new Animated.Value(0)).current;
+    const [citys, setCitys] = useState([]);
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     // Cung cấp hàm openModal cho component cha
     useImperativeHandle(ref, () => ({
@@ -29,34 +45,76 @@ const ModalDestination = ({ setValueInput, setListProduct }, ref) => {
         setValue(cityName);
     };
 
-    // Thiết lập chuyển động
-    const setAnimate = () => {
-        // Reset Animated Value trước khi bắt đầu animation mới
-        Animated.timing(height, {
-            toValue: Dimensions.get('window').height - 66, // Giá trị cuối cùng
-            duration: 500, // Thời gian animation
-            useNativeDriver: false, // Sử dụng Native driver để tăng hiệu suất
-        }).start(); // Khởi động animation
-    };
+    // Các phần tử renderItem
+    const renderItemCity = ({ item }) => (
+        <TouchableOpacity
+            onPress={() => {
+                setVisible(false);
+                setValueInput(item.name);
+                setListProduct(item.id);
+            }}
+            activeOpacity={0.5}
+        >
+            <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 6 }}>
+                <IconFeather name="map-pin" size={26} color="#FF6600" />
+                <View style={{ paddingHorizontal: 12 }}>
+                    <Text style={{ color: '#000', fontWeight: 700, fontSize: 16 }}>{item.name}</Text>
+                    <Text style={{ color: '#000' }}>{item.country}</Text>
+                </View>
+            </View>
+        </TouchableOpacity>
+    );
+    const renderItemProduct = ({ item }) => (
+        <TouchableWithoutFeedback
+            onPress={() => {
+                handlePressProduct(item.id, item.image, item.name, item.star, item.category, item.cityId, item.city, item.package), setVisible(false);
+            }}
+        >
+            <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12 }}>
+                <FastImage
+                    style={{
+                        height: 50,
+                        width: 50,
+                        borderRadius: 8,
+                    }}
+                    source={{ uri: item.image, priority: FastImage.priority.high }}
+                    resizeMode={FastImage.resizeMode.cover}
+                />
+                <View style={{ flex: 1, marginLeft: 10 }}>
+                    <Text style={{ color: '#000', marginBottom: 4 }} numberOfLines={1}>
+                        {item.name}
+                    </Text>
+                    <Text style={{ color: '#c0c0c0', fontWeight: 700 }}>{item.city}</Text>
+                </View>
+            </View>
+        </TouchableWithoutFeedback>
+    );
 
+    // Gọi api lần đầu
     useEffect(() => {
-        // Hàm xử lý khi bàn phím đóng
-        const handleKeyboardHide = () => {
-            console.log('set animation');
-            setAnimate(); // Gọi animation khi bàn phím đóng
-        };
+        if (value === '') {
+            setCitys([]);
+            setProducts([]);
+        }
+        if (loading) {
+            return;
+        }
+        setLoading(true);
+        async function fetchData() {
+            try {
+                const res = await axios.get(`${API_URL}/api/getListCityAccordingString/${value}`);
+                setCitys(res.data);
 
-        console.log('đã vào modal');
-        // Đăng ký sự kiện khi bàn phím đóng
-        const keyboardHideListener = Keyboard.addListener('keyboardDidHide', handleKeyboardHide);
-
-        // Gỡ bỏ sự kiện khi component unmount
-        return () => {
-            console.log('Đã xóa sự kiện');
-            // Xóa sự kiện khi đóng bàn phím
-            keyboardHideListener.remove();
-        };
-    }, []);
+                const res1 = await axios.get(`${API_URL}/api/getListProductAccordingString/${value}`);
+                setProducts(res1.data);
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchData();
+    }, [value]);
     return (
         <Modal
             animationType="slide" // hoặc 'fade', 'none', 'slide'
@@ -83,7 +141,7 @@ const ModalDestination = ({ setValueInput, setListProduct }, ref) => {
                             size={22}
                             color="#000"
                             onPress={() => {
-                                height.setValue(0);
+                                // height.setValue(0);
                                 setVisible(false);
                             }}
                         />
@@ -104,63 +162,55 @@ const ModalDestination = ({ setValueInput, setListProduct }, ref) => {
                             }}
                         />
                     </View>
-                    {/* {show && ( */}
-                    <Animated.ScrollView
-                        style={{
-                            position: 'absolute',
-                            zIndex: 1,
-                            top: 66,
-                            width: '100%',
-                            backgroundColor: '#fff',
-                            height: height,
-                        }}
-                    >
-                        <View>
-                            <View style={{ borderBottomWidth: 1, borderBottomColor: '#c0c0c0', paddingVertical: 12 }}>
-                                <TouchableOpacity activeOpacity={0.5}>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 6 }}>
-                                        <IconFeather name="map-pin" size={26} color="#FF6600" />
-                                        <View style={{ paddingHorizontal: 12 }}>
-                                            <Text style={{ color: '#000', fontWeight: 700, fontSize: 16 }}>Osaka</Text>
-                                            <Text style={{ color: '#000' }}>nhật bản</Text>
-                                        </View>
-                                    </View>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={{ paddingVertical: 12 }}>
-                                <Text style={{ color: '#c0c0c0', paddingHorizontal: 12 }}>Có thể bạn sẽ thích</Text>
-                                <View style={{ marginTop: 12 }}>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12 }}>
-                                        <Image
-                                            source={{
-                                                uri: 'https://res.klook.com/image/upload/c_fill,w_1265,h_712/q_80/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/yf9jzfbou3qoijdqfcpm.webp',
-                                            }}
-                                            height={50}
-                                            width={50}
-                                            borderRadius={8}
-                                        />
-                                        <View style={{ flex: 1, marginLeft: 10 }}>
-                                            <Text style={{ color: '#000', marginBottom: 4 }} numberOfLines={1}>
-                                                Tour Ngày Khu Di Tích Địa Đạo Củ Chi & Đồng Bằng Sông Cửu Long từ TP. Hồ Chí Minh
-                                            </Text>
-                                            <Text style={{ color: '#c0c0c0', fontWeight: 700 }}>Hồ Chí Minh</Text>
-                                        </View>
-                                    </View>
-                                </View>
-                                {/* <FlatList
-                                    data={products}
-                                    renderItem={useCallback(renderItem, [])}
+
+                    {(citys.length !== 0 || products.length !== 0) && (
+                        <ScrollView
+                            style={{
+                                position: 'absolute',
+                                zIndex: 1,
+                                top: 66,
+                                width: '100%',
+                                backgroundColor: '#fff',
+                                height: Dimensions.get('window').height - 66,
+                            }}
+                        >
+                            {citys.length !== 0 && (
+                                <FlatList
+                                    style={{ paddingVertical: 12 }}
+                                    data={citys}
+                                    renderItem={renderItemCity}
                                     keyExtractor={(item) => item.id}
                                     initialNumToRender={1}
                                     maxToRenderPerBatch={1}
                                     windowSize={3}
                                     removeClippedSubviews={true}
                                     scrollEventThrottle={16}
-                                /> */}
-                            </View>
-                        </View>
-                    </Animated.ScrollView>
-                    {/* )} */}
+                                    scrollEnabled={false}
+                                    ItemSeparatorComponent={() => <View style={{ height: 12 }}></View>}
+                                />
+                            )}
+                            {citys.length === 0 || products.length === 0 || <View style={{ borderBottomColor: '#dedede', borderBottomWidth: 1 }} />}
+                            {products.length !== 0 && (
+                                <FlatList
+                                    style={{ paddingVertical: 12 }}
+                                    data={products}
+                                    renderItem={renderItemProduct}
+                                    keyExtractor={(item) => item.id}
+                                    initialNumToRender={1}
+                                    maxToRenderPerBatch={1}
+                                    windowSize={3}
+                                    removeClippedSubviews={true}
+                                    scrollEventThrottle={16}
+                                    scrollEnabled={false}
+                                    ItemSeparatorComponent={() => <View style={{ height: 12 }}></View>}
+                                    ListHeaderComponent={() => (
+                                        <Text style={{ color: '#c0c0c0', paddingHorizontal: 12, marginBottom: 16 }}>Có thể bạn sẽ thích</Text>
+                                    )}
+                                />
+                            )}
+                        </ScrollView>
+                    )}
+
                     <View
                         style={{
                             flex: 1,

@@ -3,6 +3,7 @@ import React, { forwardRef, memo } from 'react';
 
 import { CircleFade } from 'react-native-animated-spinkit';
 import TabViewExampleHomePage from './TabViewExampleHomePage';
+import { moderateScale, scale } from 'react-native-size-matters';
 
 const SuggestAndRecent = (
     { active, marginLeft, formatNumberWithCommas, minPricePackage, handlePressProduct, handleChange, pagerViewRef, viewRef },
@@ -26,9 +27,10 @@ const SuggestAndRecent = (
                     <Text
                         onPress={() => handleChange(true)}
                         style={{
-                            fontSize: 18,
+                            fontSize: moderateScale(18),
                             fontWeight: '600',
                             color: active ? '#FF9933' : '#000',
+                            paddingHorizontal: moderateScale(4),
                         }}
                     >
                         Đề xuất
@@ -36,10 +38,11 @@ const SuggestAndRecent = (
                     <Text
                         onPress={() => handleChange(false)}
                         style={{
-                            fontSize: 18,
+                            fontSize: moderateScale(18),
                             fontWeight: '600',
                             marginLeft: 30,
                             color: active ? '#000' : '#FF9933',
+                            paddingHorizontal: moderateScale(4),
                         }}
                     >
                         Gần đây
@@ -47,16 +50,17 @@ const SuggestAndRecent = (
                 </View>
                 <View
                     style={{
-                        width: 187,
+                        width: scale(160),
                         height: 4,
                         marginTop: 12,
+                        // backgroundColor: 'red',
                     }}
                 >
                     <Animated.View
                         style={{
                             height: 4,
                             backgroundColor: '#FF9933',
-                            width: 75,
+                            width: scale(70),
                             marginLeft: marginLeft,
                         }}
                     />

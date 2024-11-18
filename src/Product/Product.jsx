@@ -1,8 +1,9 @@
-import { View, ScrollView } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import { View, ScrollView, Text } from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import axios from 'axios';
 import numeral from 'numeral';
+
 import ModalHighlight from './Modal/ModalHighlight';
 import ModalOrder from './Modal/ModalOrder';
 import Bottom_Action_Bar from './Component/Bottom_Action_Bar';
@@ -16,6 +17,9 @@ import Hightlight from './Component/Hightlight';
 import CanLike from './Component/CanLike';
 import Destination from './Component/Destination';
 import Title from './Component/Title';
+import ModalAddCart from './Modal/ModalAddCart';
+
+import { API_URL } from '@env';
 
 const Product = ({ navigation, route }) => {
     const [product, setProduct] = useState({});
@@ -26,6 +30,7 @@ const Product = ({ navigation, route }) => {
     const [bottom, setBottom] = useState(0);
     const [modalVisible, setModalVisible] = useState(false);
     const [modalVisible1, setModalVisible1] = useState(false);
+    const [modalVisible2, setModalVisible2] = useState(false);
     const [activeIndex, setActiveIndex] = useState(-1);
     const [quantity, setQuantity] = useState([]);
     const [counts, setCounts] = useState([]);
@@ -33,8 +38,13 @@ const Product = ({ navigation, route }) => {
     const [price, setPrice] = useState(undefined);
     const [package_service, setPackage_service] = useState({});
 
+    // Nhận dữ liệu từ các navigation khác chuyển qua
     const { id, category, cityId } = route.params;
 
+    const headerRef = useRef();
+    const BottomRef = useRef();
+
+    // Hàm format giá tiền
     const formatNumberWithCommas = useCallback((number) => {
         return numeral(number).format('0,0');
     }, []);
@@ -68,7 +78,8 @@ const Product = ({ navigation, route }) => {
     }, []);
 
     //Thực hiện khi nhấn vào sản phẩm
-    const handlePressProduct = useCallback(async (id, image, name, star, category, cityId, city, packages) => {
+    const handlePressProduct = useCallback(async (...param) => {
+        const [id, image, name, star, category, cityId, city, packages] = param;
         //Chuyển sang trang sản phẩm
         navigation.push('Product', {
             id: id,
@@ -96,11 +107,20 @@ const Product = ({ navigation, route }) => {
         }
     }, []);
 
+    // Sử lý lấy tọa độ của thẻ cả 2 thẻ đều nằm trong thẻ con
+    const getCoordinatesBtnAddCart = async () => {
+        const coordinates = await BottomRef.current.getCoordinates();
+        return coordinates;
+    };
+    const getCoordinatesBtnCart = async () => {
+        const coordinates = await headerRef.current.getCoordinates();
+        return coordinates;
+    };
     // Gọi api sản phẩm
     useEffect(() => {
         async function fetchData() {
             try {
-                const res1 = await axios.get(`http://10.150.3.6:8080/api/getProduct/${id}`);
+                const res1 = await axios.get(`${API_URL}/api/getProduct/${id}`);
                 setProduct(res1.data);
             } catch (error) {
                 console.log(error);
@@ -112,7 +132,7 @@ const Product = ({ navigation, route }) => {
     return (
         <>
             <View style={{ flex: 1, position: 'relative' }}>
-                <Header opacity={opacity} backgroundBtn={backgroundBtn} colorBtn={colorBtn} navigation={navigation} />
+                <Header opacity={opacity} backgroundBtn={backgroundBtn} colorBtn={colorBtn} navigation={navigation} ref={headerRef} />
 
                 <ScrollView onScroll={handleScrollScreen} showsVerticalScrollIndicator={false} stickyHeaderIndices={[0]}>
                     <ImageMain bottom={bottom} opacityImage={opacityImage} image={product.image} />
@@ -136,6 +156,7 @@ const Product = ({ navigation, route }) => {
                             place={product.place}
                             evaluate={product.evaluate}
                             booked={product.booked}
+                            navigation={navigation}
                         />
                         {/* Các điểm nổi bật */}
                         <Hightlight highlight={product.highlight} setModalVisible={setModalVisible} />
@@ -175,6 +196,8 @@ const Product = ({ navigation, route }) => {
                     formatNumberWithCommas={formatNumberWithCommas}
                     activeIndex={activeIndex}
                     setModalVisible1={setModalVisible1}
+                    setModalVisible2={setModalVisible2}
+                    ref={BottomRef}
                 />
             </View>
 
@@ -190,6 +213,20 @@ const Product = ({ navigation, route }) => {
                 formatNumberWithCommas={formatNumberWithCommas}
                 countsInit={countsInit}
                 navigation={navigation}
+            />
+
+            <ModalAddCart
+                modalVisible2={modalVisible2}
+                package_service={package_service}
+                quantity={quantity}
+                counts={counts}
+                setModalVisible2={setModalVisible2}
+                setCounts={setCounts}
+                formatNumberWithCommas={formatNumberWithCommas}
+                countsInit={countsInit}
+                navigation={navigation}
+                getCoordinatesBtnAddCart={getCoordinatesBtnAddCart}
+                getCoordinatesBtnCart={getCoordinatesBtnCart}
             />
         </>
     );

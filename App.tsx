@@ -6,7 +6,7 @@ import Pay from './src/Pay';
 import City from './src/City/City';
 import Fun_experience from './src/Fun_experience/Fun_experience';
 import Home from './src/Home/Home';
-import Cart from './src/Cart';
+import Cart from './src/Cart/Cart';
 import Notify from './src/Notify';
 import Login from './src/Login';
 import Sign from './src/Sign';
@@ -17,6 +17,7 @@ import Order_Confirm from './src/Order_Confirm';
 import Search from './src/Search/Search';
 import Have_fun from './src/Have_fun';
 import Where_go from './src/Where_go/Where_go';
+import Map from './src/Map';
 
 // import { Icon } from 'react-native-vector-icons/Icon';
 
@@ -36,6 +37,15 @@ const App = () => {
           component={TourComponent}
           options={{headerShown: false}}
         /> */}
+                {/* <Stack.Screen
+                    name="Cart"
+                    component={Cart}
+                    options={{
+                        headerShown: true,
+                        headerTitle: 'Giỏ hàng',
+                    }}
+                /> */}
+
                 <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
                 <Stack.Screen name="City" component={City} options={{ headerShown: false }} />
                 <Stack.Screen
@@ -105,6 +115,7 @@ const App = () => {
                 />
                 <Stack.Screen name="Where_go" component={Where_go} options={{ headerShown: false }} />
                 <Stack.Screen name="Fun_experience" component={Fun_experience} options={{ headerShown: false }} />
+                <Stack.Screen name="Map" component={Map} options={{ headerShown: true, title: 'Vị trí' }} />
             </Stack.Navigator>
         </NavigationContainer>
     );

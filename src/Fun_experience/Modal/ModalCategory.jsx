@@ -1,18 +1,34 @@
 import { View, Text, Modal } from 'react-native';
-import React from 'react';
+import React, { forwardRef, useImperativeHandle, useState } from 'react';
 
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import { moderateScale, verticalScale, scale } from 'react-native-size-matters';
 
-const ModalCategory = ({ modalVisible2, active, setModalVisible2, setNameCategory, setActive }) => {
-    const handlePressCategory = (param1, param2) => {
-        setNameCategory(param2);
-        setActive(param1);
+const ModalCategory = ({ setNameCategory }, ref) => {
+    const [visible, setVisible] = useState(false);
+    const [active, setActive] = useState(undefined);
+    const [name, setName] = useState('');
+
+    // Cung cấp hàm openModal cho component cha
+    useImperativeHandle(ref, () => ({
+        openModal() {
+            setVisible(true);
+        },
+        closeModal() {
+            setVisible(false);
+        },
+    }));
+
+    // Sử lý khi nhấn vào tên thể loại trong modal
+    const handlePressCategory = (id, name) => {
+        setName(name);
+        setActive(id);
     };
     return (
         <Modal
             animationType="slide" // hoặc 'fade', 'none', 'slide'
-            transparent={true} // modal trong suốt hay không
-            visible={modalVisible2} // điều kiện để hiện modal
+            transparent={true} // modal trong suốt
+            visible={visible} // điều kiện để hiện modal
         >
             <View
                 style={{
@@ -20,118 +36,74 @@ const ModalCategory = ({ modalVisible2, active, setModalVisible2, setNameCategor
                     position: 'absolute',
                     bottom: 0,
                     width: '100%',
-                    height: 400,
-                    borderTopLeftRadius: 12,
-                    borderTopEndRadius: 12,
+                    height: verticalScale(400), // Responsive chiều cao modal
+                    borderTopLeftRadius: moderateScale(12),
+                    borderTopEndRadius: moderateScale(12),
                 }}
             >
+                {/* Icon đóng modal */}
                 <IconAntDesign
                     style={{
                         position: 'absolute',
-                        top: 15,
-                        left: 15,
+                        top: verticalScale(15), // Responsive top
+                        left: scale(15), // Responsive left
                         zIndex: 1,
                     }}
                     name="close"
-                    size={22}
-                    onPress={() => setModalVisible2(false)}
+                    color="#000"
+                    size={moderateScale(22)} // Responsive icon size
+                    onPress={() => setVisible(false)}
                 />
+
+                {/* Tiêu đề */}
                 <Text
                     style={{
                         textAlign: 'center',
-                        fontSize: 16,
+                        fontSize: moderateScale(16), // Responsive font size
                         fontWeight: '600',
                         color: '#000',
                         borderBottomWidth: 1,
                         borderBottomColor: '#ccc',
-                        paddingVertical: 14,
+                        paddingVertical: verticalScale(14), // Responsive padding
                     }}
                 >
                     Chọn danh mục
                 </Text>
+
+                {/* Các lựa chọn danh mục */}
                 <View
                     style={{
                         flexDirection: 'row',
                         flexWrap: 'wrap',
-                        padding: 12,
+                        padding: scale(12), // Responsive padding
                     }}
                 >
-                    <Text
-                        onPress={() => handlePressCategory(1, 'Tour')}
-                        style={{
-                            color: active === 1 ? '#33FF00' : '#000',
-                            borderWidth: 1,
-                            borderColor: active === 1 ? '#33FF00' : '#000',
-                            paddingVertical: 8,
-                            paddingHorizontal: 16,
-                            borderRadius: 18,
-                            marginRight: 12,
-                            marginTop: 12,
-                        }}
-                    >
-                        Tour
-                    </Text>
-                    <Text
-                        onPress={() => handlePressCategory(2, 'Du thuyền')}
-                        style={{
-                            color: active === 2 ? '#33FF00' : '#000',
-                            borderWidth: 1,
-                            borderColor: active === 2 ? '#33FF00' : '#000',
-                            paddingVertical: 8,
-                            paddingHorizontal: 16,
-                            borderRadius: 18,
-                            marginRight: 12,
-                            marginTop: 12,
-                        }}
-                    >
-                        Du thuyền
-                    </Text>
-                    <Text
-                        onPress={() => handlePressCategory(3, 'Massage & Suối nước nóng')}
-                        style={{
-                            color: active === 3 ? '#33FF00' : '#000',
-                            borderWidth: 1,
-                            borderColor: active === 3 ? '#33FF00' : '#000',
-                            paddingVertical: 8,
-                            paddingHorizontal: 16,
-                            borderRadius: 18,
-                            marginRight: 12,
-                            marginTop: 12,
-                        }}
-                    >
-                        Massage & Suối nước nóng
-                    </Text>
-                    <Text
-                        onPress={() => handlePressCategory(4, 'Phiêu lưu & Khám phá thiên nhiên')}
-                        style={{
-                            color: active === 4 ? '#33FF00' : '#000',
-                            borderWidth: 1,
-                            borderColor: active === 4 ? '#33FF00' : '#000',
-                            paddingVertical: 8,
-                            paddingHorizontal: 16,
-                            borderRadius: 18,
-                            marginRight: 12,
-                            marginTop: 12,
-                        }}
-                    >
-                        Phiêu lưu & Khám phá thiên nhiên
-                    </Text>
-                    <Text
-                        onPress={() => handlePressCategory(5, 'Khách sạn')}
-                        style={{
-                            color: active === 5 ? '#33FF00' : '#000',
-                            borderWidth: 1,
-                            borderColor: active === 5 ? '#33FF00' : '#000',
-                            paddingVertical: 8,
-                            paddingHorizontal: 16,
-                            borderRadius: 18,
-                            marginRight: 12,
-                            marginTop: 12,
-                        }}
-                    >
-                        Khách sạn
-                    </Text>
+                    {[
+                        { id: 1, name: 'Tour' },
+                        { id: 2, name: 'Du thuyền' },
+                        { id: 3, name: 'Massage & Suối nước nóng' },
+                        { id: 4, name: 'Phiêu lưu & Khám phá thiên nhiên' },
+                    ].map((category) => (
+                        <Text
+                            key={category.id}
+                            onPress={() => handlePressCategory(category.id, category.name)}
+                            style={{
+                                color: active === category.id ? '#33FF00' : '#000',
+                                borderWidth: 1,
+                                borderColor: active === category.id ? '#33FF00' : '#000',
+                                paddingVertical: verticalScale(8), // Responsive padding
+                                paddingHorizontal: scale(16), // Responsive padding
+                                borderRadius: moderateScale(18), // Responsive border radius
+                                marginRight: scale(12), // Responsive margin
+                                marginTop: verticalScale(12), // Responsive margin
+                            }}
+                        >
+                            {category.name}
+                        </Text>
+                    ))}
                 </View>
+
+                {/* Footer */}
                 <View
                     style={{
                         position: 'absolute',
@@ -139,8 +111,8 @@ const ModalCategory = ({ modalVisible2, active, setModalVisible2, setNameCategor
                         justifyContent: 'space-between',
                         bottom: 0,
                         width: '100%',
-                        paddingHorizontal: 12,
-                        paddingVertical: 15,
+                        paddingHorizontal: scale(12), // Responsive padding
+                        paddingVertical: verticalScale(15), // Responsive padding
                         borderTopWidth: 1,
                         borderTopColor: '#ccc',
                         alignItems: 'center',
@@ -153,19 +125,23 @@ const ModalCategory = ({ modalVisible2, active, setModalVisible2, setNameCategor
                         }}
                         style={{
                             textDecorationLine: 'underline',
+                            color: '#000',
                         }}
                     >
                         Xóa
                     </Text>
                     <Text
-                        onPress={() => setModalVisible2(false)}
+                        onPress={() => {
+                            setVisible(false);
+                            setNameCategory(name);
+                        }}
                         style={{
                             backgroundColor: '#ff5b00',
                             color: '#fff',
                             fontWeight: '500',
-                            paddingHorizontal: 18,
-                            paddingVertical: 8,
-                            borderRadius: 8,
+                            paddingHorizontal: scale(18), // Responsive padding
+                            paddingVertical: verticalScale(8), // Responsive padding
+                            borderRadius: moderateScale(8), // Responsive border radius
                         }}
                     >
                         Chọn
@@ -176,4 +152,4 @@ const ModalCategory = ({ modalVisible2, active, setModalVisible2, setNameCategor
     );
 };
 
-export default ModalCategory;
+export default forwardRef(ModalCategory);

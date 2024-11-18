@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableWithoutFeedback, TouchableHighlight, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 
 import IconEntypo from 'react-native-vector-icons/Entypo';

@@ -1,10 +1,10 @@
 import { View, Text, TouchableWithoutFeedback } from 'react-native';
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useState } from 'react';
 
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import IconFeather from 'react-native-vector-icons/Feather';
 
-const Header = ({ navigation, openModal }, ref) => {
+const Header = ({ navigation, openModal, nameCity }, ref) => {
     const [valueInput, setValueInput] = useState(undefined);
 
     useImperativeHandle(ref, () => ({
@@ -24,6 +24,7 @@ const Header = ({ navigation, openModal }, ref) => {
                 elevation: 1,
                 borderBottomWidth: 1,
                 borderBottomColor: '#DDDDDD',
+                // display: 'none',
             }}
         >
             <IconAntDesign name="left" color="#000" size={26} onPress={() => navigation.goBack()} />

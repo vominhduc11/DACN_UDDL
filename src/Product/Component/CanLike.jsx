@@ -5,6 +5,8 @@ import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import FastImage from 'react-native-fast-image';
 import axios from 'axios';
 
+import { API_URL } from '@env';
+
 const CanLike = ({ formatNumberWithCommas, minPricePackage, handlePressProduct, category, cityId }) => {
     const [listProduct, setListProduct] = useState([]);
 
@@ -82,7 +84,7 @@ const CanLike = ({ formatNumberWithCommas, minPricePackage, handlePressProduct, 
 
     useEffect(() => {
         async function fetchData() {
-            const res = await axios.get(`http://192.168.0.113:8080/api/getListProduct/${category}/${cityId}`);
+            const res = await axios.get(`${API_URL}/api/getListProduct/${category}/${cityId}`);
             setListProduct(res.data);
         }
         fetchData();

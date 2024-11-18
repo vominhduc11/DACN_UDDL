@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Header from './Component/Header';
 import BackgroundMain from './Component/BackgroundMain';
 import Container from './Component/Container';
+import { scale, verticalScale } from 'react-native-size-matters';
 
 const Feature_Activity = ({ navigation }) => {
     const [opacity, setOpacity] = useState(0);
@@ -31,16 +32,28 @@ const Feature_Activity = ({ navigation }) => {
     };
     return (
         <View style={{ position: 'relative' }}>
+            <Header opacity={opacity} color1={color1} color2={color2} navigation={navigation} />
+
             <ScrollView
                 onScroll={handleScroll}
-                style={{ backgroundColor: '#fff', height: '100%' }}
+                style={{
+                    backgroundColor: '#fff',
+                    height: '100%',
+                }}
                 showsVerticalScrollIndicator={false}
                 stickyHeaderIndices={[0]}
             >
                 <BackgroundMain bottom={bottom} opacityBackground={opacityBackground} />
-                <Container />
+                <View
+                    style={{
+                        paddingHorizontal: scale(12),
+                        paddingBottom: verticalScale(20), // Adjusting padding for flexibility
+                        paddingTop: verticalScale(16), // Adjust top padding with vertical scale
+                    }}
+                >
+                    <Container />
+                </View>
             </ScrollView>
-            <Header opacity={opacity} color1={color1} color2={color2} navigation={navigation} />
         </View>
     );
 };
