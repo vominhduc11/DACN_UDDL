@@ -7,7 +7,7 @@ import IconEntypo from 'react-native-vector-icons/Entypo';
 import axios from 'axios';
 import numeral from 'numeral';
 
-import { API_URL } from '@env';
+import Config from '../../.env/Config';
 
 const ListSearch = ({ category, handlePressProduct, nameCity }, ref) => {
     const [products, setProducts] = useState([]);
@@ -126,7 +126,7 @@ const ListSearch = ({ category, handlePressProduct, nameCity }, ref) => {
 
     // Sử lý khi bấm vào tên thành phố
     const setListProduct = async (cityId) => {
-        const res = await axios.get(`${API_URL}/api/getAllProductOfCity/${cityId}`);
+        const res = await axios.get(`${Config.API_URL}/api/getAllProductOfCity/${cityId}`);
         setProducts(res.data);
     };
 
@@ -134,11 +134,11 @@ const ListSearch = ({ category, handlePressProduct, nameCity }, ref) => {
     useEffect(() => {
         async function fetchData() {
             if (nameCity) {
-                const res = await axios.get(`${API_URL}/api/getAllProductOfCategoryAndCity/${category}/${nameCity}`);
+                const res = await axios.get(`${Config.API_URL}/api/getAllProductOfCategoryAndCity/${category}/${nameCity}`);
                 setProducts(res.data);
             } else {
                 // category được truyền qua từ trang trước
-                const res = await axios.get(`${API_URL}/api/getAllProductOfCategory/${category}`);
+                const res = await axios.get(`${Config.API_URL}/api/getAllProductOfCategory/${category}`);
                 setProducts(res.data);
             }
         }

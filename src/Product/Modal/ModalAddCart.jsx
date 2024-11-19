@@ -4,6 +4,7 @@ import React, { memo, useRef } from 'react';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 const ModalAddCart = ({
     product,
@@ -32,10 +33,8 @@ const ModalAddCart = ({
         setCounts(updatedCounts);
     };
 
-    // Xử lý thêm sản phẩm vào giỏ hàng
-    const handleAddCart = async () => {
-        // Trả về mảng quantitys thêm trường amount trong obj
-
+    // Tạo mảng quantity thêm trường amount
+    const setQuantity = () => {
         const result = package_service.quantitys
             .map((quantity, index) => {
                 if (counts[index] !== 0) {
@@ -45,47 +44,71 @@ const ModalAddCart = ({
                 return null; // Trả về null cho các phần tử không đạt điều kiện
             })
             .filter((quantity) => quantity !== null); // Loại bỏ các phần tử null
-        // Lấy các sản phẩm giỏ hàng đã được lưu trong AsyncStorage
-        const products = JSON.parse(await AsyncStorage.getItem('cart'));
-        // Tạo mới obj
-        const newObj = {
-            id: product.id,
-            name: product.name,
-            image: product.image,
-            name_package: package_service.name,
-            quantity: result,
 
-            star: product.star,
-            category: product.category,
-            cityId: cityId,
-            city: cityName,
-            packages: product.package_services,
-        };
-        // Thêm obj vừa tạo vào đầu mảng products
-        products.unshift(newObj);
-        // Lưu vào AsyncStorage mảng mới
-        await AsyncStorage.setItem('cart', JSON.stringify(products));
-        if (await AsyncStorage.getItem('unviewedCartCount')) {
-            const result = JSON.parse(await AsyncStorage.getItem('unviewedCartCount'));
-            setUnviewedCartCount(result + 1);
-            await AsyncStorage.setItem('unviewedCartCount', JSON.stringify(result + 1));
+        return result;
+    };
+
+    // Kiểm tra sản phẩm có tồn tại trong giỏ hàng không
+    const existsProductCart = async (idProduct) => {
+        try {
+            const res = await axios.get(`http://localhost:8080/api/checkIfExists/${idProduct}`);
+
+            return res.data;
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const partialUpdateProductCart = async (idProduct, quantity) => {
+        try {
+            await axios.put('http://localhost:8080/api/partialUpdateProductCart', {
+                idProduct: idProduct,
+                quantity: JSON.stringify(quantity),
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const addProductCart = async (idProduct, idPackage, quantity) => {
+        try {
+            await axios.post('http://localhost:8080/api/addProductCart', {
+                idProduct: idProduct,
+                idPackage: idPackage,
+                quantity: JSON.stringify(quantity),
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    // Xử lý thêm sản phẩm vào giỏ hàng
+    const handleAddCart = async () => {
+        if (await existsProductCart(product.id)) {
+            await partialUpdateProductCart(product.id, setQuantity());
+            // Set số hiển thị các sản phẩm chưa xem trên giỏ hàng
+            if (await AsyncStorage.getItem('unviewedCartCount')) {
+                const result = JSON.parse(await AsyncStorage.getItem('unviewedCartCount'));
+                setUnviewedCartCount(result);
+            } else {
+                setUnviewedCartCount(1);
+                await AsyncStorage.setItem('unviewedCartCount', JSON.stringify(1));
+            }
         } else {
-            setUnviewedCartCount(1);
-            await AsyncStorage.setItem('unviewedCartCount', JSON.stringify(1));
+            await addProductCart(product.id, package_service.id, setQuantity());
+            // Set số hiển thị các sản phẩm chưa xem trên giỏ hàng
+            if (await AsyncStorage.getItem('unviewedCartCount')) {
+                const result = JSON.parse(await AsyncStorage.getItem('unviewedCartCount'));
+                setUnviewedCartCount(result + 1);
+                await AsyncStorage.setItem('unviewedCartCount', JSON.stringify(result + 1));
+            } else {
+                setUnviewedCartCount(1);
+                await AsyncStorage.setItem('unviewedCartCount', JSON.stringify(1));
+            }
         }
         // Đóng modal và sau đó set chuyển động cho cart
         setModalVisible2(false);
         showCartAnimate();
-
-        const a = {
-            quantity: [
-                {
-                    name: 'người lớn',
-                    price: 200000,
-                    amount: 2,
-                },
-            ],
-        };
     };
 
     return (

@@ -56,9 +56,14 @@ const Bottom_Action_Bar = (
                     duration: 400,
                     useNativeDriver: false,
                 }),
-            ]).start();
+            ]).start(() => {
+                // Bỏ giao diện animate , set về vị trí cũ , thay đổi giá trị sản phẩn giỏ hàng chưa xem trong component Header
+                setShowCartAnimate(false);
+                bottom.setValue(0);
+                left.setValue(50);
+            });
         }
-        // console.log(showCartAnimate);
+        // Thực hiện animate khi set showCartAnimate = true
         if (showCartAnimate) {
             setAnimateForCart();
         }

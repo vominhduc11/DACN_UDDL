@@ -1,9 +1,9 @@
 import { View, Text, ImageBackground, TouchableWithoutFeedback, FlatList } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-
-import { API_URL, API_KEY } from '@env';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
+
+import Config from '../../.env/Config';
 
 const Part3 = ({ id, city, navigation }) => {
     const [citys, setCitys] = useState([]);
@@ -50,7 +50,7 @@ const Part3 = ({ id, city, navigation }) => {
     useEffect(() => {
         // console.log('mount');
         async function findLocal(param) {
-            const res = await axios.get(`https://geocode.search.hereapi.com/v1/geocode?apikey=${API_KEY}&q=${param}`);
+            const res = await axios.get(`https://geocode.search.hereapi.com/v1/geocode?apikey=${Config.API_KEY}&q=${param}`);
             // console.log(param);
             return res.data.items[0].position;
         }
@@ -69,7 +69,7 @@ const Part3 = ({ id, city, navigation }) => {
                         //lấy vị trí
                         const positionDestination = await findLocal(ele.name);
                         const res = await axios.get(
-                            `https://router.hereapi.com/v8/routes?apikey=oX3CYSdcd1kzHo9iAiGTKzYCSetABD5KuCAkPUN6QrQ&transportMode=car&origin=${positionOrigin.lat},${positionOrigin.lng}&destination=${positionDestination.lat},${positionDestination.lng}&return=summary`
+                            `https://router.hereapi.com/v8/routes?apikey=${Config.API_KEY}&transportMode=car&origin=${positionOrigin.lat},${positionOrigin.lng}&destination=${positionDestination.lat},${positionDestination.lng}&return=summary`
                         );
                         ele.distance = res.data.routes[0].sections[0].summary.length / 1000;
                         return ele;

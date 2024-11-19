@@ -32,20 +32,6 @@ const App = () => {
                     gestureEnabled: true, // Kích hoạt cử chỉ vuốt
                 }}
             >
-                {/* <Stack.Screen
-          name="TourComponent"
-          component={TourComponent}
-          options={{headerShown: false}}
-        /> */}
-                {/* <Stack.Screen
-                    name="Cart"
-                    component={Cart}
-                    options={{
-                        headerShown: true,
-                        headerTitle: 'Giỏ hàng',
-                    }}
-                /> */}
-
                 <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
                 <Stack.Screen name="City" component={City} options={{ headerShown: false }} />
                 <Stack.Screen

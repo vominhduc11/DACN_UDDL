@@ -9,7 +9,7 @@ import axios from 'axios';
 import Geolocation from '@react-native-community/geolocation';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
-import { API_URL, API_KEY } from '@env';
+import Config from '../../../.env/Config';
 
 const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handlePressProduct, pagerViewRef }, ref) => {
     const [heightPagerView, setHeightPagerView] = useState(1200);
@@ -70,7 +70,7 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
         setLoading1(true);
 
         try {
-            const res = await axios.get(`${API_URL}/api/getInTurnProduct/${amountProduct1}`);
+            const res = await axios.get(`${Config.API_URL}/api/getInTurnProduct/${amountProduct1}`);
             setListProduct3(res.data);
             setAmountProduct1(amountProduct1 + 10);
         } catch (error) {
@@ -91,11 +91,11 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
 
             async function getPosition(...params) {
                 const res1 = await axios.get(
-                    `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${params[0]},${params[1]}&lang=vi-VN&apiKey=${API_KEY}`
+                    `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${params[0]},${params[1]}&lang=vi-VN&apiKey=${Config.API_KEY}`
                 );
 
-                const res2 = await axios.get(`${API_URL}/api/getCityByName/${res1.data.items[0].address.county}`);
-                const res3 = await axios.get(`${API_URL}/api/getInTurnProductOfCity/${res2.data.id}/${amountProduct2}`);
+                const res2 = await axios.get(`${Config.API_URL}/api/getCityByName/${res1.data.items[0].address.county}`);
+                const res3 = await axios.get(`${Config.API_URL}/api/getInTurnProductOfCity/${res2.data.id}/${amountProduct2}`);
                 setListProduct4(res3.data);
                 setAmountProduct2(amountProduct2 + 10);
             }

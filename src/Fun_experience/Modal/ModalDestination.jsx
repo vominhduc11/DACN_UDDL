@@ -8,7 +8,7 @@ import axios from 'axios';
 import FastImage from 'react-native-fast-image';
 import { moderateScale, verticalScale, scale } from 'react-native-size-matters';
 
-import { API_URL } from '@env';
+import Config from '../../.env/Config';
 
 const ModalDestination = ({ handlePressProduct, navigation, setNameCity }, ref) => {
     const [visible, setVisible] = useState(false);
@@ -119,10 +119,10 @@ const ModalDestination = ({ handlePressProduct, navigation, setNameCity }, ref) 
         setLoading(true);
         async function fetchData() {
             try {
-                const res = await axios.get(`${API_URL}/api/getListCityAccordingString/${value}`);
+                const res = await axios.get(`${Config.API_URL}/api/getListCityAccordingString/${value}`);
                 setCitys(res.data);
 
-                const res1 = await axios.get(`${API_URL}/api/getListProductAccordingString/${value}`);
+                const res1 = await axios.get(`${Config.API_URL}/api/getListProductAccordingString/${value}`);
                 setProducts(res1.data);
             } catch (error) {
                 console.log(error);

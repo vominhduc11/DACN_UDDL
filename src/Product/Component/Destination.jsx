@@ -4,7 +4,7 @@ import React, { memo, useEffect, useState } from 'react';
 import FastImage from 'react-native-fast-image';
 import axios from 'axios';
 
-import { API_URL } from '@env';
+import Config from '../../.env/Config';
 
 const Destination = ({ handlePressProduct, cityId }) => {
     const [listProduct, setListProduct] = useState([]);
@@ -49,7 +49,7 @@ const Destination = ({ handlePressProduct, cityId }) => {
 
     useEffect(() => {
         async function fetchData() {
-            const res = await axios.get(`${API_URL}/api/getProductOfCity/${cityId}/10`);
+            const res = await axios.get(`${Config.API_URL}/api/getProductOfCity/${cityId}/10`);
             setListProduct(res.data);
         }
         fetchData();

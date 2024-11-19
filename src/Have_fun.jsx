@@ -8,7 +8,7 @@ import FastImage from 'react-native-fast-image';
 import axios from 'axios';
 import numeral from 'numeral';
 
-import { API_URL } from '@env';
+import Config from './.env/Config';
 
 const Have_fun = ({ navigation, route }) => {
     const [products, setProducts] = useState([]);
@@ -120,7 +120,7 @@ const Have_fun = ({ navigation, route }) => {
     useEffect(() => {
         async function fetchData() {
             try {
-                const res = await axios.get(`${API_URL}/api/getAllProductOfCity/${idCity}`);
+                const res = await axios.get(`${Config.API_URL}/api/getAllProductOfCity/${idCity}`);
                 console.log(idCity);
                 setProducts(res.data);
             } catch (error) {

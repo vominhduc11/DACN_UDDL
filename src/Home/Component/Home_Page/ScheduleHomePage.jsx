@@ -6,7 +6,7 @@ import axios from 'axios';
 import FastImage from 'react-native-fast-image';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 
-import { API_URL } from '@env';
+import Config from '../../../.env/Config';
 
 const ScheduleHomePage = ({ formatNumberWithCommas, minPricePackage, handlePressProduct, navigation }) => {
     // console.log(API_URL);
@@ -84,10 +84,10 @@ const ScheduleHomePage = ({ formatNumberWithCommas, minPricePackage, handlePress
     useEffect(() => {
         async function fetchData() {
             //Lấy 1 thành phố bất kì
-            const res1 = await axios.get(`${API_URL}/api/getCity`);
+            const res1 = await axios.get(`${Config.API_URL}/api/getCity`);
             setCity_name(res1.data.name);
             // Lấy 10 sản phẩm của thành phố bất kì trên
-            const res2 = await axios.get(`${API_URL}/api/getProductOfCity/${1}/10`);
+            const res2 = await axios.get(`${Config.API_URL}/api/getProductOfCity/${1}/10`);
             setListProduct(res2.data);
         }
         fetchData();

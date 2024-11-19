@@ -1,12 +1,15 @@
 import { Text, TouchableWithoutFeedback, View } from 'react-native';
-import React, { forwardRef, useImperativeHandle, useRef } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 
 import IconEntypo from 'react-native-vector-icons/Entypo';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import IconFeather from 'react-native-vector-icons/Feather';
 import { scale } from 'react-native-size-matters';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Header = ({ opacity, backgroundBtn, colorBtn, navigation }, ref) => {
+    const [unviewedCartCount, setUnviewedCartCount] = useState(0);
     // Nút cart trên cùng góc phải
     const btnCartRef = useRef();
 
@@ -21,6 +24,17 @@ const Header = ({ opacity, backgroundBtn, colorBtn, navigation }, ref) => {
             return { x: coordinates.x, y: coordinates.y };
         },
     }));
+
+    useEffect(() => {
+        async function setValueAmountUnviewed() {
+            if (await AsyncStorage.getItem('unviewedCartCount')) {
+                setUnviewedCartCount(JSON.parse(await AsyncStorage.getItem('unviewedCartCount')));
+            } else {
+                setUnviewedCartCount(0);
+            }
+        }
+        setValueAmountUnviewed();
+    }, []);
     return (
         <View
             style={{
@@ -71,21 +85,23 @@ const Header = ({ opacity, backgroundBtn, colorBtn, navigation }, ref) => {
                         <IconFeather name="shopping-cart" size={20} color={colorBtn} />
                         {/* Số lượng sản phẩm chưa xem trong giỏ hàng */}
 
-                        <View
-                            style={{
-                                position: 'absolute',
-                                backgroundColor: 'red',
-                                width: 18,
-                                height: 18,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                borderRadius: 30,
-                                top: -2,
-                                left: 24,
-                            }}
-                        >
-                            <Text style={{ fontSize: 10, fontWeight: '700' }}>1</Text>
-                        </View>
+                        {unviewedCartCount === 0 || (
+                            <View
+                                style={{
+                                    position: 'absolute',
+                                    backgroundColor: 'red',
+                                    width: 18,
+                                    height: 18,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    borderRadius: 30,
+                                    top: -2,
+                                    left: 24,
+                                }}
+                            >
+                                <Text style={{ fontSize: 10, fontWeight: '700' }}>{unviewedCartCount}</Text>
+                            </View>
+                        )}
                     </View>
                 </TouchableWithoutFeedback>
             </View>

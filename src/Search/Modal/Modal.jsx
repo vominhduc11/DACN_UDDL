@@ -1,24 +1,12 @@
-import {
-    View,
-    Text,
-    Modal,
-    TextInput,
-    Keyboard,
-    TouchableWithoutFeedback,
-    Dimensions,
-    TouchableOpacity,
-    Image,
-    FlatList,
-    ScrollView,
-} from 'react-native';
-import React, { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useState } from 'react';
+import { View, Text, Modal, TextInput, Keyboard, TouchableWithoutFeedback, Dimensions, TouchableOpacity, FlatList, ScrollView } from 'react-native';
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import IconFeather from 'react-native-vector-icons/Feather';
 import axios from 'axios';
-
-import { API_URL } from '@env';
 import FastImage from 'react-native-fast-image';
+
+import Config from '../../.env/Config';
 
 const ModalDestination = ({ setValueInput, setListProduct, handlePressProduct, navigation }, ref) => {
     const [visible, setVisible] = useState(false);
@@ -102,10 +90,10 @@ const ModalDestination = ({ setValueInput, setListProduct, handlePressProduct, n
         setLoading(true);
         async function fetchData() {
             try {
-                const res = await axios.get(`${API_URL}/api/getListCityAccordingString/${value}`);
+                const res = await axios.get(`${Config.API_URL}/api/getListCityAccordingString/${value}`);
                 setCitys(res.data);
 
-                const res1 = await axios.get(`${API_URL}/api/getListProductAccordingString/${value}`);
+                const res1 = await axios.get(`${Config.API_URL}/api/getListProductAccordingString/${value}`);
                 setProducts(res1.data);
             } catch (error) {
                 console.log(error);

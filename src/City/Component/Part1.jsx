@@ -5,8 +5,9 @@ import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import IconFontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import IconFoundation from 'react-native-vector-icons/Foundation';
 import axios from 'axios';
-import { API_URL } from '@env';
 import { moderateScale, scale } from 'react-native-size-matters';
+
+import Config from '../../.env/Config';
 
 const Part1 = ({ id, navigation, city }) => {
     const [listCategory, setListCategory] = useState([]);
@@ -14,7 +15,7 @@ const Part1 = ({ id, navigation, city }) => {
     // Gọi Api
     useEffect(() => {
         async function fetchData() {
-            const res = await axios.get(`${API_URL}/api/getAllCategoryOfCity/${id}`);
+            const res = await axios.get(`${Config.API_URL}/api/getAllCategoryOfCity/${id}`);
             setListCategory(res.data);
         }
         fetchData();

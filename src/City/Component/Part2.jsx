@@ -6,8 +6,9 @@ import axios from 'axios';
 import numeral from 'numeral';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FastImage from 'react-native-fast-image';
-import { API_URL } from '@env';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
+
+import Config from '../../.env/Config';
 
 const Part2 = ({ navigation, city, id }) => {
     const [products, setProducts] = useState([]);
@@ -60,7 +61,7 @@ const Part2 = ({ navigation, city, id }) => {
 
     useEffect(() => {
         async function fetchData() {
-            const res1 = await axios.get(`${API_URL}/api/getProductOfCity/${id}/4`);
+            const res1 = await axios.get(`${Config.API_URL}/api/getProductOfCity/${id}/4`);
             setProducts(res1.data);
         }
 

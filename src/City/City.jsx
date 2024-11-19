@@ -10,7 +10,7 @@ import Part3 from './Component/Part3';
 import axios from 'axios';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
-import { API_URL } from '@env';
+import Config from '../.env/Config';
 
 const City = ({ navigation, route }) => {
     const [opacity, setOpacity] = useState(0);
@@ -43,7 +43,7 @@ const City = ({ navigation, route }) => {
     useEffect(() => {
         async function fetchData() {
             try {
-                const res = await axios.get(`${API_URL}/api/getCity/${id}`);
+                const res = await axios.get(`${Config.API_URL}/api/getCity/${id}`);
                 setCity(res.data); // Truy cập vào dữ liệu trong response
             } catch (error) {
                 console.log(error);

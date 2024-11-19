@@ -19,7 +19,7 @@ import Destination from './Component/Destination';
 import Title from './Component/Title';
 import ModalAddCart from './Modal/ModalAddCart';
 
-import { API_URL } from '@env';
+import Config from '../.env/Config';
 
 const Product = ({ navigation, route }) => {
     const [product, setProduct] = useState({});
@@ -127,7 +127,7 @@ const Product = ({ navigation, route }) => {
     useEffect(() => {
         async function fetchData() {
             try {
-                const res1 = await axios.get(`${API_URL}/api/getProduct/${id}`);
+                const res1 = await axios.get(`${Config.API_URL}/api/getProduct/${id}`);
                 setProduct(res1.data);
             } catch (error) {
                 console.log(error);

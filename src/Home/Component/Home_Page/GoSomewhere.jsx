@@ -7,7 +7,7 @@ import FastImage from 'react-native-fast-image';
 import axios from 'axios';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 
-import { API_URL } from '@env';
+import Config from '../../../.env/Config';
 
 const GoSomewhere = ({ navigation }) => {
     const [listCity, setListCity] = useState([]);
@@ -85,7 +85,7 @@ const GoSomewhere = ({ navigation }) => {
                 // Lấy tất cả các thành phố (6 thành phố) và lưu vào trong AsyncStorage
                 // Nếu AsyncStorage tồn tại thì lần sau chỉ cần truy cập vào AsyncStorage
                 if (!(await AsyncStorage.getItem('city'))) {
-                    const res3 = await axios.get(`${API_URL}/api/getListCity`);
+                    const res3 = await axios.get(`${Config.API_URL}/api/getListCity`);
                     await AsyncStorage.setItem('city', JSON.stringify(res3.data));
                     setListCity(res3.data);
                 } else {
