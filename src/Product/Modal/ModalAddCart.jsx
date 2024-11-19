@@ -3,19 +3,22 @@ import React, { memo, useRef } from 'react';
 
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ModalAddCart = ({
+    product,
+    cityId,
+    cityName,
     modalVisible2,
     package_service,
     quantity,
     counts,
     setModalVisible2,
     setCounts,
+    setUnviewedCartCount,
     formatNumberWithCommas,
     countsInit,
-    getCoordinatesBtnAddCart,
-    getCoordinatesBtnCart,
-    navigation,
+    showCartAnimate,
 }) => {
     // Xử lý khi đóng modal
     const handleCloseModal = () => {
@@ -31,12 +34,58 @@ const ModalAddCart = ({
 
     // Xử lý thêm sản phẩm vào giỏ hàng
     const handleAddCart = async () => {
-        console.log(await getCoordinatesBtnAddCart());
-        console.log(await getCoordinatesBtnCart());
-        // btnAddCartRef.current.measure((fx, fy, width, height, px, py) => {
-        //     console.log('X:', px, 'Y:', py, 'Width:', width, 'Height:', height);
-        // });
+        // Trả về mảng quantitys thêm trường amount trong obj
+
+        const result = package_service.quantitys
+            .map((quantity, index) => {
+                if (counts[index] !== 0) {
+                    quantity.amount = counts[index];
+                    return quantity;
+                }
+                return null; // Trả về null cho các phần tử không đạt điều kiện
+            })
+            .filter((quantity) => quantity !== null); // Loại bỏ các phần tử null
+        // Lấy các sản phẩm giỏ hàng đã được lưu trong AsyncStorage
+        const products = JSON.parse(await AsyncStorage.getItem('cart'));
+        // Tạo mới obj
+        const newObj = {
+            id: product.id,
+            name: product.name,
+            image: product.image,
+            name_package: package_service.name,
+            quantity: result,
+
+            star: product.star,
+            category: product.category,
+            cityId: cityId,
+            city: cityName,
+            packages: product.package_services,
+        };
+        // Thêm obj vừa tạo vào đầu mảng products
+        products.unshift(newObj);
+        // Lưu vào AsyncStorage mảng mới
+        await AsyncStorage.setItem('cart', JSON.stringify(products));
+        if (await AsyncStorage.getItem('unviewedCartCount')) {
+            const result = JSON.parse(await AsyncStorage.getItem('unviewedCartCount'));
+            setUnviewedCartCount(result + 1);
+            await AsyncStorage.setItem('unviewedCartCount', JSON.stringify(result + 1));
+        } else {
+            setUnviewedCartCount(1);
+            await AsyncStorage.setItem('unviewedCartCount', JSON.stringify(1));
+        }
+        // Đóng modal và sau đó set chuyển động cho cart
         setModalVisible2(false);
+        showCartAnimate();
+
+        const a = {
+            quantity: [
+                {
+                    name: 'người lớn',
+                    price: 200000,
+                    amount: 2,
+                },
+            ],
+        };
     };
 
     return (

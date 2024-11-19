@@ -34,6 +34,7 @@ const Recent_View = ({ navigation }) => {
             id: id,
             category: category,
             cityId: cityId,
+            cityName: city,
         });
 
         const arr = (await AsyncStorage.getItem('product')) ? JSON.parse(await AsyncStorage.getItem('product')) : [];

@@ -35,6 +35,7 @@ const Part2 = ({ navigation, city, id }) => {
             id: id,
             category: category,
             cityId: cityId,
+            cityName: city,
         });
 
         // Lưu sản phẩm vào AsyncStorage

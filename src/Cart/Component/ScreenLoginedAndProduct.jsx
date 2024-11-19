@@ -14,6 +14,7 @@ const ScreenLoginedAndProduct = ({ navigation }) => {
             id: id,
             category: category,
             cityId: cityId,
+            cityName: city,
         });
 
         const arr = (await AsyncStorage.getItem('product')) ? JSON.parse(await AsyncStorage.getItem('product')) : [];
@@ -39,7 +40,7 @@ const ScreenLoginedAndProduct = ({ navigation }) => {
         <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
             <View style={{ paddingHorizontal: moderateScale(12), backgroundColor: '#fff' }}>
                 <TouchableOpacity
-                    onPress={() => navigation.navigate('Product')}
+                    onPress={() => handlePressProduct(item.id, item.image, item.name, item.star, item.category, item.cityId, item.city, item.package)}
                     activeOpacity={1}
                     style={{
                         flexDirection: 'row',

@@ -1,14 +1,20 @@
 import { View, Text, TouchableWithoutFeedback, Animated } from 'react-native';
-import React, { forwardRef, memo, useImperativeHandle, useRef } from 'react';
+import React, { forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 import IconEntypo from 'react-native-vector-icons/Entypo';
 import IconFeather from 'react-native-vector-icons/Feather';
-import { moderateScale, scale } from 'react-native-size-matters';
+import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 
-const Bottom_Action_Bar = ({ price, formatNumberWithCommas, activeIndex, setModalVisible1, setModalVisible2 }, ref) => {
+const Bottom_Action_Bar = (
+    { price, formatNumberWithCommas, activeIndex, setModalVisible1, setModalVisible2, getCoordinatesBtnAddCart, getCoordinatesBtnCart },
+    ref
+) => {
+    const [showCartAnimate, setShowCartAnimate] = useState(false);
+    const [unviewedCartCount, setUnviewedCartCount] = useState(0);
     // Nút cart trên cùng góc phải
     const btnAddCartRef = useRef();
     const bottom = useRef(new Animated.Value(0)).current;
+    const left = useRef(new Animated.Value(50)).current;
 
     useImperativeHandle(ref, () => ({
         async getCoordinates() {
@@ -20,7 +26,44 @@ const Bottom_Action_Bar = ({ price, formatNumberWithCommas, activeIndex, setModa
 
             return { x: coordinates.x, y: coordinates.y };
         },
+
+        showCartAnimate() {
+            setShowCartAnimate(true);
+        },
+
+        setUnviewedCartCount(value) {
+            setUnviewedCartCount(value);
+        },
     }));
+
+    // Set chuyển động giỏ hàng
+    useEffect(() => {
+        async function setAnimateForCart() {
+            const a = await getCoordinatesBtnAddCart();
+            const b = await getCoordinatesBtnCart();
+            const result1 = a.y - b.y;
+            const result2 = b.x - a.x;
+            console.log(result2);
+
+            Animated.parallel([
+                Animated.timing(bottom, {
+                    toValue: result1, // Di chuyển lên 200px
+                    duration: 400,
+                    useNativeDriver: false,
+                }),
+                Animated.timing(left, {
+                    toValue: result2, // Hiển thị hoàn toàn
+                    duration: 400,
+                    useNativeDriver: false,
+                }),
+            ]).start();
+        }
+        // console.log(showCartAnimate);
+        if (showCartAnimate) {
+            setAnimateForCart();
+        }
+    }, [showCartAnimate]);
+
     return (
         <View
             style={{
@@ -84,35 +127,40 @@ const Bottom_Action_Bar = ({ price, formatNumberWithCommas, activeIndex, setModa
                         }}
                     >
                         {/* Phần tử chuyển động giỏ hàng */}
-                        <Animated.View
-                            style={{
-                                width: scale(40),
-                                height: scale(40),
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                position: 'absolute',
-                                bottom: bottom,
-                                left: moderateScale(50),
-                            }}
-                        >
-                            <IconFeather name="shopping-cart" size={20} color="#000" />
-                            <View
+                        {showCartAnimate && (
+                            <Animated.View
                                 style={{
-                                    position: 'absolute',
-                                    backgroundColor: 'red',
-                                    width: 18,
-                                    height: 18,
+                                    width: scale(40),
+                                    height: scale(40),
                                     justifyContent: 'center',
                                     alignItems: 'center',
-                                    borderRadius: 30,
-                                    top: -2,
-                                    left: 24,
+                                    position: 'absolute',
+                                    zIndex: 2,
+                                    bottom: bottom,
+                                    left: left,
+                                    // backgroundColor: 'red',
                                 }}
                             >
-                                <Text style={{ fontSize: 10, fontWeight: '700' }}>1</Text>
-                            </View>
-                        </Animated.View>
-
+                                <IconFeather name="shopping-cart" size={20} color="#000" />
+                                {unviewedCartCount === 0 || (
+                                    <View
+                                        style={{
+                                            position: 'absolute',
+                                            backgroundColor: 'red',
+                                            width: 18,
+                                            height: 18,
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            borderRadius: 30,
+                                            top: -2,
+                                            left: 24,
+                                        }}
+                                    >
+                                        <Text style={{ fontSize: 10, fontWeight: '700' }}>1</Text>
+                                    </View>
+                                )}
+                            </Animated.View>
+                        )}
                         <Text
                             ref={btnAddCartRef}
                             style={{

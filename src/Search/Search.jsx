@@ -34,6 +34,7 @@ const Search = ({ navigation, route }) => {
             id: id,
             category: category,
             cityId: cityId,
+            cityName: city,
         });
 
         // Lưu sản phẩm vào AsyncStorage

@@ -39,7 +39,7 @@ const Product = ({ navigation, route }) => {
     const [package_service, setPackage_service] = useState({});
 
     // Nhận dữ liệu từ các navigation khác chuyển qua
-    const { id, category, cityId } = route.params;
+    const { id, category, cityId, cityName } = route.params;
 
     const headerRef = useRef();
     const BottomRef = useRef();
@@ -85,6 +85,7 @@ const Product = ({ navigation, route }) => {
             id: id,
             category: category,
             cityId: cityId,
+            cityName: city,
         });
 
         //Lưu sản phẩm vào AsyncStorage
@@ -115,6 +116,12 @@ const Product = ({ navigation, route }) => {
     const getCoordinatesBtnCart = async () => {
         const coordinates = await headerRef.current.getCoordinates();
         return coordinates;
+    };
+    const showCartAnimate = () => {
+        BottomRef.current.showCartAnimate();
+    };
+    const setUnviewedCartCount = (value) => {
+        BottomRef.current.setUnviewedCartCount(value);
     };
     // Gọi api sản phẩm
     useEffect(() => {
@@ -197,6 +204,8 @@ const Product = ({ navigation, route }) => {
                     activeIndex={activeIndex}
                     setModalVisible1={setModalVisible1}
                     setModalVisible2={setModalVisible2}
+                    getCoordinatesBtnAddCart={getCoordinatesBtnAddCart}
+                    getCoordinatesBtnCart={getCoordinatesBtnCart}
                     ref={BottomRef}
                 />
             </View>
@@ -216,17 +225,19 @@ const Product = ({ navigation, route }) => {
             />
 
             <ModalAddCart
+                product={product}
+                cityId={cityId}
+                cityName={cityName}
                 modalVisible2={modalVisible2}
                 package_service={package_service}
                 quantity={quantity}
                 counts={counts}
                 setModalVisible2={setModalVisible2}
+                showCartAnimate={showCartAnimate}
+                setUnviewedCartCount={setUnviewedCartCount}
                 setCounts={setCounts}
                 formatNumberWithCommas={formatNumberWithCommas}
                 countsInit={countsInit}
-                navigation={navigation}
-                getCoordinatesBtnAddCart={getCoordinatesBtnAddCart}
-                getCoordinatesBtnCart={getCoordinatesBtnCart}
             />
         </>
     );

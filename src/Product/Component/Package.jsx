@@ -15,7 +15,7 @@ const Package = ({
 }) => {
     //chọn gói dịch vụ
     function handleSelectServicePackage(index, id) {
-        // Set active
+        // Set active , Nếu active bằng -1 thì không thể hiện modal thanh toán
         setActiveIndex(index);
         // Set số lượng
         const temp = package_services.find((package_service) => package_service.id === id);

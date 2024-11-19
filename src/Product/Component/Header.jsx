@@ -1,9 +1,10 @@
-import { TouchableWithoutFeedback, View } from 'react-native';
+import { Text, TouchableWithoutFeedback, View } from 'react-native';
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 
 import IconEntypo from 'react-native-vector-icons/Entypo';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import IconFeather from 'react-native-vector-icons/Feather';
+import { scale } from 'react-native-size-matters';
 
 const Header = ({ opacity, backgroundBtn, colorBtn, navigation }, ref) => {
     // Nút cart trên cùng góc phải
@@ -68,6 +69,23 @@ const Header = ({ opacity, backgroundBtn, colorBtn, navigation }, ref) => {
                         }}
                     >
                         <IconFeather name="shopping-cart" size={20} color={colorBtn} />
+                        {/* Số lượng sản phẩm chưa xem trong giỏ hàng */}
+
+                        <View
+                            style={{
+                                position: 'absolute',
+                                backgroundColor: 'red',
+                                width: 18,
+                                height: 18,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                borderRadius: 30,
+                                top: -2,
+                                left: 24,
+                            }}
+                        >
+                            <Text style={{ fontSize: 10, fontWeight: '700' }}>1</Text>
+                        </View>
                     </View>
                 </TouchableWithoutFeedback>
             </View>
