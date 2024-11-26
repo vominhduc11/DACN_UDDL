@@ -6,12 +6,15 @@ import ScreenNotLogin from './Component/ScreenNotLogin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
+import Config from '../.env/Config';
+
 const Cart = ({ navigation }) => {
     const [isLogin, setIsLogin] = useState(false);
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
         async function fetchData() {
+            // await AsyncStorage.removeItem('idUser');
             // Lấy bất đồng bộ id của người dùng lưu trong AsyncStorage
             const idUser = JSON.parse(await AsyncStorage.getItem('idUser'));
             // Xét trường hợp
@@ -19,7 +22,7 @@ const Cart = ({ navigation }) => {
                 setIsLogin(true);
 
                 // Lấy bất đồng bộ các sản phẩm của của giỏ hàng lưu trong AsyncStorage
-                const res = await axios.get('http://localhost:8080/api/getAllProductCart');
+                const res = await axios.get(`${Config.API_URL}/api/getAllProductCart/${idUser}`);
                 // Xét trường hợp
                 if (res.data.length === 0) {
                     setProducts([]);
@@ -43,7 +46,7 @@ const Cart = ({ navigation }) => {
         <>
             {isLogin || <ScreenNotLogin navigation={navigation} />}
             {isLogin && products.length === 0 && <ScreenLogined navigation={navigation} />}
-            {isLogin && products.length !== 0 && <ScreenLoginedAndProduct navigation={navigation} products={products} />}
+            {isLogin && products.length !== 0 && <ScreenLoginedAndProduct navigation={navigation} products={products} setProducts={setProducts} />}
         </>
     );
 };

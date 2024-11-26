@@ -123,12 +123,17 @@ const Product = ({ navigation, route }) => {
     const setUnviewedCartCount = (value) => {
         BottomRef.current.setUnviewedCartCount(value);
     };
+    const setUnviewedCartCount_Header = (value) => {
+        headerRef.current.setUnviewedCartCount(value);
+    };
     // Gọi api sản phẩm
     useEffect(() => {
         async function fetchData() {
+            const idUser = JSON.parse(await AsyncStorage.getItem('idUser'));
             try {
-                const res1 = await axios.get(`${Config.API_URL}/api/getProduct/${id}`);
-                setProduct(res1.data);
+                const res = await axios.get(`${Config.API_URL}/api/getProduct/${id}/${idUser}`);
+                setProduct(res.data);
+                headerRef.current.setLiked(res.data.isLike);
             } catch (error) {
                 console.log(error);
             }
@@ -139,7 +144,14 @@ const Product = ({ navigation, route }) => {
     return (
         <>
             <View style={{ flex: 1, position: 'relative' }}>
-                <Header opacity={opacity} backgroundBtn={backgroundBtn} colorBtn={colorBtn} navigation={navigation} ref={headerRef} />
+                <Header
+                    opacity={opacity}
+                    backgroundBtn={backgroundBtn}
+                    colorBtn={colorBtn}
+                    idProduct={product.id}
+                    navigation={navigation}
+                    ref={headerRef}
+                />
 
                 <ScrollView onScroll={handleScrollScreen} showsVerticalScrollIndicator={false} stickyHeaderIndices={[0]}>
                     <ImageMain bottom={bottom} opacityImage={opacityImage} image={product.image} />
@@ -206,6 +218,7 @@ const Product = ({ navigation, route }) => {
                     setModalVisible2={setModalVisible2}
                     getCoordinatesBtnAddCart={getCoordinatesBtnAddCart}
                     getCoordinatesBtnCart={getCoordinatesBtnCart}
+                    setUnviewedCartCount_Header={setUnviewedCartCount_Header}
                     ref={BottomRef}
                 />
             </View>
@@ -213,6 +226,9 @@ const Product = ({ navigation, route }) => {
             <ModalHighlight highlight={product.highlight} modalVisible={modalVisible} setModalVisible={setModalVisible} />
 
             <ModalOrder
+                product={product}
+                cityId={cityId}
+                cityName={cityName}
                 modalVisible1={modalVisible1}
                 package_service={package_service}
                 quantity={quantity}

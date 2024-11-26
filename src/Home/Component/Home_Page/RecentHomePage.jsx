@@ -55,6 +55,7 @@ const RecentHomePage = ({ handlePressProduct, navigation }, ref) => {
             if (await AsyncStorage.getItem('product')) {
                 setListProduct(JSON.parse(await AsyncStorage.getItem('product')));
             }
+            // Set giá trị sản phẩm giỏ hàng chưa xem
         });
 
         return unsubscribe;

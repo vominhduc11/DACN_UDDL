@@ -7,11 +7,13 @@ import FastImage from 'react-native-fast-image';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 
 import Config from '../../../.env/Config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ScheduleHomePage = ({ formatNumberWithCommas, minPricePackage, handlePressProduct, navigation }) => {
     // console.log(API_URL);
     const [city_name, setCity_name] = useState(undefined);
     const [listProduct, setListProduct] = useState([]);
+    const [idCity, setIdCity] = useState(undefined);
 
     // Các element sản phẩm FlaList
     const renderItem = ({ item }) => (
@@ -83,11 +85,13 @@ const ScheduleHomePage = ({ formatNumberWithCommas, minPricePackage, handlePress
     // Gọi api lần đầu
     useEffect(() => {
         async function fetchData() {
+            const idUser = JSON.parse(await AsyncStorage.getItem('idUser'));
             //Lấy 1 thành phố bất kì
             const res1 = await axios.get(`${Config.API_URL}/api/getCity`);
             setCity_name(res1.data.name);
+            setIdCity(res1.data.id);
             // Lấy 10 sản phẩm của thành phố bất kì trên
-            const res2 = await axios.get(`${Config.API_URL}/api/getProductOfCity/${1}/10`);
+            const res2 = await axios.get(`${Config.API_URL}/api/getProductOfCity/${res1.data.id}/10/${idUser}`);
             setListProduct(res2.data);
         }
         fetchData();
@@ -101,7 +105,7 @@ const ScheduleHomePage = ({ formatNumberWithCommas, minPricePackage, handlePress
                     fontWeight: '700',
                     color: '#000',
                 }}
-                onPress={() => navigation.navigate('Feature_Activity')}
+                onPress={() => navigation.navigate('Feature_Activity', { idCity })}
             >
                 Tiếp tục lên lịch {city_name}
                 <IconEntypo name="chevron-thin-right" size={16} color="#000" />

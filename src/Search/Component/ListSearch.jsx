@@ -1,5 +1,5 @@
-import { View, Text, FlatList, TouchableWithoutFeedback } from 'react-native';
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from 'react';
+import { View, Text, FlatList, TouchableWithoutFeedback, Animated, Modal, TouchableOpacity } from 'react-native';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 import FastImage from 'react-native-fast-image';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
@@ -8,9 +8,16 @@ import axios from 'axios';
 import numeral from 'numeral';
 
 import Config from '../../.env/Config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 const ListSearch = ({ category, handlePressProduct, nameCity }, ref) => {
     const [products, setProducts] = useState([]);
+    const [likes, setLikes] = useState([]);
+    const [visible, setVisible] = useState(false);
+    const [message, setMessage] = useState('');
+
+    const topRef = useRef(new Animated.Value(-58));
 
     //Thiết lập hàm cho component cha
     useImperativeHandle(ref, () => ({
@@ -40,6 +47,54 @@ const ListSearch = ({ category, handlePressProduct, nameCity }, ref) => {
             return numeral(number).format('0.[0]a').toUpperCase();
         }
         return number;
+    };
+
+    // Sử lý khi bấm vào tên thành phố
+    const setListProduct = async (cityId) => {
+        const idUser = JSON.parse(await AsyncStorage.getItem('idUser'));
+        const res = await axios.get(`${Config.API_URL}/api/getAllProductOfCity/${cityId}/${idUser}`);
+        setProducts(res.data);
+    };
+    // Hàm sử lí gọi thông báo khi bấm vào trái tim
+    const handleNotify = (info) => {
+        setMessage(info);
+        //Thiết lập chuyển động
+        Animated.timing(topRef.current, {
+            toValue: 36,
+            duration: 500,
+            useNativeDriver: false,
+        }).start();
+
+        setVisible(true);
+        // Đóng modal sau 1 khoảng thời gian
+        setTimeout(() => {
+            setVisible(false);
+            topRef.current.setValue(-58);
+        }, 1500);
+    };
+    // Thêm và xóa sản phẩm yêu thích
+    const handleAddLike = async (idProduct) => {
+        setLikes([...likes, idProduct]);
+
+        try {
+            const idUser = JSON.parse(await AsyncStorage.getItem('idUser'));
+            await axios.post(`${Config.API_URL}/api/addProductFavorite`, { idProduct, idUser });
+            handleNotify('Đã thêm vào danh sách yêu thích!');
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const handleDeleteLike = async (idProduct) => {
+        const newlikes = likes.filter((item) => item !== idProduct);
+        setLikes(newlikes);
+
+        try {
+            const idUser = JSON.parse(await AsyncStorage.getItem('idUser'));
+            await axios.delete(`${Config.API_URL}/api/deleteProductFavorite/${idUser}/${idProduct}`);
+            handleNotify('Đã xóa khỏi danh sách yêu thích!');
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     // Phần tử render trong FlatList
@@ -119,51 +174,123 @@ const ListSearch = ({ category, handlePressProduct, nameCity }, ref) => {
                         <Text style={{ color: '#000' }}>đ {formatNumberWithCommas(minPricePackage(item.package))}</Text>
                     )}
                 </Text>
-                <IconAntDesign name="hearto" size={25} color="#fff" style={{ position: 'absolute', right: 12, top: 20 }} />
+                {likes.includes(item.id) || (
+                    <TouchableOpacity
+                        onPress={() => handleAddLike(item.id)}
+                        style={{
+                            position: 'absolute',
+                            right: scale(12),
+                            top: verticalScale(12),
+                            padding: 6,
+                        }}
+                    >
+                        <IconAntDesign name="hearto" size={moderateScale(25)} color="#fff" />
+                    </TouchableOpacity>
+                )}
+                {likes.includes(item.id) && (
+                    <TouchableOpacity
+                        onPress={() => handleDeleteLike(item.id)}
+                        style={{
+                            position: 'absolute',
+                            right: scale(12),
+                            top: verticalScale(12),
+                            padding: 6,
+                        }}
+                    >
+                        <IconAntDesign name="heart" size={moderateScale(25)} color="red" />
+                    </TouchableOpacity>
+                )}
             </View>
         </TouchableWithoutFeedback>
     );
 
-    // Sử lý khi bấm vào tên thành phố
-    const setListProduct = async (cityId) => {
-        const res = await axios.get(`${Config.API_URL}/api/getAllProductOfCity/${cityId}`);
-        setProducts(res.data);
-    };
-
     // Gọi api lần đầu
     useEffect(() => {
         async function fetchData() {
-            if (nameCity) {
-                const res = await axios.get(`${Config.API_URL}/api/getAllProductOfCategoryAndCity/${category}/${nameCity}`);
-                setProducts(res.data);
-            } else {
-                // category được truyền qua từ trang trước
-                const res = await axios.get(`${Config.API_URL}/api/getAllProductOfCategory/${category}`);
-                setProducts(res.data);
+            try {
+                const idUser = JSON.parse(await AsyncStorage.getItem('idUser'));
+                if (nameCity) {
+                    const res = await axios.get(`${Config.API_URL}/api/getAllProductOfCategoryAndCity/${category}/${nameCity}/${idUser}`);
+                    setProducts(res.data);
+                    setLikes(
+                        res.data.map((ele) => {
+                            if (ele.isLike) {
+                                return ele.id;
+                            }
+                        })
+                    );
+                } else {
+                    // category được truyền qua từ trang trước
+                    const res = await axios.get(`${Config.API_URL}/api/getAllProductOfCategory/${category}/${idUser}`);
+                    setProducts(res.data);
+                    setLikes(
+                        res.data.map((ele) => {
+                            if (ele.isLike) {
+                                return ele.id;
+                            }
+                        })
+                    );
+                }
+            } catch (error) {
+                console.log(error);
             }
         }
         fetchData();
     }, []);
     return (
-        <FlatList
-            style={{ paddingHorizontal: 12, flex: 1 }}
-            data={products}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
-            initialNumToRender={1}
-            maxToRenderPerBatch={1}
-            windowSize={3}
-            removeClippedSubviews={true}
-            scrollEventThrottle={16}
-            ItemSeparatorComponent={() => <View style={{ height: 24 }} />}
-            contentContainerStyle={{ flexGrow: 1 }}
-            ListHeaderComponent={
-                <View style={{ backgroundColor: '#fff' }}>
-                    <Text style={{ color: '#000', paddingVertical: 15 }}>Tìm thấy {products.length} kết quả</Text>
+        <>
+            <FlatList
+                style={{ paddingHorizontal: 12, flex: 1 }}
+                data={products}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
+                initialNumToRender={1}
+                maxToRenderPerBatch={1}
+                windowSize={3}
+                removeClippedSubviews={true}
+                scrollEventThrottle={16}
+                ItemSeparatorComponent={() => <View style={{ height: 24 }} />}
+                contentContainerStyle={{ flexGrow: 1 }}
+                ListHeaderComponent={
+                    <View style={{ backgroundColor: '#fff' }}>
+                        <Text style={{ color: '#000', paddingVertical: 15 }}>Tìm thấy {products.length} kết quả</Text>
+                    </View>
+                }
+                ListFooterComponent={() => <View style={{ height: 12 }} />}
+            />
+            {/* Modal Component */}
+            <Modal
+                animationType="slide" // Kiểu hoạt ảnh: "slide", "fade", hoặc "none"
+                transparent={true} // Cho phép modal trong suốt
+                visible={visible} // Trạng thái hiển thị modal
+                onRequestClose={() => setVisible(false)} // Gọi khi người dùng nhấn nút Back
+            >
+                <View
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        right: 0,
+                        left: 0,
+                        bottom: 0,
+                        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Animated.View
+                        style={{
+                            backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                            padding: 6,
+                            borderRadius: 6,
+                            width: scale(160),
+                            position: 'absolute',
+                            top: topRef.current,
+                        }}
+                    >
+                        <Text style={{ textAlign: 'center' }}>{message}</Text>
+                    </Animated.View>
                 </View>
-            }
-            ListFooterComponent={() => <View style={{ height: 12 }} />}
-        />
+            </Modal>
+        </>
     );
 };
 

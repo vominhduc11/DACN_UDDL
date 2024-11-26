@@ -20,7 +20,7 @@ const Where_go = ({ navigation }) => {
     }
     return (
         <>
-            {show && <Header />}
+            {show && <Header navigation={navigation} />}
             <ScrollView onScroll={handleScrollScreen}>
                 <View>
                     <View
@@ -36,7 +36,7 @@ const Where_go = ({ navigation }) => {
                         <IconEntypo name="chevron-left" size={28} color="#fff" onPress={() => navigation.goBack()} />
                     </View>
                     <BackgroundMain />
-                    <Container />
+                    <Container navigation={navigation} />
                 </View>
             </ScrollView>
         </>

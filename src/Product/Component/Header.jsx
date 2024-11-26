@@ -1,18 +1,24 @@
-import { Text, TouchableWithoutFeedback, View } from 'react-native';
-import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
+import { Animated, Modal, Text, TouchableWithoutFeedback, View } from 'react-native';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 import IconEntypo from 'react-native-vector-icons/Entypo';
-import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import IconFeather from 'react-native-vector-icons/Feather';
-import { scale } from 'react-native-size-matters';
+import { moderateScale, scale } from 'react-native-size-matters';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Config from '../../.env/Config';
 
-const Header = ({ opacity, backgroundBtn, colorBtn, navigation }, ref) => {
+const Header = ({ opacity, backgroundBtn, colorBtn, navigation, idProduct }, ref) => {
     const [unviewedCartCount, setUnviewedCartCount] = useState(0);
+    const [liked, setLiked] = useState(undefined);
+    const [visible, setVisible] = useState(false);
+    const [message, setMessage] = useState('');
+
+    const topRef = useRef(new Animated.Value(-58));
     // Nút cart trên cùng góc phải
     const btnCartRef = useRef();
-
+    // Mặc định các hàm gọi từ component cha
     useImperativeHandle(ref, () => ({
         async getCoordinates() {
             const coordinates = await new Promise((resolve) => {
@@ -23,18 +29,65 @@ const Header = ({ opacity, backgroundBtn, colorBtn, navigation }, ref) => {
 
             return { x: coordinates.x, y: coordinates.y };
         },
+        setUnviewedCartCount(value) {
+            setUnviewedCartCount(value);
+        },
+        setLiked(value) {
+            setLiked(value);
+        },
     }));
+    // Hàm sử lí gọi thông báo khi bấm vào trái tim
+    const handleNotify = (info) => {
+        setMessage(info);
+        //Thiết lập chuyển động
+        Animated.timing(topRef.current, {
+            toValue: 36,
+            duration: 500,
+            useNativeDriver: false,
+        }).start();
 
+        setVisible(true);
+        // Đóng modal sau 1 khoảng thời gian
+        setTimeout(() => {
+            setVisible(false);
+            topRef.current.setValue(-58);
+        }, 1500);
+    };
+    // Thêm và xóa sản phẩm yêu thích
+    const handleAddLike = async (idProduct) => {
+        setLiked(true);
+
+        try {
+            const idUser = JSON.parse(await AsyncStorage.getItem('idUser'));
+            await axios.post(`${Config.API_URL}/api/addProductFavorite`, { idProduct, idUser });
+            handleNotify('Đã thêm vào danh sách yêu thích!');
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const handleDeleteLike = async (idProduct) => {
+        setLiked(false);
+
+        try {
+            const idUser = JSON.parse(await AsyncStorage.getItem('idUser'));
+            await axios.delete(`${Config.API_URL}/api/deleteProductFavorite/${idUser}/${idProduct}`);
+            handleNotify('Đã xóa khỏi danh sách yêu thích!');
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    // set giá trị số sản phẩm giỏ hàng chưa xem khi focos
     useEffect(() => {
-        async function setValueAmountUnviewed() {
+        const unsubcribe = navigation.addListener('focus', async () => {
             if (await AsyncStorage.getItem('unviewedCartCount')) {
                 setUnviewedCartCount(JSON.parse(await AsyncStorage.getItem('unviewedCartCount')));
             } else {
                 setUnviewedCartCount(0);
             }
-        }
-        setValueAmountUnviewed();
-    }, []);
+        });
+
+        return unsubcribe;
+    }, [navigation]);
     return (
         <View
             style={{
@@ -57,11 +110,11 @@ const Header = ({ opacity, backgroundBtn, colorBtn, navigation }, ref) => {
                         borderRadius: 30,
                     }}
                 >
-                    <IconEntypo name="chevron-left" size={20} color={colorBtn} />
+                    <IconEntypo name="chevron-left" size={moderateScale(25)} color={colorBtn} />
                 </View>
             </TouchableWithoutFeedback>
             <View style={{ flexDirection: 'row' }}>
-                <TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={() => handleAddLike(idProduct)}>
                     <View
                         style={{
                             backgroundColor: backgroundBtn,
@@ -70,10 +123,11 @@ const Header = ({ opacity, backgroundBtn, colorBtn, navigation }, ref) => {
                             marginRight: 12,
                         }}
                     >
-                        <IconMaterialIcons name="favorite-border" size={20} color={colorBtn} />
+                        {liked && <IconAntDesign onPress={() => handleDeleteLike(idProduct)} name="heart" size={moderateScale(25)} color="red" />}
+                        {liked || <IconAntDesign onPress={() => handleAddLike(idProduct)} name="hearto" size={moderateScale(25)} color="#000" />}
                     </View>
                 </TouchableWithoutFeedback>
-                <TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={() => navigation.navigate('Cart')}>
                     <View
                         ref={btnCartRef}
                         style={{
@@ -82,7 +136,7 @@ const Header = ({ opacity, backgroundBtn, colorBtn, navigation }, ref) => {
                             borderRadius: 30,
                         }}
                     >
-                        <IconFeather name="shopping-cart" size={20} color={colorBtn} />
+                        <IconFeather name="shopping-cart" size={moderateScale(25)} color={colorBtn} />
                         {/* Số lượng sản phẩm chưa xem trong giỏ hàng */}
 
                         {unviewedCartCount === 0 || (
@@ -105,6 +159,30 @@ const Header = ({ opacity, backgroundBtn, colorBtn, navigation }, ref) => {
                     </View>
                 </TouchableWithoutFeedback>
             </View>
+
+            {/* Modal Component */}
+            <Modal
+                animationType="slide" // Kiểu hoạt ảnh: "slide", "fade", hoặc "none"
+                transparent={true} // Cho phép modal trong suốt
+                visible={visible} // Trạng thái hiển thị modal
+                onRequestClose={() => setVisible(false)} // Gọi khi người dùng nhấn nút Back
+            >
+                <View
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        right: 0,
+                        left: 0,
+                        bottom: 0,
+                        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Animated.View style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', width: scale(140), position: 'absolute', top: topRef.current }}>
+                        <Text style={{ textAlign: 'center' }}>{message}</Text>
+                    </Animated.View>
+                </View>
+            </Modal>
         </View>
     );
 };

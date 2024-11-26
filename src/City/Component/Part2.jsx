@@ -1,7 +1,8 @@
-import { View, Text, TouchableWithoutFeedback } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableWithoutFeedback, Modal, Animated, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
 
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import IconEntypo from 'react-native-vector-icons/Entypo';
 import axios from 'axios';
 import numeral from 'numeral';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -12,7 +13,18 @@ import Config from '../../.env/Config';
 
 const Part2 = ({ navigation, city, id }) => {
     const [products, setProducts] = useState([]);
+    const [likes, setLikes] = useState([]);
+    const [visible, setVisible] = useState(false);
+    const [message, setMessage] = useState('');
 
+    const topRef = useRef(new Animated.Value(-58));
+    //chuyển đổi số lớn
+    const formatNumber = (number) => {
+        if (number >= 1000) {
+            return numeral(number).format('0.[0]a').toUpperCase();
+        }
+        return number;
+    };
     //Tìm price nhỏ nhất
     function minPrice(data) {
         const pricelist = data.map((ele) => ele.price);
@@ -59,10 +71,59 @@ const Part2 = ({ navigation, city, id }) => {
         }
     };
 
+    // Hàm sử lí gọi thông báo khi bấm vào trái tim
+    const handleNotify = (info) => {
+        setMessage(info);
+        //Thiết lập chuyển động
+        Animated.timing(topRef.current, {
+            toValue: 36,
+            duration: 500,
+            useNativeDriver: false,
+        }).start();
+
+        setVisible(true);
+        // Đóng modal sau 1 khoảng thời gian
+        setTimeout(() => {
+            setVisible(false);
+            topRef.current.setValue(-58);
+        }, 1500);
+    };
+    // Thêm và xóa sản phẩm yêu thích
+    const handleAddLike = async (idProduct) => {
+        setLikes([...likes, idProduct]);
+        try {
+            const idUser = JSON.parse(await AsyncStorage.getItem('idUser'));
+            await axios.post(`${Config.API_URL}/api/addProductFavorite`, { idProduct, idUser });
+            handleNotify('Đã thêm vào danh sách yêu thích!');
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const handleDeleteLike = async (idProduct) => {
+        const newlikes = likes.filter((item) => item !== idProduct);
+        setLikes(newlikes);
+
+        try {
+            const idUser = JSON.parse(await AsyncStorage.getItem('idUser'));
+            await axios.delete(`${Config.API_URL}/api/deleteProductFavorite/${idUser}/${idProduct}`);
+            handleNotify('Đã xóa khỏi danh sách yêu thích!');
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     useEffect(() => {
         async function fetchData() {
-            const res1 = await axios.get(`${Config.API_URL}/api/getProductOfCity/${id}/4`);
+            const idUser = JSON.parse(await AsyncStorage.getItem('idUser'));
+            const res1 = await axios.get(`${Config.API_URL}/api/getProductOfCity/${id}/4/${idUser}`);
             setProducts(res1.data);
+            setLikes(
+                res1.data.map((ele, index) => {
+                    if (ele.isLike === true) {
+                        return index;
+                    }
+                })
+            );
         }
 
         fetchData();
@@ -107,8 +168,8 @@ const Part2 = ({ navigation, city, id }) => {
                                 borderWidth: 0.5,
                                 borderColor: '#DDDDDD',
                                 borderRadius: 12,
-                                width: scale(140),
-                                marginBottom: moderateScale(15),
+                                width: '48%',
+                                marginBottom: moderateScale(10),
                                 position: 'relative',
                             }}
                         >
@@ -131,21 +192,25 @@ const Part2 = ({ navigation, city, id }) => {
                                     style={{
                                         fontWeight: 700,
                                         color: '#000',
-                                        width: verticalScale(140),
                                     }}
                                 >
                                     {product.name}
                                 </Text>
-                                <Text style={{ marginTop: moderateScale(6) }}>
-                                    <IconAntDesign name="star" size={moderateScale(16)} color="#FFCC33" />
+                                <Text numberOfLines={1} style={{ marginTop: 6, flexDirection: 'row' }}>
                                     <Text
                                         style={{
-                                            color: '#FFCC33',
+                                            color: '#fe9428',
+                                            fontWeight: '600',
                                         }}
                                     >
+                                        <IconAntDesign name="star" color="#fe9428" />
                                         {product.star}
                                     </Text>
-                                    (362)
+                                    <Text style={{ color: '#747878' }}>
+                                        ({product.evaluate})
+                                        <IconEntypo name="dot-single" />
+                                        {formatNumber(product.booked)} Đã được đặt
+                                    </Text>
                                 </Text>
                                 <Text
                                     style={{
@@ -157,16 +222,32 @@ const Part2 = ({ navigation, city, id }) => {
                                     đ {formatNumberWithCommas(minPricePackage(product.package))}
                                 </Text>
                             </View>
-                            <IconAntDesign
-                                name="hearto"
-                                size={moderateScale(25)}
-                                color="#fff"
-                                style={{
-                                    position: 'absolute',
-                                    right: scale(12),
-                                    top: verticalScale(12),
-                                }}
-                            />
+                            {likes.includes(product.id) || (
+                                <TouchableOpacity
+                                    onPress={() => handleAddLike(product.id)}
+                                    style={{
+                                        position: 'absolute',
+                                        right: scale(12),
+                                        top: verticalScale(12),
+                                        padding: 6,
+                                    }}
+                                >
+                                    <IconAntDesign name="hearto" size={moderateScale(25)} color="#fff" />
+                                </TouchableOpacity>
+                            )}
+                            {likes.includes(product.id) && (
+                                <TouchableOpacity
+                                    onPress={() => handleDeleteLike(product.id)}
+                                    style={{
+                                        position: 'absolute',
+                                        right: scale(12),
+                                        top: verticalScale(12),
+                                        padding: 6,
+                                    }}
+                                >
+                                    <IconAntDesign name="heart" size={moderateScale(25)} color="red" />
+                                </TouchableOpacity>
+                            )}
                         </View>
                     </TouchableWithoutFeedback>
                 ))}
@@ -185,6 +266,38 @@ const Part2 = ({ navigation, city, id }) => {
                     Xem tất cả
                 </Text>
             </TouchableWithoutFeedback>
+            {/* Modal Component */}
+            <Modal
+                animationType="slide" // Kiểu hoạt ảnh: "slide", "fade", hoặc "none"
+                transparent={true} // Cho phép modal trong suốt
+                visible={visible} // Trạng thái hiển thị modal
+                onRequestClose={() => setVisible(false)} // Gọi khi người dùng nhấn nút Back
+            >
+                <View
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        right: 0,
+                        left: 0,
+                        bottom: 0,
+                        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Animated.View
+                        style={{
+                            backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                            padding: 6,
+                            borderRadius: 6,
+                            width: scale(160),
+                            position: 'absolute',
+                            top: topRef.current,
+                        }}
+                    >
+                        <Text style={{ textAlign: 'center' }}>{message}</Text>
+                    </Animated.View>
+                </View>
+            </Modal>
         </View>
     );
 };

@@ -14,8 +14,13 @@ const Stack = createNativeStackNavigator();
 const Home = ({ navigation }) => {
     const [activeMenu, setActiveMenu] = useState(1);
 
-    const navigate_set = (param) => {
-        setActiveMenu(param);
+    const setActive = {
+        setOrder(param) {
+            setActiveMenu(param);
+        },
+        setHome(param) {
+            setActiveMenu(param);
+        },
     };
 
     return (
@@ -27,16 +32,12 @@ const Home = ({ navigation }) => {
                     animationDuration: 3000,
                 }}
             >
+                {/* <Stack.Screen name="Like_page" component={Like_page} options={{ headerShown: false }} /> */}
                 <Stack.Screen name="Home_page" component={Home_page} options={{ headerShown: false }} />
                 <Stack.Screen name="Endow_page" component={Endow_page} options={{ headerShown: false }} />
                 <Stack.Screen name="Like_page" component={Like_page} options={{ headerShown: false }} />
-                <Stack.Screen name="Order_page" component={Order_page} options={{ headerShown: false }} />
-                <Stack.Screen
-                    name="User_page"
-                    component={User_page}
-                    options={{ headerShown: false }}
-                    initialParams={{ navigate_set: navigate_set }}
-                />
+                <Stack.Screen name="Order_page" component={Order_page} options={{ headerShown: false }} initialParams={{ setActive: setActive }} />
+                <Stack.Screen name="User_page" component={User_page} options={{ headerShown: false }} initialParams={{ setActive: setActive }} />
             </Stack.Navigator>
             <NavBar activeMenu={activeMenu} setActiveMenu={setActiveMenu} navigation={navigation} />
         </View>

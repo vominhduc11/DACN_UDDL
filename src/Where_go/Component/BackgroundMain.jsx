@@ -1,4 +1,4 @@
-import { View, Text, ImageBackground, TextInput } from 'react-native';
+import { View, Text, ImageBackground, TextInput, FlatList } from 'react-native';
 import React from 'react';
 
 import IconFeather from 'react-native-vector-icons/Feather';
@@ -13,7 +13,7 @@ const BackgroundMain = () => {
                 alignItems: 'center',
             }}
             source={{
-                uri: 'https://dulichbienhaitien.com.vn/gomsu/sanpham/anh/images/chuan-bi-do-di-bien-cho-nu-7-cach-mix-do-di-bien-cuc-xinh-3.jpg',
+                uri: 'https://moc247.com/wp-content/uploads/2023/12/hinh-anh-bien-dep_1.jpg',
             }}
         >
             <Text
@@ -36,7 +36,7 @@ const BackgroundMain = () => {
                     width: '100%',
                 }}
             >
-                <IconFeather name="search" size={20} style={{ marginHorizontal: 10 }} />
+                <IconFeather name="search" color="#c0c0c0" size={20} style={{ marginHorizontal: 10 }} />
                 <TextInput
                     style={{
                         width: 130,
@@ -45,6 +45,7 @@ const BackgroundMain = () => {
                         paddingVertical: 8,
                     }}
                     placeholder="Tìm địa điểm"
+                    placeholderTextColor="#c0c0c0"
                 />
             </View>
         </ImageBackground>

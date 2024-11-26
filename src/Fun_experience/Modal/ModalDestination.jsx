@@ -9,8 +9,9 @@ import FastImage from 'react-native-fast-image';
 import { moderateScale, verticalScale, scale } from 'react-native-size-matters';
 
 import Config from '../../.env/Config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const ModalDestination = ({ handlePressProduct, navigation, setNameCity }, ref) => {
+const ModalDestination = ({ setNameCity, navigation }, ref) => {
     const [visible, setVisible] = useState(false);
     const [value, setValue] = useState('');
     const [citys, setCitys] = useState([]);
@@ -28,10 +29,41 @@ const ModalDestination = ({ handlePressProduct, navigation, setNameCity }, ref) 
     }));
 
     // Sử lý khi nhấp vào tên thành phố
-    const handlePressCity_Name = (cityName, cityId) => {
+    const handlePressCity_Name = (cityName) => {
         setVisible(false);
         setValue(cityName);
         setNameCity(cityName);
+    };
+
+    //Thực hiện khi nhấn vào sản phẩm
+    const handlePressProduct = async (...param) => {
+        const [id, image, name, star, category, cityId, city, packages] = param;
+        //Chuyển sang trang sản phẩm
+        navigation.navigate('Product', {
+            id: id,
+            category: category,
+            cityId: cityId,
+            cityName: city,
+        });
+
+        //Lưu sản phẩm vào AsyncStorage
+        const arr = (await AsyncStorage.getItem('product')) ? JSON.parse(await AsyncStorage.getItem('product')) : [];
+
+        if (!arr.some((item) => item.id === id)) {
+            if (arr.length === 10) {
+                arr.pop();
+            }
+            arr.unshift({ id: id, image: image, name: name, star: star, category: category, cityId: cityId, city: city, package: packages });
+            await AsyncStorage.setItem('product', JSON.stringify(arr));
+        } else {
+            // Tách phần tử có id bằng 2 và các phần tử còn lại
+            const elementToMove = arr.filter((item) => item.id === id);
+            const remainingElements = arr.filter((item) => item.id !== id);
+
+            // Nối phần tử đã lọc lên đầu mảng
+            const newArray = elementToMove.concat(remainingElements);
+            await AsyncStorage.setItem('product', JSON.stringify(newArray));
+        }
     };
 
     // Các phần tử renderItem
@@ -81,8 +113,8 @@ const ModalDestination = ({ handlePressProduct, navigation, setNameCity }, ref) 
     const renderItemProduct = ({ item }) => (
         <TouchableWithoutFeedback
             onPress={() => {
-                handlePressProduct(item.id, item.image, item.name, item.star, item.category, item.cityId, item.city, item.package);
                 setVisible(false);
+                handlePressProduct(item.id, item.image, item.name, item.star, item.category, item.cityId, item.city, item.package);
             }}
         >
             <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: scale(12) }}>
@@ -166,7 +198,7 @@ const ModalDestination = ({ handlePressProduct, navigation, setNameCity }, ref) 
                                 top: verticalScale(66),
                                 width: '100%',
                                 backgroundColor: '#fff',
-                                height: screenHeight - verticalScale(66),
+                                height: Dimensions.get('window').height - verticalScale(66),
                             }}
                             keyboardShouldPersistTaps="handled"
                         >
@@ -174,6 +206,7 @@ const ModalDestination = ({ handlePressProduct, navigation, setNameCity }, ref) 
                                 <FlatList
                                     style={{ paddingVertical: verticalScale(12) }}
                                     data={citys}
+                                    scrollEnabled={false}
                                     renderItem={renderItemCity}
                                     keyExtractor={(item) => item.id}
                                     ListHeaderComponent={() => <View style={{ height: verticalScale(12) }} />}
@@ -186,6 +219,7 @@ const ModalDestination = ({ handlePressProduct, navigation, setNameCity }, ref) 
                                     <FlatList
                                         style={{ paddingVertical: verticalScale(12) }}
                                         data={products}
+                                        scrollEnabled={false}
                                         renderItem={renderItemProduct}
                                         keyExtractor={(item) => item.id}
                                         ListHeaderComponent={() => (

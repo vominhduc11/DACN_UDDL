@@ -1,5 +1,5 @@
-import { View, Text, Animated, TextInput, ScrollView, ImageBackground, TouchableWithoutFeedback } from 'react-native';
-import React, { useCallback, useRef, useState } from 'react';
+import { View, Text, Animated, TextInput, ScrollView, ImageBackground, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import IconFeather from 'react-native-vector-icons/Feather';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
@@ -18,6 +18,7 @@ function Home_page({ navigation }) {
     const [opacity, setOpacity] = useState(0);
     const [active, setActive] = useState(true);
     const [show, setShow] = useState(false);
+    const [unviewedCartCount, setUnviewedCartCount] = useState(0);
 
     // Thẻ để xuất và gần đây trong SuggestAndRecent
     const viewRef = useRef(null);
@@ -138,8 +139,21 @@ function Home_page({ navigation }) {
             const newArray = elementToMove.concat(remainingElements);
             await AsyncStorage.setItem('product', JSON.stringify(newArray));
         }
-        childRef1.current.setListProduct2(JSON.parse(await AsyncStorage.getItem('product')));
     }, []);
+
+    // Set lại danh sách sản phẩm trong AsyncStorage khi focus lại trang
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', async () => {
+            // Set giá trị sản phẩm giỏ hàng chưa xem
+            if (await AsyncStorage.getItem('unviewedCartCount')) {
+                setUnviewedCartCount(JSON.parse(await AsyncStorage.getItem('unviewedCartCount')));
+            } else {
+                setUnviewedCartCount(0);
+            }
+        });
+
+        return unsubscribe;
+    }, [navigation]);
 
     return (
         <>
@@ -179,9 +193,26 @@ function Home_page({ navigation }) {
                             placeholderTextColor="#000"
                         />
                     </View>
-                    <Text onPress={() => navigation.navigate('Cart')}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
                         <IconFeather name="shopping-cart" size={moderateScale(20)} color="#000" />
-                    </Text>
+                        {unviewedCartCount === 0 || (
+                            <View
+                                style={{
+                                    position: 'absolute',
+                                    backgroundColor: 'red',
+                                    width: 16,
+                                    height: 16,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    borderRadius: 30,
+                                    top: -10,
+                                    left: 14,
+                                }}
+                            >
+                                <Text style={{ fontSize: 10, fontWeight: '700' }}>{unviewedCartCount}</Text>
+                            </View>
+                        )}
+                    </TouchableOpacity>
                     <Text onPress={() => navigation.navigate('Notify')}>
                         <IconAntDesign name="message1" size={moderateScale(20)} color="#000" />
                     </Text>

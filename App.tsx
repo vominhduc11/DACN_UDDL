@@ -18,8 +18,7 @@ import Search from './src/Search/Search';
 import Have_fun from './src/Have_fun';
 import Where_go from './src/Where_go/Where_go';
 import Map from './src/Map';
-
-// import { Icon } from 'react-native-vector-icons/Icon';
+import MyList from './src/MyList';
 
 const Stack = createNativeStackNavigator();
 
@@ -102,6 +101,7 @@ const App = () => {
                 <Stack.Screen name="Where_go" component={Where_go} options={{ headerShown: false }} />
                 <Stack.Screen name="Fun_experience" component={Fun_experience} options={{ headerShown: false }} />
                 <Stack.Screen name="Map" component={Map} options={{ headerShown: true, title: 'Vị trí' }} />
+                <Stack.Screen name="MyList" component={MyList} options={{ headerShown: true, title: '' }} />
             </Stack.Navigator>
         </NavigationContainer>
     );

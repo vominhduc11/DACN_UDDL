@@ -1,10 +1,12 @@
 import { View, Text, ImageBackground } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import IconFeather from 'react-native-vector-icons/Feather';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import axios from 'axios';
+import Config from '../../.env/Config';
 
-const BackgroundMain = ({ bottom, opacityBackground }) => {
+const BackgroundMain = ({ bottom, opacityBackground, city }) => {
     return (
         <View style={{ position: 'relative' }}>
             <ImageBackground
@@ -17,7 +19,7 @@ const BackgroundMain = ({ bottom, opacityBackground }) => {
                     opacity: opacityBackground,
                 }}
                 source={{
-                    uri: 'https://tphcm.dangcongsan.vn/DATA/72/IMAGES/2023/11/tao-da-de-tphcm-phat-trien-thanh-do-thi-thong-minh1517188897.jpg',
+                    uri: city.image,
                 }}
             >
                 <Text
@@ -28,7 +30,7 @@ const BackgroundMain = ({ bottom, opacityBackground }) => {
                     }}
                     numberOfLines={1}
                 >
-                    Hoạt động nổi bật ở thành phố Hồ Chí Minh
+                    Hoạt động nổi bật ở thành phố {city.name}
                 </Text>
                 <Text
                     style={{
@@ -38,7 +40,7 @@ const BackgroundMain = ({ bottom, opacityBackground }) => {
                     }}
                 >
                     <IconFeather name="map-pin" size={moderateScale(16)} /> {/* Dùng moderateScale cho Icon size */}
-                    TP Hồ Chí Minh
+                    {city.name}
                 </Text>
             </ImageBackground>
         </View>

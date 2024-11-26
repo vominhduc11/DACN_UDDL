@@ -4,7 +4,7 @@ import React from 'react';
 import IconEntypo from 'react-native-vector-icons/Entypo';
 import IconFeather from 'react-native-vector-icons/Feather';
 
-const Header = () => {
+const Header = ({ navigation }) => {
     return (
         <View
             style={{
@@ -25,15 +25,13 @@ const Header = () => {
                     flexDirection: 'row',
                     alignItems: 'center',
                     borderRadius: 30,
-                    // paddingHorizontal: 0,
                     backgroundColor: '#fff',
-                    // marginTop: 24,
                     borderWidth: 1,
                     flex: 1,
                     marginLeft: 12,
                 }}
             >
-                <IconFeather name="search" size={20} style={{ marginHorizontal: 10 }} />
+                <IconFeather name="search" size={20} color="#c0c0c0" style={{ marginHorizontal: 10 }} />
                 <TextInput
                     style={{
                         width: 130,
@@ -42,6 +40,7 @@ const Header = () => {
                         paddingVertical: 8,
                     }}
                     placeholder="Tìm địa điểm"
+                    placeholderTextColor="#c0c0c0"
                 />
             </View>
         </View>

@@ -20,44 +20,7 @@
 
 <body>
     <script>
-        function isAddress(text) {
-            const regexVietnam = /^\d+[A-Za-z]*\s(Đường|Phố|Thôn|Xã|Phường|Quận|Huyện|Thành phố|Tỉnh).*/;
-            const regexInternational = /^\d+\s[A-Za-z\s]+(Street|St\.|Ave|Avenue|Road|Rd\.|Blvd|Boulevard|Lane|Ln).*/;
-            return regexVietnam.test(text) || regexInternational.test(text);
-        }
-
-        // Kiểm tra chuỗi
-        const text1 = "123 Lê Lợi, Quận 1, TP. Hồ Chí Minh";
-        const text2 = "Khởi hành từ Hà Nội";
-
-        console.log(isAddress(text1)); // true
-        console.log(isAddress(text2)); // false
-
-
-
-
-
-        id, image, name, star, category, cityId, city, packages
-        const a = {
-            id: 2,
-            name: 'Du thuyền Sài Gòn với bữa tối trên tàu Saigon Princess',
-            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLpjIs9paeuwquOJEmVOXCqz7sjlwDHIhEXA&s',
-            name_package: "",
-            quantity: [
-                {
-                    name: "người lớn",
-                    price: 200000,
-                    amount: 2
-                }
-            ],
-
-            star: 3.5,
-            category: "",
-            cityId: 2,
-            city: "",
-
-            packages: ""
-
-        }
+        let counter = 0;
+        while (counter++ < 10) console.log(counter++);
     </script>
 </body>

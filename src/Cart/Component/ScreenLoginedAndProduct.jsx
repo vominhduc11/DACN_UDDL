@@ -1,21 +1,26 @@
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 
 import FastImage from 'react-native-fast-image';
+import numeral from 'numeral';
 import IconFeather from 'react-native-vector-icons/Feather';
 import { moderateScale, verticalScale, scale } from 'react-native-size-matters';
+import AwesomeAlert from 'react-native-awesome-alerts';
+import Config from '../../.env/Config';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const ScreenLoginedAndProduct = ({ navigation, products }) => {
-    //chuyển đổi số lớn
-    const formatNumber = (number) => {
-        if (number >= 1000) {
-            return numeral(number).format('0.[0]a').toUpperCase();
-        }
-        return number;
+const ScreenLoginedAndProduct = ({ navigation, products, setProducts }) => {
+    const [showAlert, setShowAlert] = useState(false);
+    const [idPackage, setIdPackage] = useState(undefined);
+    //Chuyển đổi tiền tệ
+    const formatNumberWithCommas = (number) => {
+        return numeral(number).format('0,0');
     };
     //Thực hiện khi nhấn vào sản phẩm
     const handlePressProduct = async (...param) => {
         const [id, image, name, star, category, cityId, city, packages] = param;
+        console.log(id);
         //Chuyển sang trang sản phẩm
         navigation.navigate('Product', {
             id: id,
@@ -41,7 +46,6 @@ const ScreenLoginedAndProduct = ({ navigation, products }) => {
             const newArray = elementToMove.concat(remainingElements);
             await AsyncStorage.setItem('product', JSON.stringify(newArray));
         }
-        childRef1.current.setListProduct2(JSON.parse(await AsyncStorage.getItem('product')));
     };
     // Phần tử để render trong FlatList
     const renderItem = ({ item }) => (
@@ -61,13 +65,14 @@ const ScreenLoginedAndProduct = ({ navigation, products }) => {
                     borderRadius: scale(12),
                 }}
                 source={{
-                    uri: 'https://res.klook.com/image/upload/fl_lossy.progressive,w_500,h_334,c_fill,q_85/activities/fdbxep6vcao6inbj611w.webp',
+                    uri: item.image,
                     priority: FastImage.priority.high,
                 }}
                 resizeMode={FastImage.resizeMode.cover}
             />
             <View style={{ flex: 1, paddingLeft: moderateScale(10) }}>
                 <Text
+                    numberOfLines={2}
                     style={{
                         fontSize: moderateScale(16),
                         fontWeight: '600',
@@ -76,10 +81,12 @@ const ScreenLoginedAndProduct = ({ navigation, products }) => {
                 >
                     {item.name}
                 </Text>
-                <Text style={{ color: '#000', marginTop: 10 }}>{item.name_package}</Text>
-                {JSON.parse(item.quantity).map((ele) => (
+                <Text numberOfLines={2} style={{ color: '#000', marginTop: 10 }}>
+                    {item.name_package}
+                </Text>
+                {item.quantity.map((ele) => (
                     <Text style={{ color: '#000' }}>
-                        {ele.amount} &times; {ele.name}
+                        {ele.amount} &times; {ele.age}
                     </Text>
                 ))}
                 <View
@@ -98,28 +105,99 @@ const ScreenLoginedAndProduct = ({ navigation, products }) => {
                             marginRight: moderateScale(20),
                         }}
                     >
-                        đ {formatNumber(JSON.parse(item.quantity).reduce((total, item) => total + item.price * item.amount, 0))}
+                        đ {formatNumberWithCommas(item.quantity.reduce((total, item) => total + item.price * item.amount, 0))}
                     </Text>
-                    <Text style={{ padding: 6 }}>
+                    <Text
+                        onPress={() => {
+                            setIdPackage(item.id_package), setShowAlert(true);
+                        }}
+                        style={{ padding: 6 }}
+                    >
                         <IconFeather name="trash-2" color="red" size={moderateScale(24)} />
                     </Text>
                 </View>
             </View>
         </TouchableOpacity>
     );
+    // Sử lý khi xác nhận xóa sản phẩm trong giỏ hàng
+    const handleDeleteProductCart = async (idPackage) => {
+        try {
+            const idUser = JSON.parse(await AsyncStorage.getItem('idUser'));
+            await axios.delete(`${Config.API_URL}/api/deleteProductCart/${idPackage}/${idUser}`);
+            const res1 = await axios.get(`${Config.API_URL}/api/getAllProductCart/${idUser}`);
+            // Set lại danh sách sản phẩm
+            // Đóng Alert
+            setProducts(res1.data);
+            setShowAlert(false);
+        } catch (error) {
+            console.log(error);
+        }
+    };
     return (
-        <FlatList
-            style={{ paddingHorizontal: moderateScale(12), backgroundColor: '#fff', flex: 1 }}
-            data={products}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
-            initialNumToRender={1}
-            maxToRenderPerBatch={1}
-            windowSize={3}
-            removeClippedSubviews={true}
-            scrollEventThrottle={16}
-            showsVerticalScrollIndicator={false}
-        />
+        <>
+            <FlatList
+                style={{ paddingHorizontal: moderateScale(12), backgroundColor: '#fff', flex: 1 }}
+                data={products}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id_package} // Dùng id làm key duy nhất
+                initialNumToRender={1}
+                maxToRenderPerBatch={1}
+                windowSize={3}
+                removeClippedSubviews={true}
+                scrollEventThrottle={16}
+                showsVerticalScrollIndicator={false}
+            />
+            <View
+                style={{
+                    flexDirection: 'row',
+                    backgroundColor: '#fff',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    borderTopColor: '#dedede',
+                    borderTopWidth: 0.8,
+                    elevation: 12,
+                    padding: 12,
+                }}
+            >
+                <Text style={{ color: '#000', fontWeight: '700', fontSize: 18 }}>
+                    đ{' '}
+                    {formatNumberWithCommas(
+                        products.reduce((total, item) => {
+                            // total + item.price * item.amount
+                            return (
+                                total +
+                                item.quantity.reduce((total, item) => {
+                                    return total + item.price;
+                                }, 0)
+                            );
+                        }, 0)
+                    )}
+                </Text>
+                <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={() => navigation.navigate('Pay', { products })}
+                    style={{ backgroundColor: '#FF6600', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 8 }}
+                >
+                    <Text style={{ color: '#fff', fontWeight: 700 }}>Thanh toán</Text>
+                </TouchableOpacity>
+            </View>
+            <AwesomeAlert
+                show={showAlert}
+                showProgress={false}
+                title="Thông báo"
+                message="Xác nhận xóa dịch vụ này!"
+                closeOnTouchOutside={true}
+                closeOnHardwareBackPress={false}
+                showConfirmButton={true}
+                confirmText="Xác nhận"
+                confirmButtonColor="#DD6B55"
+                onConfirmPressed={() => handleDeleteProductCart(idPackage)}
+                showCancelButton={true} // Hiển thị nút hủy
+                cancelText="Hủy" // Text của nút hủy
+                cancelButtonColor="#A9A9A9" // Màu sắc của nút hủy
+                onCancelPressed={() => setShowAlert(false)} // Hàm xử lý khi nhấn nút hủy
+            />
+        </>
     );
 };
 

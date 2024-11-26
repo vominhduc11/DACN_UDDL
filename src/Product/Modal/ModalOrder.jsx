@@ -5,6 +5,9 @@ import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const ModalOrder = ({
+    product,
+    cityId,
+    cityName,
     modalVisible1,
     package_service,
     quantity,
@@ -25,6 +28,47 @@ const ModalOrder = ({
         const updatedCounts = [...counts];
         updatedCounts[index] = newCount;
         setCounts(updatedCounts);
+    };
+    // Tạo mảng quantity thêm trường amount
+    const setQuantity = () => {
+        const result = package_service.quantitys
+            .map((quantity, index) => {
+                if (counts[index] !== 0) {
+                    quantity.amount = counts[index];
+                    return quantity;
+                }
+                return null; // Trả về null cho các phần tử không đạt điều kiện
+            })
+            .filter((quantity) => quantity !== null); // Loại bỏ các phần tử null
+
+        return result;
+    };
+    // Xử lý khi bấm vào order
+    const handleOrder = () => {
+        console.log(setQuantity());
+        const products = [
+            {
+                image: product.image,
+                quantity: setQuantity(),
+                package: product.package_services,
+                name_package: package_service.name,
+                star: product.star,
+                city: cityName,
+                name: product.name,
+                id: product.id,
+                cityId: cityId,
+                category: product.category,
+                id_package: package_service.id,
+            },
+        ];
+        products[0].package.forEach((ele) => {
+            ele.quantity = ele.quantitys;
+            delete ele.quantitys;
+        });
+        // Đóng modal hiện tại
+        setModalVisible1(false);
+        // Chuyển sang trang Pay
+        navigation.navigate('Pay', products);
     };
 
     return (
@@ -160,14 +204,7 @@ const ModalOrder = ({
                                 }, 0)
                             )}
                         </Text>
-                        <TouchableOpacity
-                            onPress={() => {
-                                setModalVisible1(false);
-                                navigation.navigate('Pay');
-                            }}
-                            activeOpacity={0.6}
-                            style={{ marginBottom: 12 }}
-                        >
+                        <TouchableOpacity onPress={handleOrder} activeOpacity={0.6} style={{ marginBottom: 12 }}>
                             <Text
                                 style={{
                                     textAlign: 'center',

@@ -6,7 +6,16 @@ import IconFeather from 'react-native-vector-icons/Feather';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 
 const Bottom_Action_Bar = (
-    { price, formatNumberWithCommas, activeIndex, setModalVisible1, setModalVisible2, getCoordinatesBtnAddCart, getCoordinatesBtnCart },
+    {
+        price,
+        formatNumberWithCommas,
+        activeIndex,
+        setModalVisible1,
+        setModalVisible2,
+        getCoordinatesBtnAddCart,
+        getCoordinatesBtnCart,
+        setUnviewedCartCount_Header,
+    },
     ref
 ) => {
     const [showCartAnimate, setShowCartAnimate] = useState(false);
@@ -59,6 +68,7 @@ const Bottom_Action_Bar = (
             ]).start(() => {
                 // Bỏ giao diện animate , set về vị trí cũ , thay đổi giá trị sản phẩn giỏ hàng chưa xem trong component Header
                 setShowCartAnimate(false);
+                setUnviewedCartCount_Header(unviewedCartCount);
                 bottom.setValue(0);
                 left.setValue(50);
             });
@@ -161,7 +171,7 @@ const Bottom_Action_Bar = (
                                             left: 24,
                                         }}
                                     >
-                                        <Text style={{ fontSize: 10, fontWeight: '700' }}>1</Text>
+                                        <Text style={{ fontSize: 10, fontWeight: '700' }}>{unviewedCartCount}</Text>
                                     </View>
                                 )}
                             </Animated.View>

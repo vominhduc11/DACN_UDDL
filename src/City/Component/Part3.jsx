@@ -48,7 +48,6 @@ const Part3 = ({ id, city, navigation }) => {
 
     // Gọi api lần đầu
     useEffect(() => {
-        // console.log('mount');
         async function findLocal(param) {
             const res = await axios.get(`https://geocode.search.hereapi.com/v1/geocode?apikey=${Config.API_KEY}&q=${param}`);
             // console.log(param);
@@ -57,7 +56,7 @@ const Part3 = ({ id, city, navigation }) => {
 
         async function fetchData() {
             try {
-                const res = await axios.get(`${API_URL}/api/getAllCity/${id}`);
+                const res = await axios.get(`${Config.API_URL}/api/getAllCity/${id}`);
                 // Bỏ thành phố hiện tại
                 const newData = res.data.filter((ele) => ele.id !== id);
                 // Tìm tọa độ hiện tại của thành phố đó
@@ -75,10 +74,9 @@ const Part3 = ({ id, city, navigation }) => {
                         return ele;
                     })
                 );
+                setCitys(mainData);
             } catch (error) {
                 console.log(error);
-            } finally {
-                setCitys(mainData);
             }
         }
         fetchData();
@@ -110,7 +108,7 @@ const Part3 = ({ id, city, navigation }) => {
                 horizontal
             />
 
-            <TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => navigation.navigate('Where_go')}>
                 <Text
                     style={{
                         textAlign: 'center',

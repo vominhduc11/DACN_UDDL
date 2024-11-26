@@ -67,7 +67,7 @@ const Pay_status = ({ navigation }) => {
                         </Text>
                     </TouchableWithoutFeedback>
                 </View>
-                <Text style={{ marginTop: 24 }}>
+                <Text style={{ marginTop: 24, color: '#000' }}>
                     Mã đặt hàng:
                     <Text style={{ color: '#000' }}>2651521150</Text>
                 </Text>
@@ -79,10 +79,9 @@ const Pay_status = ({ navigation }) => {
                         marginTop: 24,
                     }}
                 >
-                    <Text>Cảm ơn bạn đã đặt dịch vụ với Klook!</Text>
-                    <Text>
-                        Thông tin đơn hàng và voucher sẽ được gửi đến{' '}
-                        <Text style={{ color: '#000' }}>vominhduc760@gmail.com</Text>
+                    <Text style={{ color: '#000' }}>Cảm ơn bạn đã đặt dịch vụ với Klook!</Text>
+                    <Text style={{ color: '#000' }}>
+                        Thông tin đơn hàng và voucher sẽ được gửi đến <Text style={{ color: '#0099FF' }}>vominhduc760@gmail.com</Text>
                     </Text>
                 </View>
             </View>

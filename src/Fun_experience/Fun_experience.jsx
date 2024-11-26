@@ -86,7 +86,7 @@ const Fun_experience = ({ navigation }) => {
 
                     {/* Điểm đến */}
                     <Destination openModalDestination={openModalDestination} colorAuthenCity={colorAuthenCity} ref={destinationRef} />
-                    <ModalDestination setNameCity={setNameCity} ref={modalDestinationRef} />
+                    <ModalDestination setNameCity={setNameCity} ref={modalDestinationRef} navigation={navigation} />
 
                     {/* Danh mục */}
                     <Category openModalCategory={openModalCategory} colorAuthenCategory={colorAuthenCategory} ref={categoryRef} />

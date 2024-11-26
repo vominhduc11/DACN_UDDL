@@ -5,6 +5,7 @@ import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import Config from '../../.env/Config';
 
 const ModalAddCart = ({
     product,
@@ -49,9 +50,10 @@ const ModalAddCart = ({
     };
 
     // Kiểm tra sản phẩm có tồn tại trong giỏ hàng không
-    const existsProductCart = async (idProduct) => {
+    const existsPackage = async (idPackage) => {
+        const idUser = JSON.parse(await AsyncStorage.getItem('idUser'));
         try {
-            const res = await axios.get(`http://localhost:8080/api/checkIfExists/${idProduct}`);
+            const res = await axios.get(`${Config.API_URL}/api/checkIfExists/${idPackage}/${idUser}`);
 
             return res.data;
         } catch (error) {
@@ -59,9 +61,12 @@ const ModalAddCart = ({
         }
     };
 
-    const partialUpdateProductCart = async (idProduct, quantity) => {
+    const partialUpdateProductCart = async (idPackage, idProduct, quantity) => {
+        const idUser = JSON.parse(await AsyncStorage.getItem('idUser'));
         try {
-            await axios.put('http://localhost:8080/api/partialUpdateProductCart', {
+            await axios.put(`${Config.API_URL}/api/partialUpdateProductCart`, {
+                idPackage: idPackage,
+                idUser: idUser,
                 idProduct: idProduct,
                 quantity: JSON.stringify(quantity),
             });
@@ -71,10 +76,12 @@ const ModalAddCart = ({
     };
 
     const addProductCart = async (idProduct, idPackage, quantity) => {
+        const idUser = JSON.parse(await AsyncStorage.getItem('idUser'));
         try {
-            await axios.post('http://localhost:8080/api/addProductCart', {
+            await axios.post(`${Config.API_URL}/api/addProductCart`, {
                 idProduct: idProduct,
                 idPackage: idPackage,
+                idUser: idUser,
                 quantity: JSON.stringify(quantity),
             });
         } catch (error) {
@@ -84,8 +91,8 @@ const ModalAddCart = ({
 
     // Xử lý thêm sản phẩm vào giỏ hàng
     const handleAddCart = async () => {
-        if (await existsProductCart(product.id)) {
-            await partialUpdateProductCart(product.id, setQuantity());
+        if (await existsPackage(package_service.id)) {
+            await partialUpdateProductCart(package_service.id, product.id, setQuantity());
             // Set số hiển thị các sản phẩm chưa xem trên giỏ hàng
             if (await AsyncStorage.getItem('unviewedCartCount')) {
                 const result = JSON.parse(await AsyncStorage.getItem('unviewedCartCount'));

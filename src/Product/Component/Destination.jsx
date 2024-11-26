@@ -5,6 +5,7 @@ import FastImage from 'react-native-fast-image';
 import axios from 'axios';
 
 import Config from '../../.env/Config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Destination = ({ handlePressProduct, cityId }) => {
     const [listProduct, setListProduct] = useState([]);
@@ -49,7 +50,8 @@ const Destination = ({ handlePressProduct, cityId }) => {
 
     useEffect(() => {
         async function fetchData() {
-            const res = await axios.get(`${Config.API_URL}/api/getProductOfCity/${cityId}/10`);
+            const idUser = JSON.parse(await AsyncStorage.getItem('idUser'));
+            const res = await axios.get(`${Config.API_URL}/api/getProductOfCity/${cityId}/10/${idUser}`);
             setListProduct(res.data);
         }
         fetchData();

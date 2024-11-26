@@ -16,6 +16,7 @@ const Title = ({ name, star, notify, place, evaluate, booked, navigation }) => {
     return (
         <>
             <Text
+                numberOfLines={5}
                 style={{
                     fontSize: 20,
                     fontWeight: '700',
