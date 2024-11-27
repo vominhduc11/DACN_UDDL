@@ -84,7 +84,7 @@ const ScreenLoginedAndProduct = ({ navigation, products, setProducts }) => {
                 <Text numberOfLines={2} style={{ color: '#000', marginTop: 10 }}>
                     {item.name_package}
                 </Text>
-                {item.quantity.map((ele) => (
+                {item.quantitys.map((ele) => (
                     <Text style={{ color: '#000' }}>
                         {ele.amount} &times; {ele.age}
                     </Text>
@@ -105,7 +105,7 @@ const ScreenLoginedAndProduct = ({ navigation, products, setProducts }) => {
                             marginRight: moderateScale(20),
                         }}
                     >
-                        đ {formatNumberWithCommas(item.quantity.reduce((total, item) => total + item.price * item.amount, 0))}
+                        đ {formatNumberWithCommas(item.quantitys.reduce((total, item) => total + item.price * item.amount, 0))}
                     </Text>
                     <Text
                         onPress={() => {
@@ -166,7 +166,7 @@ const ScreenLoginedAndProduct = ({ navigation, products, setProducts }) => {
                             // total + item.price * item.amount
                             return (
                                 total +
-                                item.quantity.reduce((total, item) => {
+                                item.quantitys.reduce((total, item) => {
                                     return total + item.price;
                                 }, 0)
                             );

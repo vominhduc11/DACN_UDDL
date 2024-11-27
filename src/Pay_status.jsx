@@ -4,7 +4,8 @@ import React from 'react';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import { TouchableWithoutFeedback } from 'react-native';
 
-const Pay_status = ({ navigation }) => {
+const Pay_status = ({ navigation, route }) => {
+    const { email } = route.params;
     return (
         <View
             style={{
@@ -51,7 +52,7 @@ const Pay_status = ({ navigation }) => {
                         </Text>
                     </TouchableWithoutFeedback>
                     <View style={{ height: 12 }} />
-                    <TouchableWithoutFeedback onPress={() => navigation.navigate('Order_Confirm')}>
+                    <TouchableWithoutFeedback onPress={() => navigation.navigate('Order_page')}>
                         <Text
                             style={{
                                 backgroundColor: '#ff5c19',
@@ -81,7 +82,7 @@ const Pay_status = ({ navigation }) => {
                 >
                     <Text style={{ color: '#000' }}>Cảm ơn bạn đã đặt dịch vụ với Klook!</Text>
                     <Text style={{ color: '#000' }}>
-                        Thông tin đơn hàng và voucher sẽ được gửi đến <Text style={{ color: '#0099FF' }}>vominhduc760@gmail.com</Text>
+                        Thông tin đơn hàng và voucher sẽ được gửi đến <Text style={{ color: '#0099FF' }}>{email}</Text>
                     </Text>
                 </View>
             </View>

@@ -31,6 +31,7 @@ const ModalOrder = ({
     };
     // Tạo mảng quantity thêm trường amount
     const setQuantity = () => {
+        console.log(package_service);
         const result = package_service.quantitys
             .map((quantity, index) => {
                 if (counts[index] !== 0) {
@@ -45,11 +46,10 @@ const ModalOrder = ({
     };
     // Xử lý khi bấm vào order
     const handleOrder = () => {
-        console.log(setQuantity());
         const products = [
             {
                 image: product.image,
-                quantity: setQuantity(),
+                quantitys: setQuantity(),
                 package: product.package_services,
                 name_package: package_service.name,
                 star: product.star,
@@ -61,14 +61,10 @@ const ModalOrder = ({
                 id_package: package_service.id,
             },
         ];
-        products[0].package.forEach((ele) => {
-            ele.quantity = ele.quantitys;
-            delete ele.quantitys;
-        });
         // Đóng modal hiện tại
         setModalVisible1(false);
         // Chuyển sang trang Pay
-        navigation.navigate('Pay', products);
+        navigation.navigate('Pay', { products });
     };
 
     return (

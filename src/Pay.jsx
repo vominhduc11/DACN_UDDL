@@ -13,6 +13,7 @@ const Pay = ({ navigation, route }) => {
     const [user, setUser] = useState({});
 
     const { products } = route.params;
+    console.log(products);
     //Chuyển đổi tiền tệ
     const formatNumberWithCommas = (number) => {
         return numeral(number).format('0,0');
@@ -38,75 +39,74 @@ const Pay = ({ navigation, route }) => {
         const idUser = JSON.parse(await AsyncStorage.getItem('idUser'));
         await axios.post(`${Config.API_URL}/api/addOrder?idUser=${idUser}`, products);
         // Gửi mail
-        // let string = ``;
+        let string = ``;
         // Duyệt qua từng sản phẩm
-        // products.forEach((product) => {
-        //     let stringQuantity = ``;
+        products.forEach((product) => {
+            let stringQuantity = ``;
 
-        //     // Duyệt qua từng phần tử quantity trong sản phẩm
-        //     product.quantity.forEach((ele) => {
-        //         stringQuantity += `${ele.amount} &times; ${ele.age}<br/>`; // Thêm chi tiết số lượng vào chuỗi
-        //     });
+            // Duyệt qua từng phần tử quantitys trong sản phẩm
+            product.quantitys.forEach((ele) => {
+                stringQuantity += `${ele.amount} &times; ${ele.age}<br/>`; // Thêm chi tiết số lượng vào chuỗi
+            });
 
-        //     // Xây dựng chuỗi chi tiết đơn hàng cho từng sản phẩm
-        //     string += `
-        //     <b>${product.name}</b>  <!-- In đậm tên sản phẩm -->
-        //     <br/>
-        //     <br/>
-        //     ${product.name_package}
-        //     <br/>
-        //     ${stringQuantity}
-        //     <br/>
-        //     <br/>
-        //     <b>${formatNumberWithCommas(
-        //         product.quantity.reduce((total, item) => total + item.price * item.amount, 0)
-        //     )}</b>  <!-- In đậm tổng giá sản phẩm -->
-        //     `;
-        // });
-
+            // Xây dựng chuỗi chi tiết đơn hàng cho từng sản phẩm
+            string += `
+            <b>${product.name}</b>  <!-- In đậm tên sản phẩm -->
+            <br/>
+            <br/>
+            ${product.name_package}
+            <br/>
+            ${stringQuantity}
+            <br/>
+            <br/>
+            <b>${formatNumberWithCommas(
+                product.quantitys.reduce((total, item) => total + item.price * item.amount, 0)
+            )}</b>  <!-- In đậm tổng giá sản phẩm -->
+            `;
+        });
         // Gửi email với nội dung xác nhận đơn hàng
-        // await axios.post(`${Config.API_URL}/api/email/send`, {
-        //     getTo: user.email,
-        //     getSubject: 'Xác nhận đơn hàng',
-        //     getBody: `
-        //     Dear <b>${user.name}</b>,
-        //     <br/>
-        //     <br/>
-        //     Thank you for booking your recent tour with Travello. We are thrilled to have you on board!
-        //     <br/>
-        //     <br/>
-        //     Your package details:
-        //     <br/>
-        //     <br/>
-        //     ${string}
-        //     <br/>
-        //     <br/>
-        //     <br/>
-        //     Tổng cộng: <b>${formatNumberWithCommas(
-        //         products.reduce((total, item) => {
-        //             return total + item.quantity.reduce((total, item) => total + item.price * item.amount, 0);
-        //         }, 0)
-        //     )}đ</b>  <!-- In đậm tổng tiền -->
-        //     <br/>
-        //     <br/>
-        //     If you have any questions or need assistance, feel free to contact us at support@example.com or call us at +1-234-567-890.
-        //     <br/>
-        //     <br/>
-        //     Looking forward to making your trip memorable!
-        //     <br/>
-        //     <br/>
-        //     Best regards,
-        //     <br/>
-        //     Travello
-        //     <br/>
-        //     Customer Support Team
-        //     `,
-        //     // Nếu API hỗ trợ, bạn có thể cần thêm một phần như content-type
-        //     headers: {
-        //         'Content-Type': 'text/html', // Chỉ định kiểu nội dung là HTML
-        //     },
-        // });
-        // navigation.navigate('Pay_status');
+        await axios.post(`${Config.API_URL}/api/email/send`, {
+            getTo: user.email,
+            getSubject: 'Xác nhận đơn hàng',
+            getBody: `
+            Dear <b>${user.name}</b>,
+            <br/>
+            <br/>
+            Thank you for booking your recent tour with Travello. We are thrilled to have you on board!
+            <br/>
+            <br/>
+            Your package details:
+            <br/>
+            <br/>
+            ${string}
+            <br/>
+            <br/>
+            <br/>
+            Tổng cộng: <b>${formatNumberWithCommas(
+                products.reduce((total, item) => {
+                    return total + item.quantitys.reduce((total, item) => total + item.price * item.amount, 0);
+                }, 0)
+            )}đ</b>  <!-- In đậm tổng tiền -->
+            <br/>
+            <br/>
+            If you have any questions or need assistance, feel free to contact us at support@example.com or call us at +1-234-567-890.
+            <br/>
+            <br/>
+            Looking forward to making your trip memorable!
+            <br/>
+            <br/>
+            Best regards,
+            <br/>
+            Travello
+            <br/>
+            Customer Support Team
+            `,
+            // Nếu API hỗ trợ, bạn có thể cần thêm một phần như content-type
+            headers: {
+                'Content-Type': 'text/html', // Chỉ định kiểu nội dung là HTML
+            },
+        });
+        navigation.navigate('Pay_status', { email: user.email });
     };
     // Hàm render phần tử trong FlatList
     const renderItem = ({ item }) => (
@@ -125,7 +125,7 @@ const Pay = ({ navigation, route }) => {
                 <Text numberOfLines={2} style={{ color: '#000' }}>
                     {item.name_package}
                 </Text>
-                {item.quantity.map((ele) => (
+                {item.quantitys.map((ele) => (
                     <Text style={{ color: '#000', marginTop: 4 }}>
                         {ele.amount} &times; {ele.age}
                     </Text>
@@ -138,7 +138,7 @@ const Pay = ({ navigation, route }) => {
                         marginTop: 12,
                     }}
                 >
-                    đ {formatNumberWithCommas(item.quantity.reduce((total, item) => total + item.price * item.amount, 0))}
+                    đ {formatNumberWithCommas(item.quantitys.reduce((total, item) => total + item.price * item.amount, 0))}
                 </Text>
             </View>
         </View>
@@ -372,7 +372,7 @@ const Pay = ({ navigation, route }) => {
                             // total + item.price * item.amount
                             return (
                                 total +
-                                item.quantity.reduce((total, item) => {
+                                item.quantitys.reduce((total, item) => {
                                     return total + item.price;
                                 }, 0)
                             );

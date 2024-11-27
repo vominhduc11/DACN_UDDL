@@ -15,6 +15,8 @@ function Order_page({ navigation, route }) {
     const { setActive } = route.params;
     // Gọi api lần đầu để xác nhận giao diện
     useEffect(() => {
+        // Set lại về Order
+        setActive.setOrder(4);
         async function fetchData() {
             // await AsyncStorage.removeItem('idUser');
             // Lấy bất đồng bộ id của người dùng lưu trong AsyncStorage
@@ -25,6 +27,7 @@ function Order_page({ navigation, route }) {
 
                 // Lấy bất đồng bộ các sản phẩm của của giỏ hàng lưu trong AsyncStorage
                 const res = await axios.get(`${Config.API_URL}/api/getAllOrder/${idUser}`);
+                console.log(res.data);
                 // Xét trường hợp
                 if (res.data.length === 0) {
                     setProducts([]);

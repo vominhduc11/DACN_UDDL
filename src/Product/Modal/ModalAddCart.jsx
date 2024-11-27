@@ -34,7 +34,7 @@ const ModalAddCart = ({
         setCounts(updatedCounts);
     };
 
-    // Tạo mảng quantity thêm trường amount
+    // Tạo mảng quantitys thêm trường amount
     const setQuantity = () => {
         const result = package_service.quantitys
             .map((quantity, index) => {
@@ -61,28 +61,28 @@ const ModalAddCart = ({
         }
     };
 
-    const partialUpdateProductCart = async (idPackage, idProduct, quantity) => {
+    const partialUpdateProductCart = async (idPackage, idProduct, quantitys) => {
         const idUser = JSON.parse(await AsyncStorage.getItem('idUser'));
         try {
             await axios.put(`${Config.API_URL}/api/partialUpdateProductCart`, {
                 idPackage: idPackage,
                 idUser: idUser,
                 idProduct: idProduct,
-                quantity: JSON.stringify(quantity),
+                quantitys: JSON.stringify(quantitys),
             });
         } catch (error) {
             console.log(error);
         }
     };
 
-    const addProductCart = async (idProduct, idPackage, quantity) => {
+    const addProductCart = async (idProduct, idPackage, quantitys) => {
         const idUser = JSON.parse(await AsyncStorage.getItem('idUser'));
         try {
             await axios.post(`${Config.API_URL}/api/addProductCart`, {
                 idProduct: idProduct,
                 idPackage: idPackage,
                 idUser: idUser,
-                quantity: JSON.stringify(quantity),
+                quantitys: JSON.stringify(quantitys),
             });
         } catch (error) {
             console.log(error);

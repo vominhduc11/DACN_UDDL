@@ -42,13 +42,13 @@ const LoginedAndProduct = ({ navigation, products }) => {
                         <Text numberOfLines={3} style={{ color: '#000' }}>
                             {item.name_package}
                         </Text>
-                        {item.quantity.map((ele, index) => (
+                        {item.quantitys?.map((ele, index) => (
                             <Text key={index} style={{ color: '#000', marginTop: 4 }}>
                                 {ele.amount} &times; {ele.age}
                             </Text>
                         ))}
                         <Text style={{ color: '#000', marginTop: 12 }}>
-                            Đã thanh toán: đ {formatNumberWithCommas(item.quantity.reduce((total, item) => total + item.price * item.amount, 0))}
+                            Đã thanh toán: đ {formatNumberWithCommas(item.quantitys?.reduce((total, item) => total + item.price * item.amount, 0))}
                         </Text>
                         <Text style={{ color: '#1cb57a', marginTop: 2 }}>Đơn hàng đã được xác nhận</Text>
                     </View>
