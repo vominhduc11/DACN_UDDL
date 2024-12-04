@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 

@@ -175,6 +175,7 @@ const Product = ({ navigation, route }) => {
                             place={product.place}
                             evaluate={product.evaluate}
                             booked={product.booked}
+                            address={product.address}
                             navigation={navigation}
                         />
                         {/* Các điểm nổi bật */}

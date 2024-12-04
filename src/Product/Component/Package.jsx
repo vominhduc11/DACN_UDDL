@@ -1,5 +1,6 @@
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import React, { memo } from 'react';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const Package = ({
     package_services,
@@ -13,6 +14,7 @@ const Package = ({
     setCountsInit,
     setPrice,
 }) => {
+    console.log(package_services);
     //chọn gói dịch vụ
     function handleSelectServicePackage(index, id) {
         // Set active , Nếu active bằng -1 thì không thể hiện modal thanh toán
@@ -31,63 +33,86 @@ const Package = ({
         setPrice(minPrice(temp.quantitys));
     }
     return (
-        <View style={{ marginTop: 24 }}>
-            <View
-                style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                }}
-            >
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                    }}
-                >
-                    <Text
+        <>
+            {package_services === undefined && (
+                <SkeletonPlaceholder>
+                    <View
                         style={{
-                            backgroundColor: '#FF5B00',
-                            width: 7,
+                            marginTop: 24,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            width: 120,
+                            height: 18,
                             borderRadius: 12,
-                            height: 24,
-                            marginRight: 10,
                         }}
                     />
-                    <Text
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 12 }}>
+                        <View style={{ width: 240, height: 100, marginRight: 10, borderRadius: 12 }} />
+                        <View style={{ width: 240, height: 100, marginRight: 10, borderRadius: 12 }} />
+                    </View>
+                </SkeletonPlaceholder>
+            )}
+            {package_services === undefined || (
+                <View style={{ marginTop: 24 }}>
+                    <View
                         style={{
-                            color: '#000',
-                            fontSize: 18,
-                            fontWeight: '700',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
                         }}
                     >
-                        Các gói dịch vụ
-                    </Text>
-                </View>
-                <Text
-                    onPress={() => {
-                        setActiveIndex(-1), setPrice(undefined);
-                    }}
-                    style={{ textDecorationLine: 'underline', color: '#ccc' }}
-                >
-                    Xóa
-                </Text>
-            </View>
-            <ScrollView horizontal style={styles.scrollContainer} showsHorizontalScrollIndicator={false}>
-                {package_services !== undefined &&
-                    package_services.map((text, index) => (
-                        <TouchableOpacity
-                            key={index}
-                            style={[styles.item, index === activeIndex && styles.activeItem]}
-                            onPress={() => handleSelectServicePackage(index, text.id)}
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                            }}
                         >
-                            <Text style={styles.itemText}>{text.name}</Text>
+                            <Text
+                                style={{
+                                    backgroundColor: '#FF5B00',
+                                    width: 7,
+                                    borderRadius: 12,
+                                    height: 24,
+                                    marginRight: 10,
+                                }}
+                            />
+                            <Text
+                                style={{
+                                    color: '#000',
+                                    fontSize: 18,
+                                    fontWeight: '700',
+                                }}
+                            >
+                                Các gói dịch vụ
+                            </Text>
+                        </View>
+                        <Text
+                            onPress={() => {
+                                setActiveIndex(-1), setPrice(undefined);
+                            }}
+                            style={{ textDecorationLine: 'underline', color: '#ccc' }}
+                        >
+                            Xóa
+                        </Text>
+                    </View>
+                    <ScrollView horizontal style={styles.scrollContainer} showsHorizontalScrollIndicator={false}>
+                        {package_services !== undefined &&
+                            package_services.map((text, index) => (
+                                <TouchableOpacity
+                                    key={index}
+                                    style={[styles.item, index === activeIndex && styles.activeItem]}
+                                    onPress={() => handleSelectServicePackage(index, text.id)}
+                                >
+                                    <Text style={styles.itemText}>{text.name}</Text>
 
-                            <Text style={styles.priceText}>{formatNumberWithCommas(minPrice(text.quantitys))}</Text>
-                        </TouchableOpacity>
-                    ))}
-            </ScrollView>
-        </View>
+                                    <Text style={styles.priceText}>{formatNumberWithCommas(minPrice(text.quantitys))}</Text>
+                                </TouchableOpacity>
+                            ))}
+                    </ScrollView>
+                </View>
+            )}
+        </>
     );
 };
 

@@ -1,11 +1,13 @@
 import { View, Text, TouchableWithoutFeedback, FlatList } from 'react-native';
-import React, { memo, useEffect, useState } from 'react';
+import React, { Fragment, memo, useEffect, useState } from 'react';
 
 import FastImage from 'react-native-fast-image';
 import axios from 'axios';
 
 import Config from '../../.env/Config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 
 const Destination = ({ handlePressProduct, cityId }) => {
     const [listProduct, setListProduct] = useState([]);
@@ -47,7 +49,138 @@ const Destination = ({ handlePressProduct, cityId }) => {
             </View>
         </TouchableWithoutFeedback>
     );
+    // Hàm loading skeleton
+    const SkeletonItem = () => {
+        return (
+            <View style={{ marginTop: 18, paddingLeft: 16 }}>
+                <SkeletonPlaceholder>
+                    <View style={{ paddingRight: 16 }}>
+                        <Text
+                            style={{
+                                fontSize: moderateScale(17),
+                                fontWeight: '700',
+                                color: '#000',
+                            }}
+                        >
+                            Tiếp tục lên lịch
+                        </Text>
+                    </View>
+                </SkeletonPlaceholder>
+                <View style={{ flexDirection: 'row', marginTop: 12 }}>
+                    <View>
+                        <SkeletonPlaceholder>
+                            <View
+                                style={{
+                                    marginRight: scale(12),
+                                }}
+                            >
+                                {/* Placeholder cho hình ảnh */}
+                                <SkeletonPlaceholder.Item height={verticalScale(100)} width={scale(140)} borderRadius={12} />
 
+                                {/* Placeholder cho tiêu đề sản phẩm */}
+                                <SkeletonPlaceholder.Item
+                                    marginTop={moderateScale(8)}
+                                    width={scale(120)}
+                                    height={moderateScale(14)}
+                                    borderRadius={4}
+                                />
+
+                                {/* Placeholder cho giá sản phẩm */}
+                                <View
+                                    style={{
+                                        marginTop: moderateScale(12),
+                                        flexDirection: 'row',
+                                    }}
+                                >
+                                    <SkeletonPlaceholder.Item width={scale(60)} height={moderateScale(14)} borderRadius={4} />
+                                    <SkeletonPlaceholder.Item
+                                        width={scale(40)}
+                                        height={moderateScale(14)}
+                                        borderRadius={4}
+                                        marginLeft={moderateScale(8)}
+                                    />
+                                </View>
+                            </View>
+                        </SkeletonPlaceholder>
+                    </View>
+
+                    <View>
+                        <SkeletonPlaceholder>
+                            <View
+                                style={{
+                                    marginRight: scale(12),
+                                }}
+                            >
+                                {/* Placeholder cho hình ảnh */}
+                                <SkeletonPlaceholder.Item height={verticalScale(100)} width={scale(140)} borderRadius={12} />
+
+                                {/* Placeholder cho tiêu đề sản phẩm */}
+                                <SkeletonPlaceholder.Item
+                                    marginTop={moderateScale(8)}
+                                    width={scale(120)}
+                                    height={moderateScale(14)}
+                                    borderRadius={4}
+                                />
+
+                                {/* Placeholder cho giá sản phẩm */}
+                                <View
+                                    style={{
+                                        marginTop: moderateScale(12),
+                                        flexDirection: 'row',
+                                    }}
+                                >
+                                    <SkeletonPlaceholder.Item width={scale(60)} height={moderateScale(14)} borderRadius={4} />
+                                    <SkeletonPlaceholder.Item
+                                        width={scale(40)}
+                                        height={moderateScale(14)}
+                                        borderRadius={4}
+                                        marginLeft={moderateScale(8)}
+                                    />
+                                </View>
+                            </View>
+                        </SkeletonPlaceholder>
+                    </View>
+
+                    <View>
+                        <SkeletonPlaceholder>
+                            <View
+                                style={{
+                                    marginRight: scale(12),
+                                }}
+                            >
+                                {/* Placeholder cho hình ảnh */}
+                                <SkeletonPlaceholder.Item height={verticalScale(100)} width={scale(140)} borderRadius={12} />
+
+                                {/* Placeholder cho tiêu đề sản phẩm */}
+                                <SkeletonPlaceholder.Item
+                                    marginTop={moderateScale(8)}
+                                    width={scale(120)}
+                                    height={moderateScale(14)}
+                                    borderRadius={4}
+                                />
+
+                                {/* Placeholder cho giá sản phẩm */}
+                                <View
+                                    style={{
+                                        marginTop: moderateScale(12),
+                                        flexDirection: 'row',
+                                    }}
+                                >
+                                    <SkeletonPlaceholder.Item width={scale(60)} height={moderateScale(14)} borderRadius={4} />
+                                    <SkeletonPlaceholder.Item
+                                        width={scale(40)}
+                                        height={moderateScale(14)}
+                                        borderRadius={4}
+                                        marginLeft={moderateScale(8)}
+                                    />
+                                </View>
+                            </View>
+                        </SkeletonPlaceholder>
+                    </View>
+                </View>
+            </View>
+        );
+    };
     useEffect(() => {
         async function fetchData() {
             const idUser = JSON.parse(await AsyncStorage.getItem('idUser'));
@@ -57,47 +190,52 @@ const Destination = ({ handlePressProduct, cityId }) => {
         fetchData();
     }, []);
     return (
-        <View style={{ marginTop: 18, marginRight: -12 }}>
-            <View
-                style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                }}
-            >
-                <Text
-                    style={{
-                        backgroundColor: '#FF5B00',
-                        width: 7,
-                        borderRadius: 12,
-                        height: 24,
-                        marginRight: 10,
-                    }}
-                />
-                <Text
-                    style={{
-                        color: '#000',
-                        fontSize: 18,
-                        fontWeight: '700',
-                    }}
-                >
-                    Điểm đến theo xu hướng
-                </Text>
-            </View>
+        <Fragment>
+            {listProduct.length === 0 && SkeletonItem()}
+            {listProduct.length !== 0 && (
+                <View style={{ marginTop: 18, marginRight: -12 }}>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Text
+                            style={{
+                                backgroundColor: '#FF5B00',
+                                width: 7,
+                                borderRadius: 12,
+                                height: 24,
+                                marginRight: 10,
+                            }}
+                        />
+                        <Text
+                            style={{
+                                color: '#000',
+                                fontSize: 18,
+                                fontWeight: '700',
+                            }}
+                        >
+                            Điểm đến theo xu hướng
+                        </Text>
+                    </View>
 
-            {/* Danh sách sản phẩm */}
-            <FlatList
-                style={{ marginTop: 12 }}
-                data={listProduct}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                initialNumToRender={1}
-                maxToRenderPerBatch={1}
-                windowSize={3}
-                removeClippedSubviews={true}
-                horizontal
-                scrollEventThrottle={16}
-            />
-        </View>
+                    {/* Danh sách sản phẩm */}
+                    <FlatList
+                        style={{ marginTop: 12 }}
+                        data={listProduct}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item.id}
+                        initialNumToRender={1}
+                        maxToRenderPerBatch={1}
+                        windowSize={3}
+                        removeClippedSubviews={true}
+                        horizontal
+                        scrollEventThrottle={16}
+                    />
+                </View>
+            )}
+        </Fragment>
     );
 };
 

@@ -5,7 +5,15 @@ import IconEntypo from 'react-native-vector-icons/Entypo';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
 
-const Title = ({ name, star, notify, place, evaluate, booked, navigation }) => {
+const Title = ({ name, star, notify, place, address, evaluate, booked, navigation }) => {
+    // hàm chuyển đổi chuỗi tọa độ sang obj
+    function parseCoordinates(address) {
+        if (address) {
+            const [lat, lon] = address.split(',').map(Number); // Tách chuỗi bằng dấu ',' và chuyển thành số
+            return { lat, lon }; // Trả về một đối tượng với các giá trị lat và lon
+        }
+        return { lat: undefined, lon: undefined };
+    }
     //chuyển đổi số lớn
     const formatNumber = (number) => {
         if (number >= 1000) {
@@ -53,7 +61,13 @@ const Title = ({ name, star, notify, place, evaluate, booked, navigation }) => {
                 <Text style={{ color: '#000', marginLeft: 12 }}>({formatNumber(evaluate)} Đánh giá)</Text>
                 <Text style={{ marginLeft: 18, color: '#000' }}>{formatNumber(booked)} Đã đặt</Text>
             </View>
-            <TouchableWithoutFeedback onPress={() => navigation.navigate('Map')}>
+            <TouchableWithoutFeedback
+                onPress={() => {
+                    if (address) {
+                        navigation.navigate('Map', { lat: parseCoordinates(address).lat, lon: parseCoordinates(address).lon });
+                    }
+                }}
+            >
                 <View>
                     {notify && (
                         <View

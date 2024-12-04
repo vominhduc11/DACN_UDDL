@@ -19,6 +19,7 @@ import Have_fun from './src/Have_fun';
 import Where_go from './src/Where_go/Where_go';
 import Map from './src/Map';
 import MyList from './src/MyList';
+import Skeleton from './src/Skeleton';
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +32,7 @@ const App = () => {
                     gestureEnabled: true, // Kích hoạt cử chỉ vuốt
                 }}
             >
+                {/* <Stack.Screen name="Skeleton" component={Skeleton} options={{ headerShown: false }} /> */}
                 <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
                 <Stack.Screen name="City" component={City} options={{ headerShown: false }} />
                 <Stack.Screen

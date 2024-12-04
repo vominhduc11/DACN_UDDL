@@ -1,4 +1,4 @@
-import { View, Text, Animated, TextInput, ScrollView, ImageBackground, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
+import { View, Text, Animated, TextInput, ScrollView, TouchableOpacity } from 'react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import IconFeather from 'react-native-vector-icons/Feather';

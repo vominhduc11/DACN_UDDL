@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableWithoutFeedback, FlatList } from 'react-native';
+import { View, Text, ScrollView, TouchableWithoutFeedback, FlatList, Modal } from 'react-native';
 import React, { useEffect, useState } from 'react';
 
 import { moderateScale } from 'react-native-size-matters';
@@ -8,9 +8,11 @@ import IconEntypo from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Config from './.env/Config';
 import axios from 'axios';
+import { Chase } from 'react-native-animated-spinkit';
 
 const Pay = ({ navigation, route }) => {
     const [user, setUser] = useState({});
+    const [visible, setVisible] = useState(false);
 
     const { products } = route.params;
     console.log(products);
@@ -35,6 +37,8 @@ const Pay = ({ navigation, route }) => {
     }
     // Xử lí khi bấm nút thanh toán
     const handlePay = async () => {
+        // mở modal loading
+        setVisible(true);
         // Add đơn hàng vào bảng
         const idUser = JSON.parse(await AsyncStorage.getItem('idUser'));
         await axios.post(`${Config.API_URL}/api/addOrder?idUser=${idUser}`, products);
@@ -106,6 +110,8 @@ const Pay = ({ navigation, route }) => {
                 'Content-Type': 'text/html', // Chỉ định kiểu nội dung là HTML
             },
         });
+        // đóng modal loading
+        setVisible(false);
         navigation.navigate('Pay_status', { email: user.email });
     };
     // Hàm render phần tử trong FlatList
@@ -395,6 +401,23 @@ const Pay = ({ navigation, route }) => {
                     </Text>
                 </TouchableWithoutFeedback>
             </View>
+
+            <Modal
+                animationType="fade" // Loại animation: 'slide', 'fade', 'none'
+                transparent={true} // Làm nền trong suốt
+                visible={visible} // Điều khiển hiển thị Modal
+            >
+                <View
+                    style={{
+                        flex: 1,
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Màu nền tối mờ
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Chase color="#d87005" />
+                </View>
+            </Modal>
         </View>
     );
 };

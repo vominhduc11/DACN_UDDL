@@ -8,6 +8,7 @@ import axios from 'axios';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 
 import Config from '../../../.env/Config';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const GoSomewhere = ({ navigation }) => {
     const [listCity, setListCity] = useState([]);
@@ -99,34 +100,69 @@ const GoSomewhere = ({ navigation }) => {
         fetchData();
     }, []);
     return (
-        <View style={{ marginTop: 28, paddingLeft: 16 }}>
+        <View style={{ marginTop: 28 }}>
             <Text
                 onPress={() => navigation.navigate('Where_go')}
                 style={{
                     fontSize: 17,
                     fontWeight: '700',
                     color: '#000',
+                    paddingLeft: 12,
                 }}
             >
                 Bạn muốn đi đâu chơi
                 <IconEntypo name="chevron-thin-right" size={16} color="#000" />
             </Text>
-
+            {listCity.length === 0 && (
+                <View style={{ marginTop: 12 }}>
+                    <SkeletonPlaceholder>
+                        <View style={{ paddingHorizontal: 12 }}>
+                            <Text style={{ width: 'auto', height: 16 }} />
+                        </View>
+                        <View style={{ flexDirection: 'row', marginTop: 12, paddingLeft: 12 }}>
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    backgroundColor: '#F5F5F5',
+                                    borderRadius: 30,
+                                    height: 45,
+                                    width: 180,
+                                    marginRight: 12,
+                                }}
+                            />
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    backgroundColor: '#F5F5F5',
+                                    borderRadius: 30,
+                                    height: 45,
+                                    width: 180,
+                                    marginRight: 12,
+                                }}
+                            />
+                        </View>
+                    </SkeletonPlaceholder>
+                </View>
+            )}
             {/* Danh sách sản phẩm */}
-            <FlatList
-                style={{ marginTop: 12 }}
-                data={listCity}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                initialNumToRender={1}
-                maxToRenderPerBatch={1}
-                windowSize={3}
-                removeClippedSubviews={true}
-                horizontal
-                scrollEventThrottle={16}
-                ItemSeparatorComponent={() => <View style={{ width: scale(12) }} />}
-                showsHorizontalScrollIndicator={false}
-            />
+            {listCity.length !== 0 && (
+                <FlatList
+                    style={{ marginTop: 12, marginLeft: 12 }}
+                    data={listCity}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item.id}
+                    initialNumToRender={2}
+                    maxToRenderPerBatch={1}
+                    windowSize={3}
+                    removeClippedSubviews={true}
+                    horizontal
+                    scrollEventThrottle={16}
+                    ItemSeparatorComponent={() => <View style={{ width: scale(12) }} />}
+                    showsHorizontalScrollIndicator={false}
+                />
+            )}
         </View>
     );
 };

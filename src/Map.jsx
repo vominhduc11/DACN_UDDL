@@ -2,21 +2,22 @@ import React from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { StyleSheet, View } from 'react-native';
 
-const Map = () => {
+const Map = ({ route }) => {
+    const { lat, lon } = route.params;
+    console.log(lat, lon);
     return (
         <View style={styles.container}>
             <MapView
-                // provider={PROVIDER_HERE}
                 style={styles.map}
                 showsUserLocation={true}
                 initialRegion={{
-                    latitude: 52.52,
-                    longitude: 13.405,
+                    latitude: lat,
+                    longitude: lon,
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421,
                 }}
             >
-                <Marker coordinate={{ latitude: 52.52, longitude: 13.405 }} title="Berlin" description="The capital of Germany" />
+                <Marker coordinate={{ latitude: lat, longitude: lon }} title="Berlin" description="The capital of Germany" />
             </MapView>
         </View>
     );

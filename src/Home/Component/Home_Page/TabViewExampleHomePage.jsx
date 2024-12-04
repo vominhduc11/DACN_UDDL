@@ -1,5 +1,5 @@
-import React, { forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { View, Text, TouchableWithoutFeedback } from 'react-native';
+import React, { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { View, Text, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
 
 import FastImage from 'react-native-fast-image';
 import PagerView from 'react-native-pager-view';
@@ -12,7 +12,7 @@ import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import Config from '../../../.env/Config';
 
 const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handlePressProduct, pagerViewRef }, ref) => {
-    const [heightPagerView, setHeightPagerView] = useState(1200);
+    const [heightPagerView, setHeightPagerView] = useState(0);
     const [listProduct3, setListProduct3] = useState([]);
     const [listProduct4, setListProduct4] = useState([]);
     const [loading1, setLoading1] = useState(false);
@@ -20,8 +20,8 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
     const [amountProduct1, setAmountProduct1] = useState(10);
     const [amountProduct2, setAmountProduct2] = useState(10);
 
-    const heightRef1 = useRef(0);
-    const heightRef2 = useRef(0);
+    const heightRef1 = useRef(215 * 5 + 48 + 15);
+    const heightRef2 = useRef(215 * 5 + 48 + 15);
 
     useImperativeHandle(ref, () => ({
         setHeight1() {
@@ -41,26 +41,6 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
         },
     }));
 
-    //  Lấy kích thước thẻ 1
-    const handleLayout1 = (event) => {
-        const { height } = event.nativeEvent.layout;
-        if (height === 0) {
-            return;
-        }
-        heightRef1.current = height + 20;
-        setHeightPagerView(height + 20);
-    };
-
-    //  Lấy kích thước thẻ 2
-    const handleLayout2 = (event) => {
-        const { height } = event.nativeEvent.layout;
-        if (height === 0) {
-            return;
-        }
-        heightRef2.current = height + 20;
-        setHeightPagerView(height + 20);
-    };
-
     // Gọi api
     const fetchInTurnProduct1 = async () => {
         if (loading1) {
@@ -73,6 +53,8 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
             const res = await axios.get(`${Config.API_URL}/api/getInTurnProduct/${amountProduct1}`);
             setListProduct3(res.data);
             setAmountProduct1(amountProduct1 + 10);
+            setHeightPagerView(heightRef1.current);
+            heightRef1.current = heightRef1.current + (215 * 5 + 48);
         } catch (error) {
             console.error('Error fetching product:', error);
         } finally {
@@ -98,6 +80,8 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
                 const res3 = await axios.get(`${Config.API_URL}/api/getInTurnProductOfCity/${res2.data.id}/${amountProduct2}`);
                 setListProduct4(res3.data);
                 setAmountProduct2(amountProduct2 + 10);
+                setHeightPagerView(heightRef2.current);
+                heightRef2.current = heightRef2.current + (215 * 5 + 48);
             }
         } catch (error) {
             console.error('Error fetching product:', error);
@@ -113,7 +97,6 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
     return (
         <PagerView ref={pagerViewRef} style={{ height: heightPagerView }} initialPage={0} scrollEnabled={false}>
             <View
-                onLayout={handleLayout1}
                 key="1"
                 style={{
                     marginTop: 24,
@@ -123,7 +106,8 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
                 }}
             >
                 {listProduct3.map((product) => (
-                    <TouchableWithoutFeedback
+                    <TouchableOpacity
+                        activeOpacity={1}
                         key={product.id}
                         onPress={() =>
                             handlePressProduct(
@@ -144,6 +128,7 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
                                 borderColor: '#DDDDDD',
                                 borderRadius: 12,
                                 width: scale(155),
+                                height: 215,
                                 marginBottom: moderateScale(10),
                             }}
                         >
@@ -240,11 +225,10 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
                                 </View>
                             </View>
                         </View>
-                    </TouchableWithoutFeedback>
+                    </TouchableOpacity>
                 ))}
             </View>
             <View
-                onLayout={handleLayout2}
                 key="2"
                 style={{
                     marginTop: 24,
@@ -276,6 +260,7 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
                                 borderRadius: 12,
                                 width: 140,
                                 marginBottom: 8,
+                                height: 215,
                             }}
                         >
                             <View>
