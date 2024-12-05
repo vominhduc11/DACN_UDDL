@@ -1,10 +1,11 @@
-import { ImageBackground, KeyboardAvoidingView, Platform, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View, Modal } from 'react-native';
+import { ImageBackground, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View, Modal, Button, Image } from 'react-native';
 import React, { useState } from 'react';
 
 import FastImage from 'react-native-fast-image';
 import axios from 'axios';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import { Chase } from 'react-native-animated-spinkit';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 const Sign = ({ navigation }) => {
     const [valueName, setValueName] = useState('');
@@ -16,6 +17,7 @@ const Sign = ({ navigation }) => {
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [textConfirm, setTextConfirm] = useState('');
+    const [imageUri, setImageUri] = useState(null);
 
     // Sự kiện khi input được focus
     const handleFocus = (position) => {
@@ -67,16 +69,39 @@ const Sign = ({ navigation }) => {
         return newAuthen;
     };
 
+    const pickImage = () => {
+        launchImageLibrary({ mediaType: 'photo' }, (response) => {
+            if (response.assets) {
+                setImageUri(response.assets[0].uri);
+            }
+        });
+    };
+
     // Sử lý khi nhấn nút đăng nhập
     const handlePressSign = async () => {
+        console.log(imageUri.split('/').pop());
         const result = authenSign().some((ele) => ele === false);
         if (!result) {
             setLoad(true);
             try {
-                const res = await axios.post('http://192.168.0.113:8080/api/addUser', {
-                    name: valueName,
-                    email: valueEmail,
-                    password: valuePassword,
+                const formData = new FormData();
+                // Đính kèm dữ liệu JSON
+                formData.append('name', valueName);
+                formData.append('email', valueEmail);
+                formData.append('password', valuePassword);
+                // Đính kèm file (nếu có)
+                if (imageUri) {
+                    const file = {
+                        uri: imageUri,
+                        name: imageUri.split('/').pop(), // Tên file gửi lên server
+                        type: 'image/jpeg', // Định dạng file
+                    };
+                    formData.append('fileImage', file);
+                }
+                const res = await axios.post('http://192.168.0.113:8080/api/addUser', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
                 });
                 setLoad(false);
                 if (res.data === 'Success') {
@@ -194,6 +219,34 @@ const Sign = ({ navigation }) => {
                         placeholderTextColor="#c0c0c0"
                         secureTextEntry={true}
                     />
+                    {/* Chọn ảnh đại diện */}
+                    <View style={{ marginTop: 12, alignItems: 'center' }}>
+                        <Button
+                            title="Chọn ảnh đại diện"
+                            onPress={pickImage}
+                            color="#000" // Đặt màu nút giống với các trường nhập liệu
+                            style={{
+                                backgroundColor: '#fff', // Thêm nền trắng giống các trường TextInput
+                                paddingHorizontal: 20, // Thêm khoảng cách trái phải
+                                borderRadius: 12, // Bo góc để đồng nhất với TextInput
+                                borderWidth: 1, // Đặt border cho nút
+                                borderColor: '#ccc', // Đặt màu border giống với các trường nhập liệu
+                            }}
+                        />
+                        {imageUri && (
+                            <Image
+                                source={{ uri: imageUri }}
+                                style={{
+                                    marginTop: 20,
+                                    width: 100,
+                                    height: 100,
+                                    borderRadius: 50, // Bo tròn ảnh giống với thiết kế button
+                                    borderWidth: 2, // Thêm đường viền cho ảnh
+                                    borderColor: '#ccc', // Màu viền ảnh
+                                }}
+                            />
+                        )}
+                    </View>
                     {/* Button Login */}
                     <TouchableOpacity
                         onPress={handlePressSign}

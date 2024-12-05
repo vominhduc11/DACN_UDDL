@@ -59,6 +59,7 @@ const ModalOrder = ({
                 cityId: cityId,
                 category: product.category,
                 id_package: package_service.id,
+                booked: product.booked,
             },
         ];
         // Đóng modal hiện tại

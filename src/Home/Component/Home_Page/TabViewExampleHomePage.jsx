@@ -5,6 +5,7 @@ import FastImage from 'react-native-fast-image';
 import PagerView from 'react-native-pager-view';
 import IconFontisto from 'react-native-vector-icons/Fontisto';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import IconEntypo from 'react-native-vector-icons/Entypo';
 import axios from 'axios';
 import Geolocation from '@react-native-community/geolocation';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
@@ -171,7 +172,7 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
                                 >
                                     {product.name}
                                 </Text>
-                                <Text style={{ marginTop: moderateScale(6), color: '#000' }}>
+                                <Text numberOfLines={1} style={{ marginTop: moderateScale(6), color: '#c0c0c0' }}>
                                     <IconAntDesign name="star" size={moderateScale(16)} color="#FFCC33" />
                                     <Text
                                         style={{
@@ -180,7 +181,8 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
                                     >
                                         {product.star}
                                     </Text>{' '}
-                                    ({product.booked})
+                                    ({product.evaluate})<IconEntypo name="dot-single" />
+                                    <Text>{product.booked} đã đặt</Text>
                                 </Text>
                                 <View
                                     style={{
@@ -301,8 +303,8 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
                                 >
                                     {product.name}
                                 </Text>
-                                <Text style={{ marginTop: 6, color: '#000' }}>
-                                    <IconAntDesign name="star" size={16} color="#FFCC33" />
+                                <Text numberOfLines={1} style={{ marginTop: moderateScale(6), color: '#c0c0c0' }}>
+                                    <IconAntDesign name="star" size={moderateScale(16)} color="#FFCC33" />
                                     <Text
                                         style={{
                                             color: '#FFCC33',
@@ -310,7 +312,8 @@ const TabViewExampleHomePage = ({ formatNumberWithCommas, minPricePackage, handl
                                     >
                                         {product.star}
                                     </Text>{' '}
-                                    ({product.booked})
+                                    ({product.evaluate})<IconEntypo name="dot-single" />
+                                    <Text>{product.booked} đã đặt</Text>
                                 </Text>
                                 <View
                                     style={{

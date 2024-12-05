@@ -25,3 +25,13 @@ Content-Type: application/json
 }
 ###
 DELETE http://localhost:8080/api/deleteProductFavorite/1/1
+####
+PATCH http://192.168.0.113:8080/api/update
+Content-Type: application/json
+
+[
+  {
+   "idProduct": 1,
+  "idUser": 1
+  }
+]

@@ -3,8 +3,7 @@ import React, { forwardRef, memo, useEffect, useImperativeHandle, useRef, useSta
 
 import IconEntypo from 'react-native-vector-icons/Entypo';
 import IconFeather from 'react-native-vector-icons/Feather';
-import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import { scale } from 'react-native-size-matters';
 
 const Bottom_Action_Bar = (
     {

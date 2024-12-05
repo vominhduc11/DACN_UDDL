@@ -1,4 +1,4 @@
-import { View, ScrollView, Text } from 'react-native';
+import { View, ScrollView, Text, TouchableOpacity } from 'react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import axios from 'axios';
@@ -152,7 +152,6 @@ const Product = ({ navigation, route }) => {
                     navigation={navigation}
                     ref={headerRef}
                 />
-
                 <ScrollView onScroll={handleScrollScreen} showsVerticalScrollIndicator={false} stickyHeaderIndices={[0]}>
                     <ImageMain bottom={bottom} opacityImage={opacityImage} image={product.image} />
                     <View
@@ -194,7 +193,13 @@ const Product = ({ navigation, route }) => {
                             setPrice={setPrice}
                         />
                         {/* Đánh giá */}
-                        <Comment star={product.star} comments={product.comments} />
+                        <Comment
+                            star={product.star}
+                            comments={product.comments}
+                            idProduct={product.id}
+                            evaluate={product.evaluate}
+                            navigation={navigation}
+                        />
                         {/* Ve dich vu nay */}
                         <About_service information={product.information} />
                         {/* Có thể bạn sẽ thích */}

@@ -19,7 +19,9 @@ import Have_fun from './src/Have_fun';
 import Where_go from './src/Where_go/Where_go';
 import Map from './src/Map';
 import MyList from './src/MyList';
-import Skeleton from './src/Skeleton';
+import Comment from './src/Comment';
+import { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,7 +34,6 @@ const App = () => {
                     gestureEnabled: true, // Kích hoạt cử chỉ vuốt
                 }}
             >
-                {/* <Stack.Screen name="Skeleton" component={Skeleton} options={{ headerShown: false }} /> */}
                 <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
                 <Stack.Screen name="City" component={City} options={{ headerShown: false }} />
                 <Stack.Screen
@@ -103,6 +104,7 @@ const App = () => {
                 <Stack.Screen name="Where_go" component={Where_go} options={{ headerShown: false }} />
                 <Stack.Screen name="Fun_experience" component={Fun_experience} options={{ headerShown: false }} />
                 <Stack.Screen name="Map" component={Map} options={{ headerShown: true, title: 'Vị trí' }} />
+                <Stack.Screen name="Comment" component={Comment} options={{ headerShown: true, title: 'Bình luận' }} />
                 <Stack.Screen name="MyList" component={MyList} options={{ headerShown: true, title: '' }} />
             </Stack.Navigator>
         </NavigationContainer>

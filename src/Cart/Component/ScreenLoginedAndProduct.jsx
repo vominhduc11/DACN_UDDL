@@ -84,8 +84,8 @@ const ScreenLoginedAndProduct = ({ navigation, products, setProducts }) => {
                 <Text numberOfLines={2} style={{ color: '#000', marginTop: 10 }}>
                     {item.name_package}
                 </Text>
-                {item.quantitys.map((ele) => (
-                    <Text style={{ color: '#000' }}>
+                {item.quantitys.map((ele, index) => (
+                    <Text key={index} style={{ color: '#000' }}>
                         {ele.amount} &times; {ele.age}
                     </Text>
                 ))}

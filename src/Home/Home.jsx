@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -9,8 +9,10 @@ import Like_page from './Route/Like_page';
 import Order_page from './Route/Order_page';
 import User_page from './Route/User_page';
 import NavBar from './Component/NavBar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator();
+
 const Home = ({ navigation }) => {
     const [activeMenu, setActiveMenu] = useState(1);
 
@@ -22,7 +24,18 @@ const Home = ({ navigation }) => {
             setActiveMenu(param);
         },
     };
-
+    useEffect(() => {
+        async function authenUser() {
+            const idUser = await AsyncStorage.getItem('idUser');
+            if (!idUser) {
+                navigation.reset({
+                    index: 0, // Đặt màn hình mục tiêu làm màn hình đầu tiên
+                    routes: [{ name: 'Login' }], // Định nghĩa màn hình mới
+                });
+            }
+        }
+        authenUser();
+    }, []);
     return (
         <View style={{ position: 'relative', zIndex: 1, flex: 1 }}>
             <Stack.Navigator

@@ -42,6 +42,15 @@ const Pay = ({ navigation, route }) => {
         // Add đơn hàng vào bảng
         const idUser = JSON.parse(await AsyncStorage.getItem('idUser'));
         await axios.post(`${Config.API_URL}/api/addOrder?idUser=${idUser}`, products);
+        // Sửa số lượng đã dặt
+        const datas = products.map((product) => {
+            return {
+                id: product.id,
+                booked: product.booked,
+            };
+        });
+
+        await axios.patch(`${Config.API_URL}/api/update`, datas);
         // Gửi mail
         let string = ``;
         // Duyệt qua từng sản phẩm
@@ -131,8 +140,8 @@ const Pay = ({ navigation, route }) => {
                 <Text numberOfLines={2} style={{ color: '#000' }}>
                     {item.name_package}
                 </Text>
-                {item.quantitys.map((ele) => (
-                    <Text style={{ color: '#000', marginTop: 4 }}>
+                {item.quantitys.map((ele, index) => (
+                    <Text key={index} style={{ color: '#000', marginTop: 4 }}>
                         {ele.amount} &times; {ele.age}
                     </Text>
                 ))}

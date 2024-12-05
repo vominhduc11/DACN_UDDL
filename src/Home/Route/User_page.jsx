@@ -63,11 +63,12 @@ function User_page({ route, navigation }) {
                                 borderRadius: 30,
                             }}
                             source={{
-                                uri: 'https://png.pngtree.com/png-clipart/20191121/original/pngtree-user-icon-png-image_5097430.jpg',
+                                uri: `http://192.168.0.113:8080/api/image/${user.image}`,
                                 priority: FastImage.priority.high,
                             }}
                             resizeMode={FastImage.resizeMode.cover}
                         />
+
                         <View>
                             <Text
                                 style={{
